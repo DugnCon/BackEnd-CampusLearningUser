@@ -2,6 +2,7 @@ package com.javaweb.entity.Course;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -29,12 +30,11 @@ public class CourseEnrollmentEntity {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="UserID")
-    @JsonBackReference
     private UserEntity userEnrollment;
     
     @OneToMany(mappedBy="enrollment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference("enroll-progress")
     private List<LessonProgressEntity> lessonProgress = new ArrayList<>();
-    
 
     @Column(name = "Progress")
     private Integer progress;
@@ -53,9 +53,8 @@ public class CourseEnrollmentEntity {
 
     @Column(name = "Status", length = 20)
     private String status;
-    
-    
 
+    @JsonManagedReference("enroll-progress")
     public List<LessonProgressEntity> getLessonProgress() {
 		return lessonProgress;
 	}

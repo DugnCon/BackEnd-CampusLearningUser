@@ -65,10 +65,10 @@ public class CourseLessonsEntity {
 	@JsonManagedReference
 	private List<CodingExercisesEntity> codeExercise = new ArrayList<>();	
 	@OneToMany(mappedBy="lessons", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonBackReference
+	@JsonManagedReference("lesson-progress")
     private List<LessonProgressEntity> lessonProgress = new ArrayList<>();
-	
-	
+
+	@JsonManagedReference("lesson-progress")
 	public List<LessonProgressEntity> getLessonProgress() {
 		return lessonProgress;
 	}

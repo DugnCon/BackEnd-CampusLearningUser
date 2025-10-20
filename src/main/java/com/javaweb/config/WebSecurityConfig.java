@@ -123,10 +123,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/blogs/**", "/api/public/**").permitAll()
                 .antMatchers("/uploads/**").permitAll()
+                .antMatchers("/api/events").permitAll()
                 
                 //Các api test dữ liệu trước khi đưa vào authenticated()
                 .antMatchers("/api/courses/enrolled").authenticated()
-                .antMatchers("/api/courses/{courseId}/progress").authenticated()
+                .antMatchers("/api/courses/*/progress").authenticated()
+                .antMatchers("/api/lessons/*/progress").authenticated()
+                .antMatchers("/api/courses/*/lessons/*/code-server", "/api/courses/*/lessons/*/submit-code").authenticated()
+                .antMatchers("/api/events/*").authenticated()
                 
                 //Authenticated
                 .antMatchers("/api/courses/**/enroll", "/api/courses/**/create-paypal-order", "/api/courses/**/learn").authenticated()

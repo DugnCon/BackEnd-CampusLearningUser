@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -26,14 +27,14 @@ public class LessonProgressEntity {
 	//enrollmentId
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="LessonID")
-	@JsonBackReference
+	@JsonBackReference("lesson-progress")
 	private CourseLessonsEntity lessons;
 	//lessonId
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="EnrollmentID")
-	@JsonBackReference
+	@JsonBackReference("enroll-progress")
 	private CourseEnrollmentEntity enrollment;
-	@Column(name="Status")
+	@Column(name="Status", length = 20)
 	private String status;
 	@Column(name="CompletedAt")
 	private LocalDateTime completedAt;
@@ -48,14 +49,12 @@ public class LessonProgressEntity {
 	public void setProgressID(Long progressID) {
 		ProgressID = progressID;
 	}
-	@JsonBackReference
 	public CourseLessonsEntity getLessons() {
 		return lessons;
 	}
 	public void setLessons(CourseLessonsEntity lessons) {
 		this.lessons = lessons;
 	}
-	@JsonBackReference
 	public CourseEnrollmentEntity getEnrollment() {
 		return enrollment;
 	}

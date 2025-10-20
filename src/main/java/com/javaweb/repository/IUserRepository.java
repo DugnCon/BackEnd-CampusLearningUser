@@ -24,7 +24,6 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 	
 	@Query("select u from UserEntity u where Email = :email")
 	UserEntity userLogin(@Param("email") String email);
-	
 	@Query("select u from UserEntity u join fetch u.courseEnrollment where u.UserID = :userId")
 	UserEntity getCourseEnrollment(@Param("userId") Long userId);
 	

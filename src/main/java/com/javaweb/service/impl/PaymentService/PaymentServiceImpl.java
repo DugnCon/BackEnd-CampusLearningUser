@@ -117,21 +117,17 @@ public class PaymentServiceImpl implements IPaymentService{
 		}
 		lessonProgressRepository.saveAll(progress);
 	}
-	
+
 	@Override
 	public ResponseEntity<Object> courseEnrolled(Long userId) {
-		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("not found"));
-		try {
-			user = userRepository.getCourseEnrollment(userId);
-			if(user != null) {
-				return ResponseEntity.ok(Map.of("data", user, "success", true, "message", "Đây là khóa học của bạn"));
-			} else {
-				return ResponseEntity.ok(Map.of("success", false, "message", "Không có khóa học nào"));
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e + "can not get course enrolled" + " " + userId);
+		boolean exists = courseEnrollmentRepository.existsUserInEnrollment(userId);
+		if (exists) {
+			return ResponseEntity.ok(Map.of("success", true, "message", "Người dùng có trong danh sách khóa học"));
+		} else {
+			return ResponseEntity.ok(Map.of("success", false, "message", "Người dùng chưa đăng ký khóa học nào"));
 		}
 	}
+
 
 	@Override
 	public ResponseEntity<Object> checkCourseEnrollment(Long courseId, Long userId) {

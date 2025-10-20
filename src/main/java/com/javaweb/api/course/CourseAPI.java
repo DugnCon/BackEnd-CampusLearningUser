@@ -1,19 +1,20 @@
 package com.javaweb.api.course;
 
+import com.javaweb.entity.Course.CourseEnrollmentEntity;
 import com.javaweb.entity.Course.CourseEntity;
 import com.javaweb.entity.Course.CourseModuleEntity;
 import com.javaweb.model.dto.MyUserDetail;
 import com.javaweb.model.dto.PayPalPaymentDTO;
 import com.javaweb.model.dto.TransactionIDDTO;
+import com.javaweb.repository.ICourseEnrollmentRepository;
 import com.javaweb.repository.ICourseModulesRepository;
-import com.javaweb.service.ICourseService;
-import com.javaweb.service.IPaymentService;
-import com.javaweb.service.JwtService;
-import com.javaweb.service.PayPalService;
+import com.javaweb.repository.ILessonProgressRepository;
+import com.javaweb.service.*;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +38,8 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/api")
 public class CourseAPI {
-
+    @Autowired
+    private CodeServerService codeServerService;
     @Autowired
     private ICourseService courseService;
     @Autowired
@@ -50,6 +52,14 @@ public class CourseAPI {
     private JwtService jwtService;
     @Autowired
     private ICourseModulesRepository modules;
+    @Autowired
+    private ILessonProgressRepository lessonProgressRepository;
+    @Autowired
+    private ICourseEnrollmentRepository enrollmentRepository;
+    @Autowired
+    private ILessonProgressService progressService;
+    @Autowired
+    private ICodingExerciseService codingExerciseService;
 
     @GetMapping("/courses")
     public ResponseEntity<Object> getCourses() {
@@ -61,6 +71,99 @@ public class CourseAPI {
     public ResponseEntity<Object> getCourseDetails(@PathVariable("courseId") Long courseId) {
     	//List<CourseModuleEntity> module = courseService.getCourseById(courseId).getCoursemodules();
         return ResponseEntity.ok(Map.of("success", true, "data", courseService.getCourseById(courseId)));
+    }
+
+    @GetMapping("/courses/{courseId}/lessons/{lessonId}/code-exercise")
+    public ResponseEntity<Object> getCodeExercise(
+            @PathVariable("courseId") Long courseId,
+            @PathVariable("lessonId") Long lessonId) {
+        //return ResponseEntity.ok(Map.of("success", true, "data", courseService.getCodeExercise(courseId, lessonId)));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        return codingExerciseService.getCodingExercise(lessonId);
+    }
+
+    @PostMapping("/courses/{courseId}/lessons/{lessonId}/submit-code")
+    public ResponseEntity<Object> submitCode(
+            @PathVariable("courseId") Long courseId,
+            @PathVariable("lessonId") Long lessonId,
+            @RequestBody Map<String, Object> submission) {
+        System.out.println(codingExerciseService.submitCode(submission, lessonId));
+        return codingExerciseService.submitCode(submission, lessonId);
+    }
+
+    /*@GetMapping("/{courseId}/psurint-details")
+    public ResponseEntity<Object> getCoursePrintDetails(@PathVariable("courseId") String courseId) {
+        if (courseId == null) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Course ID is required"));
+        }
+        Object printDetails = courseService.getCoursePrintDetails(courseId);
+        return ResponseEntity.ok(Map.of("success", true, "data", printDetails));
+    }
+
+    @PostMapping("/code-execution/execute")
+    public ResponseEntity<Object> executeCode(@RequestBody Map<String, Object> requestBody) {
+        String code = (String) requestBody.get("code");
+        String language = (String) requestBody.get("language");
+        String stdin = (String) requestBody.getOrDefault("stdin", "");
+        if (code == null || language == null) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Code và ngôn ngữ lập trình là bắt buộc"));
+        }
+        Object result = courseService.executeCode(code, language, stdin);
+        return ResponseEntity.ok(Map.of("success", true, "data", result));
+    }
+
+    @PostMapping("/code-execution/send-input")
+    public ResponseEntity<Object> sendInput(@RequestBody Map<String, String> requestBody) {
+        String executionId = requestBody.get("executionId");
+        String input = requestBody.get("input");
+        if (executionId == null) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "ID thực thi là bắt buộc"));
+        }
+        Object result = courseService.sendInput(executionId, input);
+        return ResponseEntity.ok(Map.of("success", true, "data", result));
+    }
+
+    @PostMapping("/code-execution/stop")
+    public ResponseEntity<Object> stopExecution(@RequestBody Map<String, String> requestBody) {
+        String executionId = requestBody.get("executionId");
+        if (executionId == null) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "ID thực thi là bắt buộc"));
+        }
+        Object result = courseService.stopExecution(executionId);
+        return ResponseEntity.ok(Map.of("success", true, "data", result));
+    }*/
+
+    @PostMapping("/courses/{courseId}/lessons/{lessonId}/code-server")
+    public ResponseEntity<Object> initializeCodeServer(
+            @PathVariable("courseId") Long courseId,
+            @PathVariable("lessonId") Long lessonId) {
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+            String userId = myUserDetail.getId().toString();
+
+            if (userId == null || userId.isEmpty()) {
+                resp.put("success", false);
+                resp.put("message", "Missing userId");
+                return ResponseEntity.badRequest().body(resp);
+            }
+
+            String url = codeServerService.initialize(courseId.toString(), lessonId.toString(), userId);
+
+            resp.put("success", true);
+            resp.put("url", url);
+            return ResponseEntity.ok(resp);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.put("success", false);
+            resp.put("message", e.getMessage());
+            return ResponseEntity.internalServerError().body(resp);
+        }
     }
 
     /*
@@ -90,15 +193,6 @@ public class CourseAPI {
             @PathVariable("lessonId") String lessonId,
             @RequestBody Map<String, Object> codeRequest) {
         return ResponseEntity.ok(Map.of("success", true, "output", courseService.runCodeExercise(courseId, lessonId, codeRequest)));
-    }
-
-    @PostMapping("/{courseId}/lessons/{lessonId}/submit-code")
-    public ResponseEntity<Object> submitCode(
-            @PathVariable("courseId") String courseId,
-            @PathVariable("lessonId") String lessonId,
-            @RequestBody Map<String, Object> submission) {
-        boolean success = courseService.submitCode(courseId, lessonId, submission);
-        return ResponseEntity.ok(Map.of("success", success, "message", success ? "Nộp bài thành công" : "Nộp bài thất bại"));
     }
 
     @PostMapping("/{courseId}/create-payment")
@@ -269,8 +363,6 @@ public class CourseAPI {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     	MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
     	
-    	System.out.print(myUserDetail);
-    	
     	Long userId = myUserDetail.getId();
         // TODO: service cần viết hàm getEnrolledCourses(userId)
         //return ResponseEntity.ok(Map.of("success", true, "data", courseService.getEnrolledCourses(userId)));
@@ -282,10 +374,23 @@ public class CourseAPI {
             @PathVariable("courseId") Long courseId) {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     	MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
-    	
-    	Long userId = myUserDetail.getId();
-    	
-        return ResponseEntity.ok(Map.of("success", true, "progress", courseService.getUserProgress(courseId, userId)));
+
+        Long userId = myUserDetail.getId();
+
+        return courseService.getUserProgress(courseId, userId);
+    }
+
+    //Đợi thêm vào security
+    @PostMapping("/lessons/{lessonId}/progress")
+    private ResponseEntity<Object> lessonCompleted(@RequestBody Map<String,Object> data, @PathVariable Long lessonId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        Long userId = myUserDetail.getId();
+
+        String status = data.get("status").toString();
+
+        return progressService.lessonCompleted(status, lessonId, userId);
     }
     
     @GetMapping("/courses/{courseId}/check-enrollment")
