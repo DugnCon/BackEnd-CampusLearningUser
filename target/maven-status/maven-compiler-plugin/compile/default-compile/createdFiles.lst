@@ -6,6 +6,7 @@ com\javaweb\service\FileStorageService.class
 com\javaweb\model\dto\PasskeyCredentialDTO\CredentialResponse.class
 com\javaweb\service\IEventService.class
 com\javaweb\entity\PasskeyCredentialsEntity.class
+com\javaweb\entity\Event\EventParticipantsEntity.class
 com\javaweb\service\impl\PaymentService\PaymentServiceImpl.class
 com\javaweb\entity\Event\EventProgrammingLanguagesEntity.class
 com\javaweb\entity\UserEntity.class
@@ -57,11 +58,13 @@ com\javaweb\service\IPaymentService.class
 com\javaweb\entity\Course\CourseModuleEntity.class
 com\javaweb\repository\ICourseEnrollmentRepository.class
 com\javaweb\config\JwtAuthenticationFilter.class
+com\javaweb\repository\IEventParticipantsRepository.class
 com\javaweb\api\notification\NotificationAPI.class
 com\javaweb\entity\Payment\PaymentHistoryEntity.class
 com\javaweb\SpringBootWebApplication.class
 com\javaweb\entity\Course\LessonProgressEntity.class
 com\javaweb\model\dto\CallDTO.class
+com\javaweb\utils\NullAwareBeanUtils.class
 com\javaweb\config\CorsFilter.class
 com\javaweb\service\impl\EventService\EventServiceImpl.class
 com\javaweb\api\call\CallAPI.class

@@ -2,12 +2,15 @@ package com.javaweb.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.javaweb.entity.Course.CourseEnrollmentEntity;
+import com.javaweb.entity.Event.EventParticipantsEntity;
 import com.javaweb.entity.Payment.PaymentTransactionEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -71,8 +74,17 @@ public class UserEntity {
 	@OneToMany(mappedBy="passkey", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<PasskeyCredentialsEntity> userPasskey = new ArrayList<>();
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<EventParticipantsEntity> participants = new TreeSet<>();
 
-	
+	public Set<EventParticipantsEntity> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(Set<EventParticipantsEntity> participants) {
+		this.participants = participants;
+	}
+
 	public String getStatus() {
 		return status;
 	}

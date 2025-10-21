@@ -130,7 +130,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/courses/*/progress").authenticated()
                 .antMatchers("/api/lessons/*/progress").authenticated()
                 .antMatchers("/api/courses/*/lessons/*/code-server", "/api/courses/*/lessons/*/submit-code").authenticated()
-                .antMatchers("/api/events/*").authenticated()
+                .antMatchers("/api/events/*", "/api/events/*/register", "/api/events/*/registration-status", "/api/events/*/cancel-registration").authenticated()
                 
                 //Authenticated
                 .antMatchers("/api/courses/**/enroll", "/api/courses/**/create-paypal-order", "/api/courses/**/learn").authenticated()

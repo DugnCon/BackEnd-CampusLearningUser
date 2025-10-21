@@ -1,5 +1,6 @@
 package com.javaweb.entity.Event;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
@@ -93,6 +94,18 @@ public class EventEntity {
     @OneToMany(mappedBy = "event" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<EventTechnologiesEntity> technologies = new TreeSet<>();
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<EventParticipantsEntity> participants = new TreeSet<>();
+
+    public Set<EventParticipantsEntity> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<EventParticipantsEntity> participants) {
+        this.participants = participants;
+    }
 
     public Set<EventTechnologiesEntity> getTechnologies() {
         return technologies;
