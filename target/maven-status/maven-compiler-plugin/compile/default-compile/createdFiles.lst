@@ -38,9 +38,11 @@ com\javaweb\service\PayPalService.class
 com\javaweb\repository\ILessonProgressRepository.class
 com\javaweb\service\ILessonProgressService.class
 com\javaweb\service\impl\CourseService\CourseServiceImpl.class
+com\javaweb\api\posts\PostAPI.class
 com\javaweb\entity\Course\CourseLessonsEntity.class
 com\javaweb\repository\impl\CourseRepositoryCustom\CourseRepositoryCustom.class
 com\javaweb\service\ICourseService.class
+com\javaweb\entity\Post\TagsEntity.class
 com\javaweb\service\GoogleAuthService.class
 com\javaweb\repository\impl\UserRepositoryCustom\UserRepositoryCustom.class
 com\javaweb\repository\ICodingExerciseRepository.class
@@ -50,6 +52,7 @@ com\javaweb\config\GoogleVerifier.class
 com\javaweb\service\CodeServerService$CodeServerInstance.class
 com\javaweb\service\CustomUserDetailService.class
 com\javaweb\entity\Event\EventScheduleEntity.class
+com\javaweb\entity\Post\PostMediaEntity.class
 com\javaweb\jdbc\JDBC.class
 com\javaweb\config\WebMvcConfig.class
 com\javaweb\repository\IEventScheduleRepository.class
@@ -73,6 +76,7 @@ com\javaweb\entity\CallEntity.class
 com\javaweb\service\ICodingExerciseService.class
 com\javaweb\service\JwtService.class
 com\javaweb\repository\IEventRepository.class
+com\javaweb\entity\Post\PostEntity.class
 com\javaweb\repository\IUserRepository.class
 com\javaweb\model\dto\TransactionIDDTO.class
 com\javaweb\entity\Event\EventPrizesEntity.class

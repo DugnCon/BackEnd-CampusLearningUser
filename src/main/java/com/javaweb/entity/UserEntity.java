@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.javaweb.entity.Course.CourseEnrollmentEntity;
 import com.javaweb.entity.Event.EventParticipantsEntity;
 import com.javaweb.entity.Payment.PaymentTransactionEntity;
+import com.javaweb.entity.Post.PostEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -76,6 +77,17 @@ public class UserEntity {
 	private List<PasskeyCredentialsEntity> userPasskey = new ArrayList<>();
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<EventParticipantsEntity> participants = new TreeSet<>();
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private Set<PostEntity> post = new TreeSet<>();
+
+	public Set<PostEntity> getPost() {
+		return post;
+	}
+
+	public void setPost(Set<PostEntity> post) {
+		this.post = post;
+	}
 
 	public Set<EventParticipantsEntity> getParticipants() {
 		return participants;
