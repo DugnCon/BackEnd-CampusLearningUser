@@ -1,6 +1,12 @@
 package com.javaweb.api.posts;
 
+import com.javaweb.model.dto.MyUserDetail;
+import com.javaweb.model.dto.PostDTO;
+import com.javaweb.service.IPostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -8,23 +14,40 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/posts")
 public class PostAPI {
-
+    @Autowired
+    private IPostService postService;
     // Tạo bài đăng mới
     @PostMapping
-    public ResponseEntity<Object> createPost(@RequestBody Map<String, Object> postData) {
-        return ResponseEntity.ok().body("Post created successfully");
+    public ResponseEntity<Object> createPost(@ModelAttribute PostDTO postDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        Long userId = myUserDetail.getId();
+
+        return postService.createPost(postDTO, userId);
     }
 
     // Lấy danh sách tất cả bài đăng (có phân trang + filter)
     @GetMapping
-    public ResponseEntity<Object> getAllPosts(@RequestParam Map<String, Object> params) {
-        return ResponseEntity.ok().body("List of posts");
+    public ResponseEntity<Object> getAllPosts(@RequestParam(value = "limit") int limit) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        Long userId = myUserDetail.getId();
+        String fullName = myUserDetail.getFullName();
+
+        return postService.getPostLimit(userId, limit, fullName);
     }
 
     // Lấy chi tiết 1 bài đăng
     @GetMapping("/{postId}")
     public ResponseEntity<Object> getSinglePost(@PathVariable Long postId) {
-        return ResponseEntity.ok().body("Single post details");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        Long userId = myUserDetail.getId();
+
+        return postService.getSinglePost(userId, postId);
     }
 
     // Lấy danh sách bài đăng của 1 người dùng

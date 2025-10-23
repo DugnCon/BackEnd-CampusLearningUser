@@ -1,5 +1,7 @@
 package com.javaweb.entity.Post;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,10 +13,6 @@ public class PostMediaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MediaID")
     private Long mediaID;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postID")
-    private PostEntity post;
 
     @Column(name = "MediaUrl", length = 255)
     private String mediaUrl;
@@ -41,20 +39,27 @@ public class PostMediaEntity {
     @Column(name = "CreatedAt")
     private Date createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "postID")
+    @JsonBackReference
+    private PostEntity posts;
+
+    @JsonBackReference
+    public PostEntity getPosts() {
+        return posts;
+    }
+
+    public void setPosts(PostEntity posts) {
+        this.posts = posts;
+    }
+
+
     public Long getMediaID() {
         return mediaID;
     }
 
     public void setMediaID(Long mediaID) {
         this.mediaID = mediaID;
-    }
-
-    public PostEntity getPost() {
-        return post;
-    }
-
-    public void setPost(PostEntity post) {
-        this.post = post;
     }
 
     public String getMediaUrl() {

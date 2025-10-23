@@ -1,6 +1,11 @@
 package com.javaweb.entity.Post;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.javaweb.entity.UserEntity;
+import net.minidev.json.annotate.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,8 +21,13 @@ public class PostEntity {
     @Column(name = "PostID")
     private Long postID;
 
+    @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<PostMediaEntity> media = new TreeSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID")
+    @JsonBackReference
     private UserEntity user;
 
     @ManyToMany
@@ -28,6 +38,15 @@ public class PostEntity {
             inverseJoinColumns = @JoinColumn(name = "TagID")
     )
     private Set<TagsEntity> tags = new TreeSet<>();
+
+    @JsonManagedReference
+    public Set<PostMediaEntity> getMedia() {
+        return media;
+    }
+
+    public void setMedia(Set<PostMediaEntity> media) {
+        this.media = media;
+    }
 
     @Column(name = "Content", columnDefinition = "TEXT")
     private String content;
@@ -41,12 +60,12 @@ public class PostEntity {
     @Column(name = "Location", length = 255)
     private String location;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CreatedAt")
+    @CreationTimestamp
     private Date createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UpdatedAt")
+    @UpdateTimestamp
     private Date updatedAt;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -77,6 +96,17 @@ public class PostEntity {
 
     @Column(name = "IsDeleted")
     private Boolean isDeleted;
+
+    @Transient
+    private String fullName;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     public Set<TagsEntity> getTags() {
         return tags;
@@ -109,7 +139,7 @@ public class PostEntity {
     public void setFlagged(Boolean flagged) {
         isFlagged = flagged;
     }
-
+    @JsonBackReference
     public UserEntity getUser() {
         return user;
     }

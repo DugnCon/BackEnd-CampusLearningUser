@@ -30,6 +30,8 @@ public class CustomUserDetailService implements UserDetailsService{
 		myUserDetail.setId(user.getUserId());
 		myUserDetail.setProvider(user.getProviderID());
 		myUserDetail.setProvider(user.getProvider());
+		myUserDetail.setFullName(user.getFullName());
+
 		return myUserDetail;
 	}
 
