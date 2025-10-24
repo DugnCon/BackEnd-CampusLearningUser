@@ -71,7 +71,7 @@ public class CourseServiceImpl implements ICourseService {
 			Set<Long> completedLessons = new TreeSet<>();
 
 			for(LessonProgressEntity data : lessonProgressEntities) {
-				if (data.getStatus().equals("completed")) {
+				if ("completed".equals(data.getStatus())) {
 					completedLessons.add(data.getLessons().getLessonID());
 				}
 			}
@@ -79,6 +79,26 @@ public class CourseServiceImpl implements ICourseService {
 		} catch (Exception e) {
 			e.fillInStackTrace();
 			throw new RuntimeException(e + " error in user progress");
+		}
+	}
+	@Override
+	public ResponseEntity<Object> getUserCourseEnrolled(Long userId) {
+		try {
+			Set<CourseEnrollmentEntity> enrollmentEntities = courseEnrollmentRepository.getUserCourseEnrolled(userId);
+			if(enrollmentEntities.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", "Bạn chưa đăng kí khóa học nào" ));
+			} else {
+				Set<CourseEntity> courses = new TreeSet<>(Comparator.comparing(CourseEntity::getCourseID));
+
+				for(CourseEnrollmentEntity data : enrollmentEntities) {
+					CourseEntity courseEntity = data.getCourseEnrollment();
+					courseEntity.setEnrolled(true);
+					courses.add(courseEntity);
+				}
+				return ResponseEntity.ok(Map.of("success", true, "data", courses));
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -12,7 +12,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.javaweb.entity.Course.CourseEnrollmentEntity;
 import com.javaweb.entity.Event.EventParticipantsEntity;
 import com.javaweb.entity.Payment.PaymentTransactionEntity;
+import com.javaweb.entity.Post.CommentEntity;
+import com.javaweb.entity.Post.CommentLikeEntity;
 import com.javaweb.entity.Post.PostEntity;
+import com.javaweb.entity.Post.PostLikeEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -66,11 +69,11 @@ public class UserEntity {
 	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
     private List<CallEntity> calls = new ArrayList<>();
-	@OneToMany(mappedBy="userTransactions", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<PaymentTransactionEntity> paymentTransaction = new ArrayList<>();
 	@OneToMany(mappedBy="userEnrollment" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonBackReference
 	private List<CourseEnrollmentEntity> courseEnrollment = new ArrayList<>();
 	@OneToMany(mappedBy="passkey", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
@@ -80,6 +83,42 @@ public class UserEntity {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private Set<PostEntity> post = new TreeSet<>();
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<PostLikeEntity> postlike = new ArrayList<>();
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CommentEntity> comment = new ArrayList<>();
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CommentLikeEntity> commentlike = new ArrayList<>();
+
+	@JsonBackReference
+	public List<CommentLikeEntity> getCommentlike() {
+		return commentlike;
+	}
+
+	public void setCommentlike(List<CommentLikeEntity> commentlike) {
+		this.commentlike = commentlike;
+	}
+
+	@JsonBackReference
+	public List<CommentEntity> getComment() {
+		return comment;
+	}
+
+	public void setComment(List<CommentEntity> comment) {
+		this.comment = comment;
+	}
+
+	@JsonBackReference
+	public List<PostLikeEntity> getPostlike() {
+		return postlike;
+	}
+
+	public void setPostlike(List<PostLikeEntity> postlike) {
+		this.postlike = postlike;
+	}
 
 	public Set<PostEntity> getPost() {
 		return post;
@@ -155,6 +194,7 @@ public class UserEntity {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	@JsonBackReference
 	public List<PaymentTransactionEntity> getPaymentTransaction() {
 		return paymentTransaction;
 	}

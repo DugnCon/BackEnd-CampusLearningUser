@@ -127,11 +127,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 
                 //Các api test dữ liệu trước khi đưa vào authenticated()
                 .antMatchers("/api/courses/enrolled").authenticated()
-                .antMatchers("/api/courses/*/progress").authenticated()
+                .antMatchers("/api/courses/*/progress", "/api/courses/*/payment-history").authenticated()
                 .antMatchers("/api/lessons/*/progress").authenticated()
                 .antMatchers("/api/courses/*/lessons/*/code-server", "/api/courses/*/lessons/*/submit-code").authenticated()
                 .antMatchers("/api/events/*", "/api/events/*/register", "/api/events/*/registration-status", "/api/events/*/cancel-registration").authenticated()
                 .antMatchers("/api/posts", "/api/posts/*").authenticated()
+                .antMatchers("/api/enrollments").authenticated()
+                .antMatchers("/api/user/payment-history").authenticated()
                 
                 //Authenticated
                 .antMatchers("/api/courses/**/enroll", "/api/courses/**/create-paypal-order", "/api/courses/**/learn").authenticated()

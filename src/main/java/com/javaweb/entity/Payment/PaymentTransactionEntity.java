@@ -2,6 +2,8 @@ package com.javaweb.entity.Payment;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -52,11 +54,13 @@ public class PaymentTransactionEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="UserID")
-    private UserEntity userTransactions;
+    @JsonBackReference
+    private UserEntity user;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="CourseID")
-    private CourseEntity courseTransactions;
+    @JsonManagedReference
+    private CourseEntity courses;
     
     @OneToMany(mappedBy = "paymentTransactionHistory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PaymentHistoryEntity> paymentHistory = new ArrayList<>();
@@ -70,15 +74,15 @@ public class PaymentTransactionEntity {
 		this.paymentHistory = paymentHistory;
 	}
 
-	public CourseEntity getCourseTransactions() {
-		return courseTransactions;
-	}
+    public CourseEntity getCourses() {
+        return courses;
+    }
 
-	public void setCourseTransactions(CourseEntity courseTransactions) {
-		this.courseTransactions = courseTransactions;
-	}
+    public void setCourses(CourseEntity courses) {
+        this.courses = courses;
+    }
 
-	public Long getTransactionID() {
+    public Long getTransactionID() {
 		return TransactionID;
 	}
 
@@ -86,13 +90,13 @@ public class PaymentTransactionEntity {
 		TransactionID = transactionID;
 	}
 
-	public UserEntity getUserTransactions() {
-		return userTransactions;
-	}
+    public UserEntity getUser() {
+        return user;
+    }
 
-	public void setUserTransactions(UserEntity userTransactions) {
-		this.userTransactions = userTransactions;
-	}
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 
     public Double getAmount() {
         return amount;

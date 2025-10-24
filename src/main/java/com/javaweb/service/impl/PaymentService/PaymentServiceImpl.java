@@ -1,11 +1,9 @@
 package com.javaweb.service.impl.PaymentService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.javaweb.model.dto.PaymentTransactionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +49,8 @@ public class PaymentServiceImpl implements IPaymentService{
 		try {
 			
 			PaymentTransactionEntity paymentTransaction = new PaymentTransactionEntity();
-			paymentTransaction.setCourseTransactions(course);
-			paymentTransaction.setUserTransactions(user);
+			paymentTransaction.setCourses(course);
+			paymentTransaction.setUser(user);
 			paymentTransaction.setAmount(120.000);
 			paymentTransaction.setCurrency("VND");
 			paymentTransaction.setPaymentMethod("paypal");
@@ -120,11 +118,22 @@ public class PaymentServiceImpl implements IPaymentService{
 
 	@Override
 	public ResponseEntity<Object> courseEnrolled(Long userId) {
-		boolean exists = courseEnrollmentRepository.existsUserInEnrollment(userId);
-		if (exists) {
-			return ResponseEntity.ok(Map.of("success", true, "message", "Người dùng có trong danh sách khóa học"));
-		} else {
-			return ResponseEntity.ok(Map.of("success", false, "message", "Người dùng chưa đăng ký khóa học nào"));
+		try {
+			Set<CourseEnrollmentEntity> enrollmentEntities = courseEnrollmentRepository.getUserCourseEnrolled(userId);
+			if(enrollmentEntities.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", "Bạn chưa đăng kí khóa học nào", "data", new ArrayList<>() ));
+			} else {
+				Set<CourseEntity> courses = new TreeSet<>(Comparator.comparing(CourseEntity::getCourseID));
+
+				for(CourseEnrollmentEntity data : enrollmentEntities) {
+					CourseEntity courseEntity = data.getCourseEnrollment();
+					courseEntity.setEnrolled(true);
+					courses.add(courseEntity);
+				}
+				return ResponseEntity.ok(Map.of("success", true, "data", courses));
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -142,5 +151,26 @@ public class PaymentServiceImpl implements IPaymentService{
 			throw new RuntimeException(e + " can not check course enrollment");
 		}
 	}
-
+	@Override
+	public ResponseEntity<Object> getPaymentHistory(Long userId) {
+		try {
+			Set<PaymentTransactionEntity> paymentTransactionEntities = paymentRepository.getPaymentHistory(userId);
+			if(paymentTransactionEntities.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", "Bạn chưa có cuộc giao dịch nào"));
+			} else {
+				return ResponseEntity.ok(Map.of("success", true, "message", "Đây là lịch sử cuộc giao dịch", "data", paymentTransactionEntities));
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	@Override
+	public ResponseEntity<Object> getCoursePaymentHistory(Long userId, Long courseId) {
+		try {
+			List<PaymentTransactionDTO>	paymentTransactionEntity = paymentRepository.getCoursePaymentHistory(userId, courseId);
+			return ResponseEntity.ok(Map.of("data", paymentTransactionEntity, "success", true));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

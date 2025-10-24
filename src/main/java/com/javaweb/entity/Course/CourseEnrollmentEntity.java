@@ -25,7 +25,7 @@ public class CourseEnrollmentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="CourseID")
-    @JsonBackReference
+    @JsonManagedReference
     private CourseEntity courseEnrollment;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,7 +67,7 @@ public class CourseEnrollmentEntity {
 	public void setEnrollmentID(Long enrollmentID) {
 		EnrollmentID = enrollmentID;
 	}
-	@JsonBackReference
+	@JsonManagedReference
     public CourseEntity getCourseEnrollment() {
 		return courseEnrollment;
 	}

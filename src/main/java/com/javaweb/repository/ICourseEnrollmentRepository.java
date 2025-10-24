@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.javaweb.entity.Course.CourseEnrollmentEntity;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ICourseEnrollmentRepository extends JpaRepository<CourseEnrollmentEntity, Long>{
@@ -24,4 +25,6 @@ public interface ICourseEnrollmentRepository extends JpaRepository<CourseEnrollm
 	boolean existsUserInEnrollment(@Param("userId") Long userId);
 	@Query("select ce from CourseEnrollmentEntity ce join fetch ce.userEnrollment where ce.userEnrollment.UserID = :userId")
 	CourseEnrollmentEntity getCourseEnrollmentForProgress(@Param("userId") Long userId);
+	@Query("select ce from CourseEnrollmentEntity ce join fetch ce.userEnrollment join fetch ce.courseEnrollment c  where ce.userEnrollment.UserID = :userId")
+	Set<CourseEnrollmentEntity> getUserCourseEnrolled(@Param("userId") Long userId);
 }

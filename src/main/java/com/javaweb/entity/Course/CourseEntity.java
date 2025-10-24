@@ -8,18 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedStoredProcedureQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.ParameterMode;
-import javax.persistence.StoredProcedureParameter;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /*@NamedStoredProcedureQuery(
 		name="CourseEntity.getAllCourse",
@@ -64,14 +53,23 @@ public class CourseEntity {
 	private String courseType;
 	@OneToMany(mappedBy = "courses", cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
 	private List<CourseModuleEntity> Modules = new ArrayList<>();
-	@OneToMany(mappedBy = "courseTransactions", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "courses", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<PaymentTransactionEntity> paymentTransaction = new ArrayList<>();
 	@OneToMany(mappedBy="courseEnrollment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonBackReference 
+	@JsonBackReference
 	private List<CourseEnrollmentEntity> courseEnrollment = new ArrayList<>();
-	
-	
+	@Transient
+	private boolean enrolled;
+
+	public boolean isEnrolled() {
+		return enrolled;
+	}
+
+	public void setEnrolled(boolean enrolled) {
+		this.enrolled = enrolled;
+	}
+
 	public List<CourseEnrollmentEntity> getCourseEnrollment() {
 		return courseEnrollment;
 	}

@@ -74,14 +74,19 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public ResponseEntity<Object> getPostLimit(Long userId, int limit, String fullName) {
+    public ResponseEntity<Object> getPostLimit(int limit) {
         try {
             Pageable pageable = PageRequest.of(0, limit); // ví dụ limit = 20
-            List<PostEntity> posts = postRepository.getPostLimit(userId, pageable);
+            List<PostEntity> posts = postRepository.getPostLimit(pageable);
+            List<PostEntity> postEntityList = new ArrayList<>();
             for(PostEntity data : posts) {
+                UserEntity userEntity = data.getUser();
+                String fullName = userEntity.getFullName();
+
                 data.setFullName(fullName);
+                postEntityList.add(data);
             }
-            return ResponseEntity.ok(Map.of("posts" , posts, "success", true, "message", "Thành công"));
+            return ResponseEntity.ok(Map.of("posts" , postEntityList, "success", true, "message", "Thành công"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

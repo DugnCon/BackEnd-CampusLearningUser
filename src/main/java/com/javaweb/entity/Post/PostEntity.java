@@ -8,9 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Entity
 @Table(name = "posts")
@@ -30,6 +28,14 @@ public class PostEntity {
     @JsonBackReference
     private UserEntity user;
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<PostLikeEntity> postlike = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<CommentEntity> comment = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
             name = "posttags",
@@ -42,6 +48,22 @@ public class PostEntity {
     @JsonManagedReference
     public Set<PostMediaEntity> getMedia() {
         return media;
+    }
+    @JsonBackReference
+    public List<PostLikeEntity> getPostlike() {
+        return postlike;
+    }
+    @JsonBackReference
+    public List<CommentEntity> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<CommentEntity> comment) {
+        this.comment = comment;
+    }
+
+    public void setPostlike(List<PostLikeEntity> postlike) {
+        this.postlike = postlike;
     }
 
     public void setMedia(Set<PostMediaEntity> media) {

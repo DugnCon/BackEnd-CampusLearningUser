@@ -364,8 +364,7 @@ public class CourseAPI {
     	MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
     	
     	Long userId = myUserDetail.getId();
-        // TODO: service cần viết hàm getEnrolledCourses(userId)
-        //return ResponseEntity.ok(Map.of("success", true, "data", courseService.getEnrolledCourses(userId)));
+
     	return paymentService.courseEnrolled(userId);
     }
     
@@ -378,6 +377,16 @@ public class CourseAPI {
         Long userId = myUserDetail.getId();
 
         return courseService.getUserProgress(courseId, userId);
+    }
+
+    @GetMapping("/enrollments")
+    public ResponseEntity<Object> getUserCourseEnrolled() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        Long userId = myUserDetail.getId();
+
+        return courseService.getUserCourseEnrolled(userId);
     }
 
     //Đợi thêm vào security
@@ -407,19 +416,23 @@ public class CourseAPI {
 
     @GetMapping("/user/payment-history")
     public ResponseEntity<Object> getPaymentHistory() {
-        //List<Object> paymentHistory = courseService.getPaymentHistory();
-        //return ResponseEntity.ok(Map.of("success", true, "data", paymentHistory));
-    	return null;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        Long userId = myUserDetail.getId();
+
+    	return paymentService.getPaymentHistory(userId);
     }
-    
+
+    //Tí nữa làm cái này
     @GetMapping("/courses/{courseId}/payment-history")
     public ResponseEntity<Object> getCoursePaymentHistory(@PathVariable("courseId") Long courseId) {
-        //if (courseId == null) {
-          //  return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Course ID is required"));
-        //}
-        //List<Object> paymentHistory = courseService.getCoursePaymentHistory(courseId);
-        //return ResponseEntity.ok(Map.of("success", true, "data", paymentHistory));
-    	return null;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        Long userId = myUserDetail.getId();
+
+    	return paymentService.getCoursePaymentHistory(userId, courseId);
     }
 
     /*@DeleteMapping("/payments/{paymentId}")

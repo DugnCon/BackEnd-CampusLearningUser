@@ -13,4 +13,5 @@ public interface ICourseService {
     CourseEntity getCourseById(Long courseId);
     double getCoursePrice(Long courseId);
     ResponseEntity<Object> getUserProgress(Long courseId, Long userId);
+    ResponseEntity<Object> getUserCourseEnrolled(Long userId);
 }

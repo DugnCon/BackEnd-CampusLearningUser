@@ -30,13 +30,7 @@ public class PostAPI {
     // Lấy danh sách tất cả bài đăng (có phân trang + filter)
     @GetMapping
     public ResponseEntity<Object> getAllPosts(@RequestParam(value = "limit") int limit) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
-
-        Long userId = myUserDetail.getId();
-        String fullName = myUserDetail.getFullName();
-
-        return postService.getPostLimit(userId, limit, fullName);
+        return postService.getPostLimit(limit);
     }
 
     // Lấy chi tiết 1 bài đăng
@@ -59,6 +53,9 @@ public class PostAPI {
         return ResponseEntity.ok().body("List of user posts");
     }
 
+    /**
+     * Xử lý bài đăng
+     * **/
     // Cập nhật bài đăng
     @PutMapping("/{postId}")
     public ResponseEntity<Object> updatePost(
@@ -73,10 +70,33 @@ public class PostAPI {
         return ResponseEntity.ok().body("Post deleted successfully");
     }
 
+    /**
+     * Xử lý like bài viết thuộc PostLikeEntity
+     * **/
     // Like / Unlike bài đăng
     @PostMapping("/{postId}/like")
     public ResponseEntity<Object> toggleLike(@PathVariable Long postId) {
         return ResponseEntity.ok().body("Toggled like for post");
+    }
+
+    /**
+     * Xử lý like bình luận CommentLikeEntity
+     * **/
+    // Like / Unlike bình luận
+    @PostMapping("/comments/{commentId}/like")
+    public ResponseEntity<Object> toggleCommentLike(@PathVariable Long commentId) {
+        return ResponseEntity.ok().body("Toggled like for comment");
+    }
+
+    /**
+     * Xử lý thêm bình luận cho các bài đăng CommentEntity
+     * **/
+    // Thêm bình luận cho bài đăng
+    @PostMapping("/{postId}/comments")
+    public ResponseEntity<Object> addComment(
+            @PathVariable Long postId,
+            @RequestBody Map<String, Object> commentData) {
+        return ResponseEntity.ok().body("Comment added successfully");
     }
 
     // Lấy danh sách bình luận của bài đăng
@@ -89,19 +109,6 @@ public class PostAPI {
         return ResponseEntity.ok().body("List of comments for post");
     }
 
-    // Thêm bình luận cho bài đăng
-    @PostMapping("/{postId}/comments")
-    public ResponseEntity<Object> addComment(
-            @PathVariable Long postId,
-            @RequestBody Map<String, Object> commentData) {
-        return ResponseEntity.ok().body("Comment added successfully");
-    }
-
-    // Like / Unlike bình luận
-    @PostMapping("/comments/{commentId}/like")
-    public ResponseEntity<Object> toggleCommentLike(@PathVariable Long commentId) {
-        return ResponseEntity.ok().body("Toggled like for comment");
-    }
 
     // Xóa bình luận
     @DeleteMapping("/comments/{commentId}")

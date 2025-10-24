@@ -11,6 +11,6 @@ import java.util.List;
 public interface IPostService {
     ResponseEntity<Object> createPost(PostDTO postDTO, Long userId);
     void createMediaFromPost(Long postId, List<String> media);
-    ResponseEntity<Object> getPostLimit(Long userId, int limit, String fullName);
+    ResponseEntity<Object> getPostLimit(int limit);
     ResponseEntity<Object> getSinglePost(Long userId, Long postId);
 }

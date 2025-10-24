@@ -154,6 +154,12 @@
             <version>1.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-hibernate5</artifactId>
+        </dependency>
+
+
         <!-- Tomcat Embed Jasper for JSP -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
