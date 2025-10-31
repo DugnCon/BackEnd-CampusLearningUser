@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-be
+  labels:
+    app: spring-be
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-be
+  template:
+    metadata:
+      labels:
+        app: spring-be
+    spec:
+      containers:
+        - name: spring-be
+          image: campuslearning-spring-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

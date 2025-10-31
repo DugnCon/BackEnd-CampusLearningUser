@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  spring-app:
+    build: .
+    container_name: spring_container_2
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/campuslearning
+      SPRING_DATASOURCE_USERNAME: root       # đổi nếu không dùng root
+      SPRING_DATASOURCE_PASSWORD: dungcon2005     # password MySQL hiện có
+    networks:
+      - app-net
+    volumes:
+      - C:\Esclipe_Web\campuslearning\src:/app/src
+      - C:\Esclipe_Web\campuslearning\pom.xml:/app/pom.xml
+      - ~/.m2:/root/.m2
+      - ./uploads:/app/uploads
+
+networks:
+  app-net:

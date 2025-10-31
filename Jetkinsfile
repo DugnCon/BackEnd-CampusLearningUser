@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3'
+        jdk 'JDK17'
+    }
+
+    environment {
+        REPO_URL = 'https://github.com/DugnCon/BackEnd-CampusLearningUser.git'
+        DOCKER_IMAGE = 'your_dockerhub_username/campuslearning'  // 👉 thay tên thật
+        CONTAINER_NAME = 'spring_container_2'
+        DOCKER_CREDENTIAL_ID = 'dockerhub-cred'  // 👉 tạo trong Jenkins Credentials
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '📥 Đang lấy code từ Git...'
+                git branch: 'main', url: "${REPO_URL}"
+            }
+        }
+
+        stage('Build WAR') {
+            steps {
+                echo '🏗️ Đang build Spring Boot ứng dụng...'
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo '🐳 Đang build Docker image mới...'
+                sh 'docker build -t $DOCKER_IMAGE:latest .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo '📤 Đang đẩy image lên Docker Hub...'
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $DOCKER_IMAGE:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                echo '🚀 Đang triển khai container mới...'
+                sh '''
+                    docker stop $CONTAINER_NAME || true
+                    docker rm $CONTAINER_NAME || true
+                    docker run -d --name $CONTAINER_NAME -p 8080:8080 $DOCKER_IMAGE:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Triển khai CI/CD Docker thành công!'
+        }
+        failure {
+            echo '❌ Lỗi xảy ra trong pipeline, kiểm tra log Jenkins!'
+        }
+    }
+}
