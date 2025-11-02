@@ -92,9 +92,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(
-            "http://localhost:5004",
-            "http://localhost:5001"
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "https://*.ngrok-free.app"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
@@ -124,6 +124,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/blogs/**", "/api/public/**").permitAll()
                 .antMatchers("/uploads/**", "/ws/**").permitAll()
                 .antMatchers("/api/events").permitAll()
+                .antMatchers("/api/competitions").permitAll()
                 
                 //Các api test dữ liệu trước khi đưa vào authenticated()
                 .antMatchers("/api/courses/enrolled").authenticated()
@@ -135,7 +136,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/enrollments").authenticated()
                 .antMatchers("/api/user/payment-history", "/api/users/search", "/api/chat/users/search", "/api/chat/conversations").authenticated()
                 .antMatchers("/api/friendships/suggestions/random" , "/api/friendships", "/api/friendships/**").authenticated()
-                .antMatchers("/api/chat/conversations/*/messages", "/api/chat/messages/*").authenticated()
+                .antMatchers("/api/chat/conversations/*/messages", "/api/chat/messages/*", "/api/chat/conversations/*/files").authenticated()
+                .antMatchers("/api/competitions/*", "/api/competitions/*/register", "/api/competitions/*/start", "/api/competitions/*/problems/*", "/api/competitions/submissions/*", "/api/competitions/*/scoreboard").authenticated()
                 
                 //Authenticated
                 .antMatchers("/api/courses/**/enroll", "/api/courses/**/create-paypal-order", "/api/courses/**/learn").authenticated()

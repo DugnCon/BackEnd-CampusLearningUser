@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.javaweb.entity.ChatAndCall.CallEntity;
 import com.javaweb.entity.ChatAndCall.ConversationEntity;
 import com.javaweb.entity.ChatAndCall.ConversationParticipantEntity;
+import com.javaweb.entity.Competition.CompetitionParticipantEntity;
+import com.javaweb.entity.Competition.CompetitionRegistrationEntity;
 import com.javaweb.entity.Course.CourseEnrollmentEntity;
 import com.javaweb.entity.Event.EventParticipantsEntity;
 import com.javaweb.entity.Friend.FriendshipEntity;
@@ -118,6 +120,32 @@ public class UserEntity {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<ConversationEntity> conversation;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CompetitionRegistrationEntity> registration;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CompetitionParticipantEntity> participant;
+
+	@JsonBackReference
+	public List<CompetitionParticipantEntity> getParticipant() {
+		return participant;
+	}
+
+	public void setParticipant(List<CompetitionParticipantEntity> participant) {
+		this.participant = participant;
+	}
+
+	@JsonBackReference
+	public List<CompetitionRegistrationEntity> getRegistration() {
+		return registration;
+	}
+
+	public void setRegistration(List<CompetitionRegistrationEntity> registration) {
+		this.registration = registration;
+	}
 
 	@JsonBackReference
 	public List<ConversationEntity> getConversation() {

@@ -12,6 +12,7 @@ import com.javaweb.repository.IConversationRepository;
 import com.javaweb.repository.IMessageRepository;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IConservationService;
+import com.javaweb.service.SolvingByRabbitMQ.Message.MessageFileProducer;
 import com.javaweb.service.SolvingByRabbitMQ.Message.MessageProducer;
 import com.javaweb.utils.ChatSocketHandler;
 import org.modelmapper.ModelMapper;
@@ -28,6 +29,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -69,6 +71,9 @@ public class ConversationServiceImpl implements IConservationService {
 
     @Autowired
     private MessageProducer messageProducer;
+
+    @Autowired
+    private MessageFileProducer messageFileProducer;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -204,6 +209,7 @@ public class ConversationServiceImpl implements IConservationService {
             }
 
             ConversationEntity conversationEntity = new ConversationEntity();
+
             conversationEntity.setUser(currentUser);
             conversationEntity.setType(type);
             conversationEntity.setIsActive(true);
@@ -716,25 +722,6 @@ public class ConversationServiceImpl implements IConservationService {
         }
     }
 
-
-    private ResponseEntity<Object> createTempResponse(Long userId, Long conversationId, Map<String,Object> conversationData) {
-        Map<String, Object> responseData = new HashMap<>();
-        responseData.put("messageID", "temp_" + System.currentTimeMillis());
-        responseData.put("conversationID", conversationId);
-        responseData.put("senderID", userId);
-        responseData.put("content", conversationData.get("content"));
-        responseData.put("type", conversationData.get("type"));
-        responseData.put("createdAt", new Date().toString());
-        responseData.put("status", "sending");
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", "tin nhắn đang được xử lý");
-        response.put("data", responseData);
-
-        return ResponseEntity.ok(response);
-    }
-
     //gọi GET
     @Override
     public ResponseEntity<Object> getMessages(Long userId, Long conversationId) {
@@ -887,6 +874,7 @@ public class ConversationServiceImpl implements IConservationService {
 
     private Map<String, Object> convertMessageToMap(MessageEntity message) {
         Map<String, Object> messageData = new HashMap<>();
+
         messageData.put("messageID", message.getMessageID());
         messageData.put("conversationID", message.getConversation().getConversationID());
         messageData.put("senderID", message.getSender().getUserID());
@@ -1084,10 +1072,10 @@ public class ConversationServiceImpl implements IConservationService {
                 //  Cập nhật Redis cache
                 updateMessageInRedis(updatedMessage, conversationId, oldContent);
 
-                //  Broadcast socket event
+                //Broadcast socket event
                 broadcastUpdateEvent(updatedMessage, conversationId);
 
-                // Trả về response thành công
+                //Trả về response thành công
                 Map<String, Object> responseData = convertMessageToMap(updatedMessage);
 
                 Map<String, Object> response = new HashMap<>();
@@ -1224,4 +1212,13 @@ public class ConversationServiceImpl implements IConservationService {
         }
     }
 
+    @Override
+    public ResponseEntity<Object> sendMessageToConversationByFile(Long userId, Long conversationId, MultipartFile file) {
+        try {
+            messageFileProducer.sendUploadTask(userId, conversationId, file);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Tin nhắn đang được xủ lý"));
+        } catch (Exception e) {
+            throw new RuntimeException("can not create file");
+        }
+    }
 }

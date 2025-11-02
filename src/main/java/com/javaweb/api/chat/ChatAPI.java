@@ -135,11 +135,15 @@ public class ChatAPI {
     }
 
     @PostMapping("/conversations/{conversationId}/files")
-    public ResponseEntity<Object> sendFileMessage(@PathVariable String conversationId, @RequestParam("file") MultipartFile file, @RequestParam(value = "caption", required = false) String caption) {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<Object> sendFileMessage(@PathVariable Long conversationId, @RequestParam("file") MultipartFile file, @RequestParam(value = "caption", required = false) String caption) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
+
+        Long userId = myUserDetail.getId();
+        return conservationService.sendMessageToConversationByFile(userId, conversationId, file);
     }
 
-    // 5. USERS
+    //USERS
     @GetMapping("/users/search")
     public ResponseEntity<Object> searchUsers(@RequestParam String query) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

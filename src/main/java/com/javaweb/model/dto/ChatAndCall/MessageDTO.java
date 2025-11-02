@@ -1,6 +1,7 @@
 package com.javaweb.model.dto.ChatAndCall;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class MessageDTO {
     private Long messageID;
@@ -13,12 +14,25 @@ public class MessageDTO {
     private String content;
     private String mediaUrl;
     private String mediaType;
+
+    private Map<String, Object> fileInfo;
+
     private Long replyToMessageID;
     private Boolean isEdited;
     private Boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // Getters and Setters...
+    public Map<String, Object> getFileInfo() {
+        return fileInfo;
+    }
+
+    public void setFileInfo(Map<String, Object> fileInfo) {
+        this.fileInfo = fileInfo;
+    }
+
+    // Các getters/setters khác giữ nguyên...
     public String getSenderAvatar() {
         return senderAvatar;
     }

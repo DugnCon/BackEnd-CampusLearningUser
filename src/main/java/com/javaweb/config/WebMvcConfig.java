@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations(
                         // Nếu chạy local Windows
-                        "file:C:/Esclipe_Web/campuslearning/uploads/",  
+                        "file:C:/Esclipe_Web/campuslearning-addmin/uploads/",
                         // Nếu chạy trong Docker container (ví dụ mount /app/uploads)
                         "file:/app/uploads/"
                 );
