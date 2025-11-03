@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-be
+  labels:
+    app: spring-be
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-be
+  template:
+    metadata:
+      labels:
+        app: spring-be
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      containers:
+        - name: spring-be
+          image: damdung/campuslearning-spring-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/campuslearning"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "dungcon2005"
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "health,info,prometheus,metrics"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-be
+spec:
+  selector:
+    app: spring-be
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

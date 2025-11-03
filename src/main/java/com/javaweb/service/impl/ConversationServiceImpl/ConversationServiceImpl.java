@@ -45,7 +45,6 @@ import java.util.stream.Stream;
 @Service
 public class ConversationServiceImpl implements IConservationService {
 
-    // ============ DEPENDENCIES ============
     @Autowired
     private IUserRepository userRepository;
 
@@ -274,7 +273,8 @@ public class ConversationServiceImpl implements IConservationService {
                     "success", true,
                     "data", responseDTO,
                     "existing", false,
-                    "type", type
+                    "type", type,
+                    "message", "Tạo thành công cuộc họp"
             ));
 
         } catch (Exception e) {

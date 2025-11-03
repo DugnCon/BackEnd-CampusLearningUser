@@ -1,6 +1,8 @@
 Manifest-Version: 1.0
 Build-Jdk-Spec: 22
 Implementation-Title: campuslearning
-Implementation-Version: 2.5.14
+Implementation-Version: 1.0.0
+Build-Jdk: 17
 Created-By: Maven Integration for Eclipse
+Encoding: UTF-8
 

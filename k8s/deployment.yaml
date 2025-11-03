@@ -13,13 +13,64 @@ spec:
     metadata:
       labels:
         app: spring-be
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
         - name: spring-be
-          image: campuslearning-spring-app:latest
-          imagePullPolicy: IfNotPresent
+          image: damdung/campuslearning-spring-app:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/campuslearning"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "dungcon2005"
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
+            # Thêm cấu hình Spring Actuator
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "health,info,prometheus,metrics"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            # THÊM RABBITMQ CONFIG - kết nối đến container existing
+            - name: SPRING_RABBITMQ_HOST
+              value: "host.docker.internal"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "guest"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "guest"
+            # THÊM REDIS CONFIG - kết nối đến Redis containers existing
+            - name: SPRING_REDIS_HOST
+              value: "host.docker.internal"
+            - name: SPRING_REDIS_PORT
+              value: "6381"
+            - name: SPRING_REDIS_CONVERSATION_HOST
+              value: "host.docker.internal"
+            - name: SPRING_REDIS_CONVERSATION_PORT
+              value: "6381"
+            - name: SPRING_REDIS_MESSAGE_HOST
+              value: "host.docker.internal"
+            - name: SPRING_REDIS_MESSAGE_PORT
+              value: "6382"
+            - name: SPRING_REDIS_COMMENT_HOST
+              value: "host.docker.internal"
+            - name: SPRING_REDIS_COMMENT_PORT
+              value: "6380"
+            # Tắt health check Redis tạm thời
+            - name: MANAGEMENT_HEALTH_REDIS_ENABLED
+              value: "false"
+            - name: MANAGEMENT_HEALTH_DB_ENABLED
+              value: "false"
+            - name: MANAGEMENT_HEALTH_RABBIT_ENABLED
+              value: "false"
           resources:
             requests:
               cpu: "200m"

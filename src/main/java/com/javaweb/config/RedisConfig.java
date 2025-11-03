@@ -136,4 +136,38 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
+
+    /**
+     * Cho story
+     * */
+    @Value("${redis.story.host}")
+    private String storyHost;
+
+    @Value("${redis.story.port}")
+    private int storyPort;
+
+    @Value("${redis.story.password:}")
+    private String storyPassword;
+
+    @Bean(name = "storyRedisConnectionFactory")
+    public LettuceConnectionFactory storyRedisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(storyHost, storyPort);
+        if (storyPassword != null && !storyPassword.isEmpty()) {
+            config.setPassword(storyPassword);
+        }
+        return new LettuceConnectionFactory(config);
+    }
+
+    @Bean(name = "storyRedisTemplate")
+    public RedisTemplate<String, Object> storyRedisTemplate(
+            @Qualifier("storyRedisConnectionFactory") LettuceConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
+        template.afterPropertiesSet();
+        return template;
+    }
 }

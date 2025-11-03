@@ -1,5 +1,6 @@
 com\javaweb\entity\Event\EventEntity.class
 com\javaweb\model\dto\PayPalPaymentDTO.class
+com\javaweb\service\SolvingByRabbitMQ\Story\StoryConsumer.class
 com\javaweb\service\SolvingByRabbitMQ\Comment\CommentConsumer.class
 com\javaweb\entity\ChatAndCall\MessageEntity.class
 com\javaweb\model\dto\PasskeyCredentialDTO\CredentialResponse.class
@@ -21,12 +22,14 @@ com\javaweb\entity\Post\PostLikeEntity.class
 com\javaweb\api\course\CourseAPI.class
 com\javaweb\repository\IConversationRepository.class
 com\javaweb\repository\IPostLikeRepository.class
+com\javaweb\service\IStoryService.class
 com\javaweb\model\dto\PasskeyCredentialDTO\CredentialVerifyRequest.class
 com\javaweb\entity\Event\EventTechnologiesEntity.class
 com\javaweb\scheduler\LikeSyncScheduler.class
 com\javaweb\repository\IPostRepository.class
 com\javaweb\service\impl\PostService\CommentServiceImpl.class
 com\javaweb\service\impl\CallService\CallServiceImpl.class
+com\javaweb\service\SolvingByRabbitMQ\Story\StoryProducer.class
 com\javaweb\utils\MapUtils.class
 com\javaweb\service\impl\CompetitionService\CompetitionServiceImpl.class
 com\javaweb\service\PayPalService.class
@@ -40,6 +43,7 @@ com\javaweb\service\SolvingByRabbitMQ\Media\MediaProducer.class
 com\javaweb\entity\Post\TagsEntity.class
 com\javaweb\service\GoogleAuthService.class
 com\javaweb\repository\impl\UserRepositoryCustom\UserRepositoryCustom.class
+com\javaweb\entity\Story\StoryEntity.class
 com\javaweb\repository\ICodingExerciseRepository.class
 com\javaweb\model\dto\MyUserDetail.class
 com\javaweb\repository\ICommentRepository.class
@@ -62,7 +66,9 @@ com\javaweb\repository\IEventParticipantsRepository.class
 com\javaweb\repository\IMessageRepository.class
 com\javaweb\config\RedisConfig.class
 com\javaweb\api\notification\NotificationAPI.class
+com\javaweb\api\story\StoryAPI.class
 com\javaweb\SpringBootWebApplication.class
+com\javaweb\api\story\StoryAPI$ReplyRequest.class
 com\javaweb\converter\TestCaseConverter$1.class
 com\javaweb\entity\Competition\CompetitionSubmissionEntity.class
 com\javaweb\utils\NullAwareBeanUtils.class
@@ -77,6 +83,7 @@ com\javaweb\repository\IEventRepository.class
 com\javaweb\model\dto\PaymentTransactionDTO.class
 com\javaweb\utils\ChatSocketHandler.class
 com\javaweb\entity\ChatAndCall\ConversationParticipantEntity.class
+com\javaweb\model\dto\StoryDTO.class
 com\javaweb\repository\IPaymentRepository.class
 com\javaweb\entity\Post\CommentLikeEntity.class
 com\javaweb\repository\ICourseRepository.class
@@ -120,6 +127,7 @@ com\javaweb\converter\TestCaseConverter.class
 com\javaweb\service\CodeServerService$CodeServerInstance.class
 com\javaweb\entity\Competition\CompetitionEntity.class
 com\javaweb\service\ICommentService.class
+com\javaweb\repository\IStoryRepository.class
 com\javaweb\model\dto\UserSuggestions\UserSuggestionDTO.class
 com\javaweb\config\WebMvcConfig.class
 com\javaweb\config\AsyncConfig.class
@@ -143,6 +151,7 @@ com\javaweb\service\SolvingByRabbitMQ\Message\MessageFileProducer.class
 com\javaweb\model\dto\CompetitionRegistrationDTO.class
 com\javaweb\service\ICodingExerciseService.class
 com\javaweb\service\JwtService.class
+com\javaweb\service\impl\StoryService\StoryServiceImpl.class
 com\javaweb\entity\Post\PostEntity.class
 com\javaweb\repository\IUserRepository.class
 com\javaweb\model\dto\PostCommentDTO.class

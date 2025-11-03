@@ -125,6 +125,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/uploads/**", "/ws/**").permitAll()
                 .antMatchers("/api/events").permitAll()
                 .antMatchers("/api/competitions").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 
                 //Các api test dữ liệu trước khi đưa vào authenticated()
                 .antMatchers("/api/courses/enrolled").authenticated()
@@ -137,6 +138,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/payment-history", "/api/users/search", "/api/chat/users/search", "/api/chat/conversations").authenticated()
                 .antMatchers("/api/friendships/suggestions/random" , "/api/friendships", "/api/friendships/**").authenticated()
                 .antMatchers("/api/chat/conversations/*/messages", "/api/chat/messages/*", "/api/chat/conversations/*/files").authenticated()
+                .antMatchers("/api/stories/**").authenticated()
                 .antMatchers("/api/competitions/*", "/api/competitions/*/register", "/api/competitions/*/start", "/api/competitions/*/problems/*", "/api/competitions/submissions/*", "/api/competitions/*/scoreboard").authenticated()
                 
                 //Authenticated

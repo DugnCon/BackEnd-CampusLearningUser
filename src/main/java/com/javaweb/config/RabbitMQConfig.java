@@ -10,6 +10,7 @@ public class RabbitMQConfig {
     public static final String COMMENT_UPLOAD_QUEUE = "comment_upload_queue";
     public static final String MESSAGE_UPLOAD_QUEUE = "message_upload_queue";
     public static final String FILE_UPLOAD_QUEUE = "file_upload_queue";
+    public static final String STORY_UPLOAD_QUEUE = "story_upload_queue";
 
     @Bean
     public Queue mediaUploadQueue() {
@@ -21,4 +22,6 @@ public class RabbitMQConfig {
     public Queue messageUploadQueue() {return new Queue(MESSAGE_UPLOAD_QUEUE, false);}
     @Bean
     public Queue fileUploadQueue() {return new Queue(FILE_UPLOAD_QUEUE, false);}
+    @Bean
+    public Queue storyUploadQueue() {return new Queue(STORY_UPLOAD_QUEUE, false);}
 }
