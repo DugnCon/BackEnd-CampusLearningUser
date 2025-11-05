@@ -1,12 +1,8 @@
 package com.javaweb.service;
 
-import com.javaweb.entity.Post.CommentEntity;
-import com.javaweb.model.dto.PostCommentDTO;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 
 @Service

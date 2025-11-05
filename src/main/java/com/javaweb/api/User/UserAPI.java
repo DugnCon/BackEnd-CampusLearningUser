@@ -3,6 +3,7 @@ package com.javaweb.api.User;
 import java.util.Map;
 
 import com.javaweb.entity.UserEntity;
+import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.GoogleAuthService;
 import org.apache.catalina.User;
@@ -46,21 +47,7 @@ public class UserAPI {
 		Long userId = myUserDetail.getId();
 		return userService.userLogout(userId);
 	}
-	
-	@GetMapping("/api/auth/me")
-	public ResponseEntity<Object> getMe() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
-		Long userId = myUserDetail.getId();
-
-		UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("not found"));
-
-		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-
-		return ResponseEntity.ok(Map.of("success", true, "data", userDTO));
-	}
-	
 	//user signup
 	@PostMapping("/api/auth/register")
 	public ResponseEntity<Object> userRegister(@RequestBody UserDTO userDTO) {

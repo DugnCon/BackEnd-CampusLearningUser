@@ -1,5 +1,7 @@
 package com.javaweb.service.impl.UserService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +77,7 @@ public class UserServiceImpl implements IUserService{
 		String email = userDTO.getEmail();
 		String password = userDTO.getPassword();
 		if(!email.contains("@")) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản không đúng định dạng. Vui lòng nhâpj lại"));
 		}
 		try {
 			UserEntity user = userRepository.userLogin(email);
@@ -96,7 +98,7 @@ public class UserServiceImpl implements IUserService{
 				));
 				
 			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(HttpStatus.BAD_REQUEST.value());
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Sai tài khoản hoặc mật khẩu. Vui lòng nhập lại"));
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e + " can not found user");
@@ -136,6 +138,7 @@ public class UserServiceImpl implements IUserService{
 		try {
 			//user.setAccountStatus("OUT");
 			user.setStatus("OFFLINE");
+			user.setLastLoginAt(LocalDateTime.now());
 			userRepository.save(user);
 			return ResponseEntity.ok(Map.of("success", true, "message", "logout"));
 		} catch (Exception e) {

@@ -1,7 +1,7 @@
 package com.javaweb.service.impl.PostService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javaweb.model.dto.PostCommentDTO;
+import com.javaweb.model.dto.Post.PostCommentDTO;
 import com.javaweb.repository.ICommentRepository;
 import com.javaweb.service.SolvingByRabbitMQ.Comment.CommentProducer;
 import com.javaweb.service.ICommentService;

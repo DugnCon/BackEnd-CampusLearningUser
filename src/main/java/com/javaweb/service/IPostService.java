@@ -1,9 +1,8 @@
 package com.javaweb.service;
 
-import com.javaweb.model.dto.PostDTO;
+import com.javaweb.model.dto.Post.PostDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

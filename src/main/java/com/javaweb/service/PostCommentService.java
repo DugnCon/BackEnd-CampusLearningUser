@@ -2,7 +2,7 @@ package com.javaweb.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaweb.entity.Post.CommentEntity;
-import com.javaweb.model.dto.PostCommentDTO;
+import com.javaweb.model.dto.Post.PostCommentDTO;
 import com.javaweb.repository.ICommentRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

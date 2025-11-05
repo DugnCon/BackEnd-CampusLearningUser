@@ -1,4 +1,4 @@
-package com.javaweb.model.dto.PasskeyCredentialDTO;
+package com.javaweb.model.dto.PasskeyCredential;
 
 public class CredentialVerifyRequest {
     private String email;

@@ -1,4 +1,4 @@
-package com.javaweb.model.dto;
+package com.javaweb.model.dto.Post;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,10 +14,27 @@ public class PostCommentDTO {
     private Long userID;
     private Long postID;
     private String fullName;
+    private String userImage;
     private String content;
     private LocalDateTime createdAt;
     private Integer likesCount;
     private boolean isLiked;
+
+    public String getUserImage() {
+		return userImage;
+	}
+
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
+	}
+
+	public Long getPostID() {
+        return postID;
+    }
+
+    public void setPostID(Long postID) {
+        this.postID = postID;
+    }
 
     public boolean isLiked() {
         return isLiked;

@@ -4,6 +4,9 @@ public class UserDTO {
 	private Long userID;
     private String username;
     private String email;
+    private String avatar;
+    private String image;
+    private String status;
     private String password;
     private String fullName;
     private String dateOfBirth;
@@ -20,6 +23,30 @@ public class UserDTO {
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.school = school;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getAccountStatus() {

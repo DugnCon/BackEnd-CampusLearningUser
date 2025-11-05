@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -25,7 +26,7 @@ public class PostEntity {
 
     @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
-    private Set<PostMediaEntity> media = new TreeSet<>();
+    private Set<PostMediaEntity> media = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID")
@@ -47,7 +48,9 @@ public class PostEntity {
             joinColumns = @JoinColumn(name = "PostID"),
             inverseJoinColumns = @JoinColumn(name = "TagID")
     )
-    private Set<TagsEntity> tags = new TreeSet<>();
+    private Set<TagsEntity> tags = new HashSet<>();
+
+
 
     @JsonManagedReference
     public Set<PostMediaEntity> getMedia() {
@@ -88,11 +91,11 @@ public class PostEntity {
 
     @Column(name = "CreatedAt")
     @CreationTimestamp
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "UpdatedAt")
     @UpdateTimestamp
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DeletedAt")
@@ -128,6 +131,17 @@ public class PostEntity {
 
     @Transient
     private String fullName;
+
+    @Transient
+    private String userImage;
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
 
     public boolean getLiked() {
         return isLiked;
@@ -217,20 +231,24 @@ public class PostEntity {
         this.location = location;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public boolean isLiked() {
+        return isLiked;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Date getDeletedAt() {

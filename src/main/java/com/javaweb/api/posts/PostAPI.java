@@ -2,13 +2,14 @@ package com.javaweb.api.posts;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.javaweb.model.dto.MyUserDetail;
-import com.javaweb.model.dto.PostDTO;
+import com.javaweb.model.dto.Post.PostDTO;
 import com.javaweb.service.ICommentService;
 import com.javaweb.service.IPostService;
 import com.javaweb.service.PostCommentService;
 import com.javaweb.service.PostLikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -60,13 +61,13 @@ public class PostAPI {
     }
 
     // Lấy danh sách bài đăng của 1 người dùng
-    @GetMapping("/user/{userId}")
+    /*@GetMapping("/user/{userId}")
     public ResponseEntity<Object> getUserPosts(
             @PathVariable Long userId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok().body("List of user posts");
-    }
+    }*/
 
     /**
      * Xử lý bài đăng của bài post
@@ -104,6 +105,7 @@ public class PostAPI {
      * Xử lý thêm bình luận cho các bài đăng CommentEntity
      * **/
     // Thêm bình luận cho bài đăng
+    @MessageMapping("/comment/create")
     @PostMapping("/{postId}/comments")
     public ResponseEntity<Object> addComment(
             @PathVariable Long postId,

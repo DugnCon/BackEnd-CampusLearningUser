@@ -61,7 +61,7 @@ public class FriendshipServiceImpl implements IFriendshipService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> acceptFriend(Long friendId, Long userId) {
         //FriendshipEntity friendshipEntity = friendshipRepository.findById(friendId).orElseThrow(() -> new RuntimeException("not found friendship"));
-        FriendshipEntity friendshipEntity = friendshipRepository.getSingleFriendship(friendId, userId);
+        FriendshipEntity friendshipEntity = friendshipRepository.AcceptOrRejectFriend(userId, friendId);
         friendshipEntity.setStatus("accepted");
         friendshipRepository.save(friendshipEntity);
         return ResponseEntity.ok(Map.of("success", true));
@@ -71,8 +71,8 @@ public class FriendshipServiceImpl implements IFriendshipService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> rejectFriend(Long friendId , Long userId) {
         //FriendshipEntity friendshipEntity = friendshipRepository.findById(friendId).orElseThrow(() -> new RuntimeException("not found friendship"));
-        FriendshipEntity friendshipEntity = friendshipRepository.getSingleFriendship(friendId, userId);;
-        friendshipEntity.setStatus("pending");
+        FriendshipEntity friendshipEntity = friendshipRepository.AcceptOrRejectFriend(userId, friendId);;
+        friendshipEntity.setStatus("rejected");
         friendshipRepository.save(friendshipEntity);
         return ResponseEntity.ok(Map.of("success", true));
     }
@@ -80,7 +80,7 @@ public class FriendshipServiceImpl implements IFriendshipService {
     @Async
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> deleteFrienḍ(Long friendId, Long userId) {
-        FriendshipEntity friendshipEntity = friendshipRepository.getSingleFriendship(userId, friendId);;
+        FriendshipEntity friendshipEntity = friendshipRepository.DeleteFriend(userId, friendId);;
         friendshipRepository.deleteById(friendshipEntity.getFriendshipID());
         return ResponseEntity.ok(Map.of("success", true));
     }

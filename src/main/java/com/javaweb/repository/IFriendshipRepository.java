@@ -14,16 +14,30 @@ public interface IFriendshipRepository extends JpaRepository<FriendshipEntity, L
     FriendshipEntity getFriendshipStatus(@Param("userId") Long userId, @Param("friendId") Long friendId);
     @Query("select fs from FriendshipEntity fs join fetch fs.user join fetch fs.friend where fs.user.UserID = :userId and fs.friend.UserID = :friendId")
     FriendshipEntity getSingleFriendship(@Param("userId") Long userId, @Param("friendId") Long friendId);
+    //Accept hoặc từ chối
+    @Query("select fs from FriendshipEntity fs where fs.friend.UserID = :userId and fs.user.UserID = :friendId")
+    FriendshipEntity AcceptOrRejectFriend(@Param("userId") Long userId, @Param("friendId") Long friendId);
+    //Delete
+    @Query("""
+    select fs from FriendshipEntity fs
+    join fetch fs.user u
+    join fetch fs.friend f
+    where (
+        (u.UserID = :userId AND f.UserID = :friendId) or
+        (f.UserID = :userId AND u.UserID = :friendId)
+    )
+    """)
+    FriendshipEntity DeleteFriend(@Param("userId") Long userId, @Param("friendId") Long friendId);
     //Lấy danh sách bạn bè của chính user
     @Query("""
-    SELECT fs FROM FriendshipEntity fs
-    JOIN FETCH fs.user u
-    JOIN FETCH fs.friend f
-    WHERE (
-        (u.UserID = :userId AND f.UserID != :userId) OR
+    select fs from FriendshipEntity fs
+    join fetch fs.user u
+    join fetch fs.friend f
+    where (
+        (u.UserID = :userId AND f.UserID != :userId) or
         (f.UserID = :userId AND u.UserID != :userId)
     )
-    AND fs.status = :status
+    and fs.status = :status
     """)
     List<FriendshipEntity> getAllFriendshipAccepted(
             @Param("userId") Long userId,

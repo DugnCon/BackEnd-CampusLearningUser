@@ -1,5 +1,6 @@
 package com.javaweb.entity;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import javax.persistence.*;
@@ -69,6 +70,11 @@ public class UserEntity {
 	private boolean emailVerified;
 	@Column(name="Provider")
 	private String provider;
+	@Column(name = "CreatedAt")
+	private LocalDateTime createdAt;
+	@Column(name = "LastLoginAt")
+	private LocalDateTime lastLoginAt;
+
 
 	@OneToMany(mappedBy = "initiator", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
@@ -337,6 +343,22 @@ public class UserEntity {
 	}
 	public void setCalls(List<CallEntity> calls) {
 		this.calls = calls;
+	}
+
+	public LocalDateTime getLastLoginAt() {
+		return lastLoginAt;
+	}
+
+	public void setLastLoginAt(LocalDateTime lastLoginAt) {
+		this.lastLoginAt = lastLoginAt;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public Long getUserID() {
