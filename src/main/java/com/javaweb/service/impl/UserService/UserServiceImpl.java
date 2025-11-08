@@ -66,6 +66,7 @@ public class UserServiceImpl implements IUserService{
 			user.setFullName(userDTO.getFullName());
 			user.setDateOfBirth(userDTO.getDateOfBirth());
 			user.setSchool(userDTO.getSchool());
+			user.setRole("STUDENT");
 			userRepository.save(user);
 			return ResponseEntity.ok().body(Map.of("success","Signup Successfully!"));
 	    }
@@ -84,7 +85,6 @@ public class UserServiceImpl implements IUserService{
 			if(passwordEncoder.matches(password, user.getPassword())) {
 				
 				user.setStatus("ONLINE");
-				user.setRole("STUDENT");
 				userRepository.save(user);
 				
 				String token = jwtService.generateTokenWithClaims(Map.of(
