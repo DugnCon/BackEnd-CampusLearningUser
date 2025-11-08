@@ -84,6 +84,7 @@ public class UserServiceImpl implements IUserService{
 			if(passwordEncoder.matches(password, user.getPassword())) {
 				
 				user.setStatus("ONLINE");
+				user.setRole("STUDENT");
 				userRepository.save(user);
 				
 				String token = jwtService.generateTokenWithClaims(Map.of(
