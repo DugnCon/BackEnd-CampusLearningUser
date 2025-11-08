@@ -136,16 +136,15 @@ services:
       - ./uploads:/app/uploads
 
   # 🔹 Prometheus
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    volumes:
-      - ./k8s:/etc/prometheus
-    ports:
-      - "9090:9090"
-    networks:
-      - app-net
-    restart: always
+  #prometheus:
+   # image: prom/prometheus:latest
+    ##volumes:
+     # - ./k8s:/etc/prometheus
+    #ports:
+     # - "9090:9090"
+    #networks:
+     # - app-net
+    #restart: always
   
   # 🔹 Grafana
   grafana:
