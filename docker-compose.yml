@@ -139,8 +139,8 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
-    #volumes:
-      #- /home/nguyenducduong/campuslearning/k8s/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    volumes:
+      - /home/nguyenducduong/campuslearning/k8s:/etc/prometheus:ro
     ports:
       - "9090:9090"
     networks:
