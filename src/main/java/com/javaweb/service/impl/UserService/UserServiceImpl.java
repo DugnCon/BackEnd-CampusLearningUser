@@ -27,6 +27,7 @@ import com.javaweb.model.dto.UserDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IUserService;
 import com.javaweb.service.JwtService;
+import org.springframework.transaction.annotation.Isolation;
 
 @Service
 public class UserServiceImpl implements IUserService{
@@ -42,7 +43,7 @@ public class UserServiceImpl implements IUserService{
 	private ModelMapper modelMapper;
 
 	@Override
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public ResponseEntity<Object> userRegister(UserDTO userDTO) {
 		if (userDTO == null ||
 	        userDTO.getUsername() == null || userDTO.getUsername().trim().isEmpty() ||
@@ -65,6 +66,7 @@ public class UserServiceImpl implements IUserService{
 			user.setFullName(userDTO.getFullName());
 			user.setDateOfBirth(userDTO.getDateOfBirth());
 			user.setSchool(userDTO.getSchool());
+			userRepository.save(user);
 			return ResponseEntity.ok().body(Map.of("success","Signup Successfully!"));
 	    }
 	}
