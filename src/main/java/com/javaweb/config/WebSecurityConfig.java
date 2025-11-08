@@ -126,6 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/events").permitAll()
                 .antMatchers("/api/competitions").permitAll()
                 .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/api/gemini").permitAll()
                 
                 //Các api test dữ liệu trước khi đưa vào authenticated()
                 .antMatchers("/api/courses/enrolled").authenticated()
@@ -152,7 +153,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "TEACHER")
                 .anyRequest().authenticated()
             .and()
-                /*.oauth2Login()
+                .oauth2Login()
                 .loginPage("/api/auth/google") // FE trigger login
                 //.loginPage("/api/auth/login/test")
                 .authorizationEndpoint()
@@ -174,7 +175,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler((request, response, exception) -> {
                     response.sendRedirect("http://localhost:5004/login?error");
                 })
-            .and()*/
+            .and()
             //.logout() => cái này là logout của spring nếu làm thuần java
               //  .logoutUrl("/api/auth/logout")
                 //.logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout", "POST"))

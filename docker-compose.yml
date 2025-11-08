@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+  # 🔹 MySQL
   mysql:
     image: mysql:8.0
     container_name: mysql_container
@@ -14,40 +15,146 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - app-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # 🔹 RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_container
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - app-net
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 🔹 Redis chính
+  redis:
+    image: redis:7-alpine
+    container_name: redis_container
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - app-net
+
+  redis-comment:
+    image: redis:7-alpine
+    container_name: redis_comment_container
+    restart: always
+    ports:
+      - "6380:6379"
+    networks:
+      - app-net
+
+  redis-conversation:
+    image: redis:7-alpine
+    container_name: redis_conversation_container
+    restart: always
+    ports:
+      - "6381:6379"
+    networks:
+      - app-net
+
+  redis-message:
+    image: redis:7-alpine
+    container_name: redis_message_container
+    restart: always
+    ports:
+      - "6382:6379"
+    networks:
+      - app-net
+
+  redis-story:
+    image: redis:7-alpine
+    container_name: redis_story_container
+    restart: always
+    ports:
+      - "6383:6379"
+    networks:
+      - app-net
+
+  # 🔹 Spring Boot
   spring-app:
-    build: .
+    image: damdung/campuslearning-spring-app:latest
     container_name: spring_container_2
     restart: always
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      redis-comment:
+        condition: service_started
+      redis-conversation:
+        condition: service_started
+      redis-message:
+        condition: service_started
+      redis-story:
+        condition: service_started
     ports:
       - "8080:8080"
     environment:
+      # 🔹 MySQL
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/campuslearning
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: dungcon2005
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_SHOW_SQL: "false"
+
+      # 🔹 RabbitMQ
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+      # 🔹 Redis
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_COMMENT_HOST: redis-comment
+      SPRING_REDIS_COMMENT_PORT: 6380
+      SPRING_REDIS_CONVERSATION_HOST: redis-conversation
+      SPRING_REDIS_CONVERSATION_PORT: 6381
+      SPRING_REDIS_MESSAGE_HOST: redis-message
+      SPRING_REDIS_MESSAGE_PORT: 6382
+      SPRING_REDIS_STORY_HOST: redis-story
+      SPRING_REDIS_STORY_PORT: 6383
+
     networks:
       - app-net
     volumes:
-      - C:\Esclipe_Web\campuslearning\src:/app/src
-      - C:\Esclipe_Web\campuslearning\pom.xml:/app/pom.xml
-      - ~/.m2:/root/.m2
+      - ./repo:/app
       - ./uploads:/app/uploads
+    working_dir: /app
+    command: bash -c "mvn clean package -DskipTests && java -jar target/campuslearning-*.war"
 
+  # 🔹 Prometheus
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - /c/Esclipe_Web/campuslearning/k8s:/etc/prometheus
+      - ~/campuslearning/k8s/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     networks:
       - app-net
     restart: always
 
+  # 🔹 Grafana
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -62,8 +169,10 @@ services:
       - app-net
     restart: always
 
+# 🔹 Networks
 networks:
   app-net:
 
+# 🔹 Volumes
 volumes:
   mysql_data:
