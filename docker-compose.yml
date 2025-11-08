@@ -40,7 +40,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # 🔹 Redis chính
+  # 🔹 Redis
   redis:
     image: redis:7-alpine
     container_name: redis_container
@@ -86,9 +86,11 @@ services:
     networks:
       - app-net
 
-  # 🔹 Spring Boot
+  # 🔹 Spring Boot (build từ source code clone về)
   spring-app:
-    image: damdung/campuslearning-spring-app:latest
+    build:
+      context: ./BackEnd-CampusLearningUser
+      dockerfile: Dockerfile
     container_name: spring_container_2
     restart: always
     depends_on:
@@ -109,20 +111,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # 🔹 MySQL
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/campuslearning
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: dungcon2005
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "false"
-
-      # 🔹 RabbitMQ
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
-
-      # 🔹 Redis
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
       SPRING_REDIS_COMMENT_HOST: redis-comment
@@ -133,14 +130,10 @@ services:
       SPRING_REDIS_MESSAGE_PORT: 6382
       SPRING_REDIS_STORY_HOST: redis-story
       SPRING_REDIS_STORY_PORT: 6383
-
     networks:
       - app-net
     volumes:
-      - ./repo:/app
       - ./uploads:/app/uploads
-    working_dir: /app
-    command: bash -c "mvn clean package -DskipTests && java -jar target/campuslearning-*.war"
 
   # 🔹 Prometheus
   prometheus:
