@@ -58,16 +58,14 @@ public class UserServiceImpl implements IUserService{
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	    } else {
 	    	String password = passwordEncoder.encode(userDTO.getPassword());
-	    	String alert = userRepository.userRegister(userDTO.getUsername(), userDTO.getEmail(), 
-					password, userDTO.getFullName(), 
-					userDTO.getDateOfBirth(), userDTO.getSchool());
-			if(alert.equals("success")) {
-				return ResponseEntity.ok().body(Map.of("success","Signup Successfully!"));
-			} else if(alert.equals("wrong")){
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("massage",HttpStatus.BAD_REQUEST.value()));
-			} else {
-				return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Map.of("message",HttpStatus.TOO_MANY_REQUESTS.value()));
-			}
+			UserEntity user = new UserEntity();
+			user.setUsername(userDTO.getUsername());
+			user.setEmail(userDTO.getEmail());
+			user.setPassword(password);
+			user.setFullName(userDTO.getFullName());
+			user.setDateOfBirth(userDTO.getDateOfBirth());
+			user.setSchool(userDTO.getSchool());
+			return ResponseEntity.ok().body(Map.of("success","Signup Successfully!"));
 	    }
 	}
 
