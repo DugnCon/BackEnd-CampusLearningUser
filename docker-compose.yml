@@ -140,14 +140,13 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - /home/nguyenducduong/campuslearning/k8s/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./k8s:/etc/prometheus
     ports:
       - "9090:9090"
     networks:
       - app-net
     restart: always
-
-
+  
   # 🔹 Grafana
   grafana:
     image: grafana/grafana:latest
