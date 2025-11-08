@@ -26,7 +26,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         endpoint
                 .withSockJS()
-                .setSupressCors(true)        // 🔥 QUAN TRỌNG: Bỏ qua CORS cho SockJS
+                .setSupressCors(true)        //Bỏ qua CORS cho SockJS
                 .setClientLibraryUrl("https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js")
                 .setSessionCookieNeeded(false)
                 .setWebSocketEnabled(true)
@@ -48,10 +48,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         registry.setUserDestinationPrefix("/user");
 
-        System.out.println("✅ Message broker configured with topics, queues and user destinations");
+        System.out.println("Message broker configured with topics, queues and user destinations");
     }
 
-    // 🔥 THÊM CẤU HÌNH TRANSPORT (OPTIONAL)
+    // THÊM CẤU HÌNH TRANSPORT (OPTIONAL)
     /*
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
