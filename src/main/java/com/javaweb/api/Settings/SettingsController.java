@@ -13,7 +13,7 @@ import java.security.Principal;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/settings") // Endpoint chung cho settings
+@RequestMapping("/api/settings") // Endpoint chung cho settings
 public class SettingsController {
 
     @Autowired

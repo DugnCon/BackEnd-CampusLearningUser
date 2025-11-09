@@ -29,8 +29,6 @@ public class UserProfile {
     @Column(name = "Education", columnDefinition = "TEXT")
     private String educationJson;
 
-    // ... các trường JSON khác (WorkExperienceJson, SkillsJson, InterestsJson, SocialLinksJson, AchievementsJson, NotificationPreferencesJson) ...
-
     @Column(name = "WorkExperience", columnDefinition = "TEXT")
     private String workExperienceJson;
 
@@ -66,14 +64,12 @@ public class UserProfile {
         this.timeZone = "Asia/Ho_Chi_Minh";
     }
 
-    // Helper chung để chuyển Object sang JSON String (không cần thay đổi)
     private String convertObjectToJsonString(Object object) throws JsonProcessingException {
         if (object == null || (object instanceof List && ((List) object).isEmpty()) || (object instanceof Map && ((Map) object).isEmpty()))
             return null;
         return objectMapper.writeValueAsString(object);
     }
 
-    // Helper chung để đọc JSON Array (cho Education, WorkExperience,...)
     private <T> List<T> getListFromJson(String json, TypeReference<List<T>> typeRef) throws IOException {
         if (json == null || json.isEmpty() || json.equals("null")) {
             return Collections.emptyList();
@@ -86,7 +82,6 @@ public class UserProfile {
         }
     }
 
-    // Helper chung để đọc JSON Map (cho SocialLinks, NotificationPreferences,...)
     private <K, V> Map<K, V> getMapFromJson(String json, TypeReference<Map<K, V>> typeRef) throws IOException {
         if (json == null || json.isEmpty() || json.equals("null")) {
             return Collections.emptyMap();
@@ -100,9 +95,6 @@ public class UserProfile {
         }
     }
 
-    // --- Getters/Setters Cụ thể cho JSON Fields (ĐÃ SỬA LỖI) ---
-
-    // 🔴 Lỗi xảy ra ở đây: SocialLinks (Map)
     public Map<String, String> getSocialLinksMap() throws IOException {
         return getMapFromJson(this.socialLinksJson, new TypeReference<Map<String, String>>() {});
     }
@@ -134,7 +126,6 @@ public class UserProfile {
         this.skillsJson = convertObjectToJsonString(skills);
     }
 
-    // ... (Các Getters/Setters JSON còn lại tương tự) ...
     public List<String> getInterestsList() throws IOException {
         return getListFromJson(this.interestsJson, new TypeReference<List<String>>() {});
     }
@@ -156,7 +147,6 @@ public class UserProfile {
         this.notificationPreferencesJson = convertObjectToJsonString(preferences);
     }
 
-    // --- Getters/Setters Cơ bản (giữ nguyên) ---
 
     // ... (Các Getters/Setters cho ProfileID, User, TimeZone, PreferredLanguage, UpdatedAt) ...
     public Long getProfileId() {

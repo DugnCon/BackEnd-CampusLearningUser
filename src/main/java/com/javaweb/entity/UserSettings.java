@@ -46,24 +46,20 @@ public class UserSettings {
     private LocalDateTime lastLoggedIn;
 
     @UpdateTimestamp
-    @Column(name = "LastUpdated", updatable = false) // <--- Đã BỎ insertable = false
+    @Column(name = "LastUpdated", updatable = false)
     private LocalDateTime lastUpdated;
 
-    // !! Khởi tạo Constructor để khớp với các giá trị DEFAULT của DB !!
     public UserSettings() {
         this.theme = "light";
-        this.notificationEmail = true; // DB default là 1 (TINYINT)
-        this.notificationPush = true;  // DB default là 1
-        this.notificationInApp = true; // DB default là 1
+        this.notificationEmail = true;
+        this.notificationPush = true;
+        this.notificationInApp = true;
         this.language = "vi-VN";
         this.timeZone = "Asia/Ho_Chi_Minh";
         this.profileVisibility = "public";
-        this.lastLoggedIn = null; // Cột YES NULL (không cần giá trị)
-        // LastUpdated sẽ được DB/Hibernate xử lý
+        this.lastLoggedIn = null;
     }
 
-    // Getters and Setters...
-    // (Giữ nguyên các getters/setters đã có)
     public Long getSettingID() {
         return settingID;
     }
