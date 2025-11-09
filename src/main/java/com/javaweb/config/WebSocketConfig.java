@@ -37,7 +37,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 🔥 SIMPLE BROKER - cho các topic/queue
+        // SIMPLE BROKER - cho các topic/queue
         registry.enableSimpleBroker(
                 "/topic",
                 "/queue",
