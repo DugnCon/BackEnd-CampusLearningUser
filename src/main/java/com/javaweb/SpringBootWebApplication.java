@@ -9,10 +9,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-<<<<<<< HEAD
-=======
 import org.springframework.scheduling.annotation.EnableAsync;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.time.Instant;
@@ -21,12 +18,9 @@ import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @EnableScheduling
-<<<<<<< HEAD
-=======
 @EnableAsync
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 public class SpringBootWebApplication extends SpringBootServletInitializer {
-//    private static final String dateFormat = "yyyy-MM-dd";
+    //    private static final String dateFormat = "yyyy-MM-dd";
 //    private static final String dateTimeFormat = "yyyy-MM-dd HH:mm:ss.SSS";
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

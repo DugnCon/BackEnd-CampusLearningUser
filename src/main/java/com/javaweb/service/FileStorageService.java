@@ -8,20 +8,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-<<<<<<< HEAD
-=======
 import java.util.Map;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
 @Service
 public class FileStorageService {
 
     // Đường dẫn tuyệt đối
-<<<<<<< HEAD
-    private final String uploadDir = "C:/Esclipe_Web/campuslearning/uploads";
-=======
     private final String uploadDir = "C:/Esclipe_Web/campuslearning-addmin/uploads";
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
     public String saveFile(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) return null;
@@ -39,12 +32,6 @@ public class FileStorageService {
         // Trả về URL tương đối để FE load
         return "/uploads/" + filename;
     }
-<<<<<<< HEAD
-}
-
-
-
-=======
 
     //Cái này để lấy file size
     public Long getFileSize(String filePath) throws IOException {
@@ -129,4 +116,3 @@ public class FileStorageService {
         }
     }
 }
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c

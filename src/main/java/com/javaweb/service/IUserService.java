@@ -13,11 +13,7 @@ public interface IUserService{
 	ResponseEntity<Object> userLogin(UserDTO userDTO);
 	ResponseEntity<Object> userLogout(Long userId);
 	ResponseEntity<Object> userConnectGoogle(Long userId);
-<<<<<<< HEAD
-	UserDTO findOneByUserName(UserDTO userDTO);
-=======
 	ResponseEntity<Object> findAllUser(Long userId);
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	UserEntity userVerifyByGoogle(String id,String email, String name, String picture, String username);
-	
+
 }
