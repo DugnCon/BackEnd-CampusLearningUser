@@ -109,7 +109,7 @@ services:
       redis-story:
         condition: service_started
     ports:
-      - "8080:8080"
+      - "8888:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/campuslearning
       SPRING_DATASOURCE_USERNAME: root
