@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
+import java.time.LocalDate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -261,5 +263,66 @@ public class UserEntity {
 	public void setCalls(List<CallEntity> calls) {
 		this.calls = calls;
 	}
-	
+	@Column(name = "Bio", length = 500)
+	private String bio;
+
+
+
+	@Column(name = "PhoneNumber", length = 15)
+	private String phoneNumber;
+
+	@Column(name = "Address", length = 255)
+	private String address;
+
+	@Column(name = "City", length = 100)
+	private String city;
+
+	@Column(name = "Country", length = 100)
+	private String country;
+
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+
+
+
+// ... và đảm bảo có Getters/Setters cho tất cả các trường trên.
 }

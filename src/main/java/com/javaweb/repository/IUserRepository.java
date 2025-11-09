@@ -1,7 +1,7 @@
 package com.javaweb.repository;
 
 import java.util.Map;
-
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -19,12 +19,15 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 	
 	/*@Procedure(name="UserEntity.userLogin")
 	Map<String,Object> userLogin(@Param("u_email") String email);*/
-	
+
 	UserDTO findByUsername(String username);
-	
+	Optional<UserEntity> findUserEntityByUsername(String username);
+	Optional<UserEntity> findUserEntityByEmail(String email);
+
 	@Query("select u from UserEntity u where Email = :email")
 	UserEntity userLogin(@Param("email") String email);
 	@Query("select u from UserEntity u join fetch u.courseEnrollment where u.UserID = :userId")
 	UserEntity getCourseEnrollment(@Param("userId") Long userId);
-	
+	@Query("select u from UserEntity u where u.UserID = :userId")
+	UserEntity getUserByUserID(@Param("userId") Long userId);
 }
