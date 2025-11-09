@@ -1,7 +1,7 @@
 package com.javaweb.model.dto;
 
 public class UserDTO {
-	private Long userID;
+    private Long userID;
     private String username;
     private String email;
     private String avatar;
@@ -16,7 +16,7 @@ public class UserDTO {
     public UserDTO() {}
 
     public UserDTO(Long userID, String username, String email, String password, String fullName, String dateOfBirth, String school) {
-    	this.userID = userID;
+        this.userID = userID;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -50,14 +50,14 @@ public class UserDTO {
     }
 
     public String getAccountStatus() {
-		return accountStatus;
-	}
+        return accountStatus;
+    }
 
-	public void setAccountStatus(String accountStatus) {
-		this.accountStatus = accountStatus;
-	}
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
 
-	public String getUsername() {
+    public String getUsername() {
         return username;
     }
     public void setUsername(String username) {
@@ -78,10 +78,10 @@ public class UserDTO {
         this.password = password;
     }
 
-    public String getFullName() { 
+    public String getFullName() {
         return fullName;
     }
-    public void setFullName(String fullName) {  
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 

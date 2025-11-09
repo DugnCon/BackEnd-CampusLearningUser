@@ -53,36 +53,36 @@ public class UserAPI {
 	public ResponseEntity<Object> userRegister(@RequestBody UserDTO userDTO) {
 		return userService.userRegister(userDTO);
 	}
-	
+
 	//user login
 	@PostMapping("/api/auth/login")
 	public ResponseEntity<Object> userLogin(@RequestBody UserDTO userDTO) {
 
 		return userService.userLogin(userDTO);
 	}
-	
+
 	//Làm mới jwt khi hết hạn
 	@PostMapping("/api/auth/refresh-token")
 	public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
-	    String refreshToken = request.get("refreshToken");
+		String refreshToken = request.get("refreshToken");
 
-	    if (jwtService.isTokenExpired(refreshToken)) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                             .body(Map.of("error", "Refresh token expired"));
-	    }
+		if (jwtService.isTokenExpired(refreshToken)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(Map.of("error", "Refresh token expired"));
+		}
 
-	    String email = jwtService.extractEmail(refreshToken);
+		String email = jwtService.extractEmail(refreshToken);
 
-	    // Gen access token mới
-	    String newAccessToken = jwtService.generateToken(email);
-	    String newRefreshToken = jwtService.generateRefreshToken(email); 
+		// Gen access token mới
+		String newAccessToken = jwtService.generateToken(email);
+		String newRefreshToken = jwtService.generateRefreshToken(email);
 
-	    return ResponseEntity.ok(Map.of(
-	        "token", newAccessToken,
-	        "refreshToken", newRefreshToken
-	    ));
+		return ResponseEntity.ok(Map.of(
+				"token", newAccessToken,
+				"refreshToken", newRefreshToken
+		));
 	}
-	
+
 	//Kiểm tra tàu khoản
 	@GetMapping("/api/auth/check")
 	public ResponseEntity<Object> checkUser() {
@@ -95,14 +95,14 @@ public class UserAPI {
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(HttpStatus.UNAUTHORIZED.value());
 	}
-	
+
 	//Check xem tài khoản dùng 2FA không
 	@PostMapping("/api/passkeys/check-registration")
 	public ResponseEntity<Object> checkRegisFromUser(@RequestBody Map<String,Object> passkey) {
 		String email = passkey.get("email").toString();
 		return ResponseEntity.ok(Map.of("hasPasskey",true));
 	}
-	
+
 	//Xác thưc tài khoản google
 	@PostMapping("/api/auth/google")
 	public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> payload) {
@@ -140,7 +140,7 @@ public class UserAPI {
 					.body(Map.of("success", false, "message", e.getMessage()));
 		}
 	}
-	
+
 	//Cái này spring cứ gọi, không biết ném nó đi kiểu gì
 	@GetMapping("/api/auth/google")
 	public ResponseEntity<?> loginWithGoogleGetData(@RequestParam Map<String, String> payload) {
@@ -185,25 +185,25 @@ public class UserAPI {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 			Long userId = myUserDetail.getId();
-			
+
 			return userService.userConnectGoogle(userId);
 		} catch (Exception e) {
 			throw  new RuntimeException(e + " Can not login by google appearing some errors");
 		}
 	}
-	
+
 	//Tài khoản google khi disconnect
 	@DeleteMapping("/api/auth/oauth/disconnect/google")
 	public ResponseEntity<Object> disconnectOAuthProvider() {
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		try {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
-			
+
 			Long userId = myUserDetail.getId();
 			return userService.userLogout(userId);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@GetMapping("/api/auth/oauth/connections")

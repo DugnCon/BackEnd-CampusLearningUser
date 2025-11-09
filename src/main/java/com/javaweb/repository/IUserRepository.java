@@ -33,7 +33,7 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 
 	@Query("""
     select u from UserEntity u
-    left join FriendshipEntity f 
+    left join FriendshipEntity f
       on (f.user.UserID = :currentUserId and f.friend.UserID = u.UserID)
       or (f.friend.UserID = :currentUserId and f.user.UserID = u.UserID)
     where u.UserID != :currentUserId
