@@ -28,9 +28,22 @@ public class UserProfileServiceImpl implements UserProfileService {
     private UserProfileHelperService userProfileHelperService;
 
     // --- Helper để tìm User ---
+    // Trong file SettingsServiceImpl.java
+
+// ... (Các imports và khai báo khác)
+
     private UserEntity getUserByUsername(String identifier) {
-        return userRepository.findUserEntityByEmail(identifier)
-                .or(() -> userRepository.findUserEntityByUsername(identifier))
+        // 1. Thử tìm bằng Email (Nếu identifier có thể là email)
+        // Tên phương thức trong IUserRepository là findByEmail
+        return userRepository.findByEmail(identifier)
+
+                // 2. Nếu không tìm thấy bằng email, thử tìm bằng Username
+                .or(() -> {
+                    // Tên phương thức trong IUserRepository là findByUsernameExact
+                    return userRepository.findByUsernameExact(identifier);
+                })
+
+                // 3. Nếu vẫn không tìm thấy, ném ngoại lệ
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy User: " + identifier));
     }
 

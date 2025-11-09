@@ -367,4 +367,67 @@ public class UserEntity {
 	public void setUserID(Long userID) {
 		UserID = userID;
 	}
+
+
+
+
+
+	@Column(name = "Bio", columnDefinition = "TEXT") // Dùng TEXT cho Bio nếu có thể dài
+	private String bio;
+
+	@Column(name = "PhoneNumber")
+	private String phoneNumber;
+
+	@Column(name = "Address")
+	private String address;
+
+	@Column(name = "City")
+	private String city;
+
+	@Column(name = "Country")
+	private String country;
+
+
+	public String getBio() {
+		return bio;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
 }
+
+
+
+
