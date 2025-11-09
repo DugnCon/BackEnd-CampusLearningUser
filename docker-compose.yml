@@ -89,7 +89,7 @@ services:
   # 🔹 Spring Boot (build từ source code clone về)
   spring-app:
     build:
-      context: ./BackEnd-CampusLearningUser
+      context: .
       dockerfile: Dockerfile
     container_name: spring_container_2
     restart: always
