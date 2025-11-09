@@ -55,7 +55,6 @@ public class SettingsServiceImpl implements SettingsService {
 
         return settingsDTO;
     }
-
     @Override
     @Transactional(readOnly = true)
     public CombinedSettingsResponseDTO getUserSettingsAndProfile(String username) {
@@ -76,7 +75,7 @@ public class SettingsServiceImpl implements SettingsService {
     @Override
     @Transactional
     public UserSettingsDTO updateUserSettings(String username, UserSettingsDTO settingsDTO) {
-        UserEntity user = getUserByUsername(username); // Lấy user
+        UserEntity user = getUserByUsername(username);
 
         UserSettings settingsEntity = userSettingsRepository.findByUser(user)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Settings cho User: " + username));

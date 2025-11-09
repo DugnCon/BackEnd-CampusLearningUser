@@ -22,36 +22,20 @@ public class UserProfileServiceImpl implements UserProfileService {
     private IUserRepository userRepository;
     @Autowired
     private UserProfileRepository userProfileRepository;
-
-    // Helper Service
     @Autowired
     private UserProfileHelperService userProfileHelperService;
 
-    // --- Helper để tìm User ---
-    // Trong file SettingsServiceImpl.java
-
-// ... (Các imports và khai báo khác)
 
     private UserEntity getUserByUsername(String identifier) {
-        // 1. Thử tìm bằng Email (Nếu identifier có thể là email)
-        // Tên phương thức trong IUserRepository là findByEmail
         return userRepository.findByEmail(identifier)
-
-                // 2. Nếu không tìm thấy bằng email, thử tìm bằng Username
                 .or(() -> {
-                    // Tên phương thức trong IUserRepository là findByUsernameExact
                     return userRepository.findByUsernameExact(identifier);
                 })
-
-                // 3. Nếu vẫn không tìm thấy, ném ngoại lệ
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy User: " + identifier));
     }
-
-    // --- Helper Map Entity -> DTO ---
     private UserProfileDTO mapEntityToDTO(UserProfile profileEntity, UserEntity userEntity) {
         UserProfileDTO dto = new UserProfileDTO();
 
-        // I. Map từ UserEntity (Bảng users)
         dto.setFullName(userEntity.getFullName());
         dto.setEmail(userEntity.getEmail());
         dto.setUsername(userEntity.getUsername());
@@ -62,11 +46,6 @@ public class UserProfileServiceImpl implements UserProfileService {
         dto.setAddress(userEntity.getAddress());
         dto.setCity(userEntity.getCity());
         dto.setCountry(userEntity.getCountry());
-
-        // SỬA LỖI: Dùng Getter/Setter kiểu String trực tiếp từ Entity
-        dto.setDateOfBirth(userEntity.getDateOfBirth());
-
-        // II. Map từ UserProfile (Bảng userprofiles - Xử lý JSON)
         try {
             dto.setEducation(profileEntity.getEducationList());
             dto.setWorkExperience(profileEntity.getWorkExperienceList());
@@ -78,15 +57,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         } catch (IOException e) {
             System.err.println("Lỗi chuyển đổi JSON khi đọc UserProfile: " + e.getMessage());
         }
-
-        // III. Map các trường String từ UserProfile
         dto.setPreferredLanguage(profileEntity.getPreferredLanguage());
         dto.setTimeZone(profileEntity.getTimeZone());
 
         return dto;
     }
 
-    // --- TRIỂN KHAI GET PROFILE ---
     @Override
     @Transactional(readOnly = true)
     public UserProfileDTO getProfile(String username) {
@@ -95,26 +71,17 @@ public class UserProfileServiceImpl implements UserProfileService {
         return mapEntityToDTO(profileEntity, user);
     }
 
-    // --- TRIỂN KHAI UPDATE PROFILE ---
-    // File: service/impl/UserProfileServiceImpl.java
-
-    // File: service/impl/UserProfileServiceImpl.java
-
     @Override
     @Transactional
     public UserProfileDTO updateProfile(String username, UserProfileDTO profileDTO) {
         UserEntity user = getUserByUsername(username);
-        // Sử dụng findOrCreateProfile để đảm bảo profileEntity luôn tồn tại
+
         UserProfile profileEntity = userProfileHelperService.findOrCreateProfile(user);
 
-        // 1. Cập nhật UserEntity (Lưu vào bảng users)
-
-        // FIX: Chỉ cập nhật nếu giá trị từ DTO KHÔNG NULL VÀ KHÔNG RỖNG để bảo vệ NOT NULL fields
         if (profileDTO.getFullName() != null && !profileDTO.getFullName().trim().isEmpty()) {
             user.setFullName(profileDTO.getFullName());
         }
 
-        // Áp dụng kiểm tra null cho các trường khác
         if (profileDTO.getBio() != null) {
             user.setBio(profileDTO.getBio());
         }
@@ -122,7 +89,6 @@ public class UserProfileServiceImpl implements UserProfileService {
             user.setSchool(profileDTO.getSchool());
         }
 
-        // Các trường địa chỉ và liên hệ
         if (profileDTO.getPhoneNumber() != null) {
             user.setPhoneNumber(profileDTO.getPhoneNumber());
         }
@@ -136,16 +102,12 @@ public class UserProfileServiceImpl implements UserProfileService {
             user.setCountry(profileDTO.getCountry());
         }
 
-        // DateOfBirth - Chỉ cập nhật nếu có giá trị được gửi
         if (profileDTO.getDateOfBirth() != null) {
             user.setDateOfBirth(profileDTO.getDateOfBirth());
         }
 
-        userRepository.save(user); // LƯU TẤT CẢ THAY ĐỔI CỦA USERENTITY
+        userRepository.save(user);
 
-        // 2. Cập nhật UserProfile Entity (Lưu vào bảng userprofiles)
-
-        // Cập nhật các trường String (có thể NULL)
         if (profileDTO.getPreferredLanguage() != null) {
             profileEntity.setPreferredLanguage(profileDTO.getPreferredLanguage());
         }
@@ -153,13 +115,6 @@ public class UserProfileServiceImpl implements UserProfileService {
             profileEntity.setTimeZone(profileDTO.getTimeZone());
         }
 
-        // Cập nhật các trường String đặc biệt
-        
-
-
-        // Cập nhật các trường List/Map (JSON)
-        // Các trường này có thể được gán trực tiếp vì chúng được lưu dưới dạng JSON String
-        // và không có ràng buộc NOT NULL trong Entity
         try {
             profileEntity.setEducationList(profileDTO.getEducation());
             profileEntity.setWorkExperienceList(profileDTO.getWorkExperience());
@@ -169,13 +124,11 @@ public class UserProfileServiceImpl implements UserProfileService {
             profileEntity.setAchievementsList(profileDTO.getAchievements());
             profileEntity.setNotificationPreferencesMap(profileDTO.getNotificationPreferences());
         } catch (JsonProcessingException e) {
-            // Ném ngoại lệ Runtime khi lỗi JSON, rollback transaction
             throw new RuntimeException("Lỗi xử lý JSON khi GHI UserProfile", e);
         }
 
         UserProfile updatedProfile = userProfileRepository.save(profileEntity);
 
-        // 3. Trả về DTO đã cập nhật
         return mapEntityToDTO(updatedProfile, user);
     }
 }

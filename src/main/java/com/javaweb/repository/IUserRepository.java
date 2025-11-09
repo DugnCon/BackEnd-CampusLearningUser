@@ -18,7 +18,6 @@ import com.javaweb.model.dto.UserDTO;
 @Repository
 public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 
-	// ============ EXISTING METHODS (KEEP AS IS) ============
 	@Procedure(procedureName="user_register")
 	String userRegister(String username, String email, String password, String fullname, String dateOfBirth, String school);
 
@@ -45,8 +44,6 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 	List<UserEntity> findByFullName(String query);
 	List<UserEntity> findBySchool(String query);
 
-	// ============ NEW METHODS FOR CONVERSATION SERVICE ============
-
 	// Tìm users by list of IDs (cho get participants)
 	@Query("SELECT u FROM UserEntity u WHERE u.UserID IN :userIds AND u.accountStatus = 'ACTIVE'")
 	List<UserEntity> findByIdIn(@Param("userIds") List<Long> userIds);
@@ -63,27 +60,21 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 			"AND u.accountStatus = 'ACTIVE'")
 	List<UserEntity> searchUsers(@Param("query") String query);
 
-	// Tìm user by email (cho verification)
 	@Query("SELECT u FROM UserEntity u WHERE u.email = :email AND u.accountStatus = 'ACTIVE'")
 	Optional<UserEntity> findByEmail(@Param("email") String email);
 
-	// Kiểm tra username tồn tại
 	@Query("SELECT COUNT(u) > 0 FROM UserEntity u WHERE u.username = :username")
 	boolean existsByUsername(@Param("username") String username);
 
-	// Kiểm tra email tồn tại
 	@Query("SELECT COUNT(u) > 0 FROM UserEntity u WHERE u.email = :email")
 	boolean existsByEmail(@Param("email") String email);
 
-	// Lấy user by username exact match (cho search chính xác)
 	@Query("SELECT u FROM UserEntity u WHERE u.username = :username AND u.accountStatus = 'ACTIVE'")
 	Optional<UserEntity> findByUsernameExact(@Param("username") String username);
 
-	// Lấy user by ID với status active
 	@Query("SELECT u FROM UserEntity u WHERE u.UserID = :userId AND u.accountStatus = 'ACTIVE'")
 	Optional<UserEntity> findActiveUserById(@Param("userId") Long userId);
 
-	// Đếm tổng số active users
 	@Query("SELECT COUNT(u) FROM UserEntity u WHERE u.accountStatus = 'ACTIVE'")
 	Long countActiveUsers();
 }
