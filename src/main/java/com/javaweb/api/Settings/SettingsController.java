@@ -21,7 +21,6 @@ public class SettingsController {
 
     @GetMapping
     public ResponseEntity<CombinedSettingsResponseDTO> getSettings(Principal principal) {
-        // principal.getName() sẽ trả về username (đã xác thực)
         String username = principal.getName();
         CombinedSettingsResponseDTO data = settingsService.getUserSettingsAndProfile(username);
         return ResponseEntity.ok(data);

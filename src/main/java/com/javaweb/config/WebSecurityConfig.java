@@ -136,7 +136,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/events/*", "/api/events/*/register", "/api/events/*/registration-status", "/api/events/*/cancel-registration").authenticated()
                 .antMatchers("/api/posts", "/api/posts/**", "/api/posts/*/like", "/api/posts/*/comments", "/api/posts/comments/*", "/api/posts/*/comments/*").authenticated()
                 .antMatchers("/api/enrollments").authenticated()
-                .antMatchers("/api/settings/profile-picture").authenticated()
+                .antMatchers("/api/settings/profile-picture", "/api/settings/**").authenticated()
                 .antMatchers("/api/user/payment-history", "/api/users/search", "/api/chat/users/search", "/api/chat/conversations").authenticated()
                 .antMatchers("/api/friendships/suggestions/random" , "/api/friendships", "/api/friendships/**").authenticated()
                 .antMatchers("/api/chat/conversations/*/messages", "/api/chat/messages/*", "/api/chat/conversations/*/files").authenticated()
