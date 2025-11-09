@@ -67,6 +67,7 @@ public class UserServiceImpl implements IUserService{
 			user.setDateOfBirth(userDTO.getDateOfBirth());
 			user.setSchool(userDTO.getSchool());
 			user.setRole("STUDENT");
+			user.setAccountStatus("ACTIVE");
 			userRepository.save(user);
 			return ResponseEntity.ok().body(Map.of("success","Signup Successfully!"));
 		}
