@@ -1,11 +1,23 @@
 package com.javaweb.service.impl.UserService;
 
+<<<<<<< HEAD
 import java.util.HashMap;
+=======
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import java.util.Map;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+<<<<<<< HEAD
+=======
+import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
+import org.modelmapper.ModelMapper;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +34,10 @@ import com.javaweb.model.dto.UserDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IUserService;
 import com.javaweb.service.JwtService;
+<<<<<<< HEAD
+=======
+import org.springframework.transaction.annotation.Isolation;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
 @Service
 public class UserServiceImpl implements IUserService{
@@ -33,9 +49,17 @@ public class UserServiceImpl implements IUserService{
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private JwtService jwtService;
+<<<<<<< HEAD
 
 	@Override
 	@Transactional
+=======
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	public ResponseEntity<Object> userRegister(UserDTO userDTO) {
 		if (userDTO == null ||
 	        userDTO.getUsername() == null || userDTO.getUsername().trim().isEmpty() ||
@@ -51,6 +75,7 @@ public class UserServiceImpl implements IUserService{
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	    } else {
 	    	String password = passwordEncoder.encode(userDTO.getPassword());
+<<<<<<< HEAD
 	    	String alert = userRepository.userRegister(userDTO.getUsername(), userDTO.getEmail(), 
 					password, userDTO.getFullName(), 
 					userDTO.getDateOfBirth(), userDTO.getSchool());
@@ -61,22 +86,41 @@ public class UserServiceImpl implements IUserService{
 			} else {
 				return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Map.of("message",HttpStatus.TOO_MANY_REQUESTS.value()));
 			}
+=======
+			UserEntity user = new UserEntity();
+			user.setUsername(userDTO.getUsername());
+			user.setEmail(userDTO.getEmail());
+			user.setPassword(password);
+			user.setFullName(userDTO.getFullName());
+			user.setDateOfBirth(userDTO.getDateOfBirth());
+			user.setSchool(userDTO.getSchool());
+			user.setRole("STUDENT");
+			userRepository.save(user);
+			return ResponseEntity.ok().body(Map.of("success","Signup Successfully!"));
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	    }
 	}
 
 	@Override
 	@Transactional
+<<<<<<< HEAD
 	public UserDTO findOneByUserName(UserDTO userDTO) {
 		return userRepository.findByUsername(userDTO.getUsername());
 	}
 
 	@Override
 	@Transactional
+=======
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	public ResponseEntity<Object> userLogin(UserDTO userDTO) {
 		String email = userDTO.getEmail();
 		String password = userDTO.getPassword();
 		if(!email.contains("@")) {
+<<<<<<< HEAD
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(HttpStatus.BAD_REQUEST.value());
+=======
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản không đúng định dạng. Vui lòng nhâpj lại"));
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 		}
 		try {
 			UserEntity user = userRepository.userLogin(email);
@@ -86,17 +130,31 @@ public class UserServiceImpl implements IUserService{
 				userRepository.save(user);
 				
 				String token = jwtService.generateTokenWithClaims(Map.of(
+<<<<<<< HEAD
 						"id", user.getUserId(),
 						"email",user.getEmail(),
 						"role", user.getRole()
 				));
 				return ResponseEntity.ok(Map.of(
 					"user", user,
+=======
+						"id", user.getUserID(),
+						"email",user.getEmail(),
+						"role", user.getRole()
+				));
+				UserDTO userResponse = modelMapper.map(user, UserDTO.class);
+				return ResponseEntity.ok(Map.of(
+					"user", userResponse,
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 					"token", token
 				));
 				
 			} else {
+<<<<<<< HEAD
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(HttpStatus.BAD_REQUEST.value());
+=======
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Sai tài khoản hoặc mật khẩu. Vui lòng nhập lại"));
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e + " can not found user");
@@ -119,7 +177,10 @@ public class UserServiceImpl implements IUserService{
 			userEntity.setPassword(password);
 			userEntity.setSchool("None");
 			userEntity.setProvider("google");
+<<<<<<< HEAD
 			userEntity.setProviderID(id);
+=======
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 			
 			userRepository.save(userEntity);
 			return userEntity;
@@ -137,6 +198,10 @@ public class UserServiceImpl implements IUserService{
 		try {
 			//user.setAccountStatus("OUT");
 			user.setStatus("OFFLINE");
+<<<<<<< HEAD
+=======
+			user.setLastLoginAt(LocalDateTime.now());
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 			userRepository.save(user);
 			return ResponseEntity.ok(Map.of("success", true, "message", "logout"));
 		} catch (Exception e) {
@@ -157,5 +222,21 @@ public class UserServiceImpl implements IUserService{
 			throw new RuntimeException(e + " can not logout account from user");
 		}
 	}
+<<<<<<< HEAD
+=======
+	@Override
+	public ResponseEntity<Object> findAllUser(Long userId) {
+		try {
+			List<UserEntity> users = userRepository.findUsersNotConnected(userId);
+			//List<UserEntity> users = userRepository.findAll();
+			List<UserSuggestionDTO> suggestions = users.stream()
+					.map(user -> modelMapper.map(user, UserSuggestionDTO.class))
+					.toList();
+			return ResponseEntity.ok(suggestions);
+		} catch (Exception e) {
+			throw new RuntimeException(e  + " không thể lấy tất cả user");
+		}
+	}
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
 }

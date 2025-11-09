@@ -1,0 +1,54 @@
+name: CI - Build & Push Spring Image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Create Dockerfile
+        run: |
+          cat > Dockerfile << 'EOF'
+          # Build stage
+          FROM maven:3.9.6-eclipse-temurin-17 AS build
+          WORKDIR /app
+          COPY pom.xml .
+          RUN mvn dependency:go-offline -B
+          COPY src ./src
+          RUN mvn clean package -DskipTests
+
+          # Production stage
+          FROM eclipse-temurin:17-jre-jammy
+          WORKDIR /app
+          COPY --from=build /app/target/*.jar app.jar
+          RUN groupadd -r spring && useradd -r -g spring spring
+          USER spring
+          EXPOSE 8080
+          ENTRYPOINT ["java", "-jar", "app.jar"]
+          EOF
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/campuslearning:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/campuslearning:latest

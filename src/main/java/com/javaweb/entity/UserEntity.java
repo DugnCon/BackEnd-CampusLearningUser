@@ -1,5 +1,6 @@
 package com.javaweb.entity;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -7,12 +8,28 @@ import java.util.TreeSet;
 import java.time.LocalDate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+=======
+import java.time.LocalDateTime;
+import java.util.*;
+
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+<<<<<<< HEAD
 import com.javaweb.entity.Course.CourseEnrollmentEntity;
 import com.javaweb.entity.Event.EventParticipantsEntity;
+=======
+import com.javaweb.entity.ChatAndCall.CallEntity;
+import com.javaweb.entity.ChatAndCall.ConversationEntity;
+import com.javaweb.entity.ChatAndCall.ConversationParticipantEntity;
+import com.javaweb.entity.Competition.CompetitionParticipantEntity;
+import com.javaweb.entity.Competition.CompetitionRegistrationEntity;
+import com.javaweb.entity.Course.CourseEnrollmentEntity;
+import com.javaweb.entity.Event.EventParticipantsEntity;
+import com.javaweb.entity.Friend.FriendshipEntity;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import com.javaweb.entity.Payment.PaymentTransactionEntity;
 import com.javaweb.entity.Post.CommentEntity;
 import com.javaweb.entity.Post.CommentLikeEntity;
@@ -62,10 +79,16 @@ public class UserEntity {
 	private String role;
 	@Column(name="Avatar")
 	private String avatar;
+<<<<<<< HEAD
+=======
+	@Column(name = "Image")
+	private String image;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	@Column(name="EmailVerified")
 	private boolean emailVerified;
 	@Column(name="Provider")
 	private String provider;
+<<<<<<< HEAD
 	@Column(name="ProviderID")
 	private String providerID;
 	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -91,20 +114,154 @@ public class UserEntity {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<CommentEntity> comment = new ArrayList<>();
+=======
+	@Column(name = "CreatedAt")
+	private LocalDateTime createdAt;
+	@Column(name = "LastLoginAt")
+	private LocalDateTime lastLoginAt;
+
+
+	@OneToMany(mappedBy = "initiator", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+    private List<CallEntity> calls = new ArrayList<>();
+
+	@OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<PaymentTransactionEntity> paymentTransaction = new ArrayList<>();
+
+	@OneToMany(mappedBy="userEnrollment" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CourseEnrollmentEntity> courseEnrollment = new ArrayList<>();
+
+	@OneToMany(mappedBy="passkey", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<PasskeyCredentialsEntity> userPasskey = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<EventParticipantsEntity> participants = new TreeSet<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private Set<PostEntity> post = new TreeSet<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<PostLikeEntity> postlike = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<CommentEntity> comment = new ArrayList<>();
+
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<CommentLikeEntity> commentlike = new ArrayList<>();
 
+<<<<<<< HEAD
+=======
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private Set<FriendshipEntity> sentRequest = new HashSet<>();
+
+	@OneToMany(mappedBy = "friend", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private Set<FriendshipEntity> receivedRequest = new HashSet<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<ConversationParticipantEntity> conversationParticipant;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<ConversationEntity> conversation;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CompetitionRegistrationEntity> registration;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CompetitionParticipantEntity> participant;
+
+	@JsonBackReference
+	public List<CompetitionParticipantEntity> getParticipant() {
+		return participant;
+	}
+
+	public void setParticipant(List<CompetitionParticipantEntity> participant) {
+		this.participant = participant;
+	}
+
+	@JsonBackReference
+	public List<CompetitionRegistrationEntity> getRegistration() {
+		return registration;
+	}
+
+	public void setRegistration(List<CompetitionRegistrationEntity> registration) {
+		this.registration = registration;
+	}
+
+	@JsonBackReference
+	public List<ConversationEntity> getConversation() {
+		return conversation;
+	}
+
+	public void setConversation(List<ConversationEntity> conversation) {
+		this.conversation = conversation;
+	}
+
+	@JsonBackReference
+	public List<ConversationParticipantEntity> getConversationParticipant() {
+		return conversationParticipant;
+	}
+
+	public void setConversationParticipant(List<ConversationParticipantEntity> conversationParticipant) {
+		this.conversationParticipant = conversationParticipant;
+	}
+
+	@JsonBackReference
+	public Set<FriendshipEntity> getReceivedRequest() {
+		return receivedRequest;
+	}
+
+	@JsonBackReference
+	public void setReceivedRequest(Set<FriendshipEntity> receivedRequest) {
+		this.receivedRequest = receivedRequest;
+	}
+
+	public Set<FriendshipEntity> getSentRequest() {
+		return sentRequest;
+	}
+
+	public void setSentRequest(Set<FriendshipEntity> sentRequest) {
+		this.sentRequest = sentRequest;
+	}
+
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	@JsonBackReference
 	public List<CommentLikeEntity> getCommentlike() {
 		return commentlike;
 	}
 
+<<<<<<< HEAD
+=======
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	public void setCommentlike(List<CommentLikeEntity> commentlike) {
 		this.commentlike = commentlike;
 	}
 
+<<<<<<< HEAD
 	@JsonBackReference
+=======
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	public List<CommentEntity> getComment() {
 		return comment;
 	}
@@ -154,6 +311,7 @@ public class UserEntity {
 		this.provider = provider;
 	}
 
+<<<<<<< HEAD
 	public String getProviderID() {
 		return providerID;
 	}
@@ -162,6 +320,8 @@ public class UserEntity {
 		this.providerID = providerID;
 	}
 
+=======
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	public boolean isEmailVerified() {
 		return emailVerified;
 	}
@@ -209,12 +369,15 @@ public class UserEntity {
 	public void setAccountStatus(String accountStatus) {
 		this.accountStatus = accountStatus;
 	}
+<<<<<<< HEAD
 	public Long getUserId() {
 		return UserID;
 	}
 	public void setUserId(Long userId) {
 		UserID = userId;
 	}
+=======
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	public String getUsername() {
 		return username;
 	}
@@ -251,18 +414,22 @@ public class UserEntity {
 	public void setSchool(String school) {
 		this.school = school;
 	}
+<<<<<<< HEAD
 	public Long getUserID() {
 		return UserID;
 	}
 	public void setUserID(Long userID) {
 		UserID = userID;
 	}
+=======
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	public List<CallEntity> getCalls() {
 		return calls;
 	}
 	public void setCalls(List<CallEntity> calls) {
 		this.calls = calls;
 	}
+<<<<<<< HEAD
 	@Column(name = "Bio", length = 500)
 	private String bio;
 
@@ -325,4 +492,29 @@ public class UserEntity {
 
 
 // ... và đảm bảo có Getters/Setters cho tất cả các trường trên.
+=======
+
+	public LocalDateTime getLastLoginAt() {
+		return lastLoginAt;
+	}
+
+	public void setLastLoginAt(LocalDateTime lastLoginAt) {
+		this.lastLoginAt = lastLoginAt;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Long getUserID() {
+		return UserID;
+	}
+	public void setUserID(Long userID) {
+		UserID = userID;
+	}
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 }

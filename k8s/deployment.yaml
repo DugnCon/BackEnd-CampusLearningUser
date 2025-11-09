@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app: spring-be
+<<<<<<< HEAD
     spec:
       containers:
         - name: spring-be
@@ -20,6 +21,96 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+=======
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      # 🔥 Init container đợi RabbitMQ trước khi start Spring Boot
+      initContainers:
+        - name: wait-for-rabbit
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z rabbitmq-service 5672; do
+                echo "Waiting for RabbitMQ..."
+                sleep 5
+              done
+      containers:
+        - name: spring-be
+          image: damdung/campuslearning-spring-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            # 🔹 MySQL
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-service:3306/campuslearning"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "dungcon2005"
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
+
+            # 🔹 Spring Actuator
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "health,info,prometheus,metrics"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+
+            # 🔹 RabbitMQ
+            - name: SPRING_RABBITMQ_HOST
+              value: "rabbitmq-service"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "guest"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "guest"
+            - name: SPRING_RABBITMQ_TEMPLATE_RETRY_ENABLED
+              value: "true"
+            - name: SPRING_RABBITMQ_TEMPLATE_RETRY_INITIAL_INTERVAL
+              value: "5000"
+            - name: SPRING_RABBITMQ_TEMPLATE_RETRY_MAX_ATTEMPTS
+              value: "3"
+            - name: SPRING_RABBITMQ_CONNECTION_TIMEOUT
+              value: "10000"
+
+            # 🔹 Redis
+            - name: SPRING_REDIS_HOST
+              value: "redis-service"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_CONVERSATION_HOST
+              value: "redis-conversation-service"
+            - name: SPRING_REDIS_CONVERSATION_PORT
+              value: "6381"
+            - name: SPRING_REDIS_MESSAGE_HOST
+              value: "redis-message-service"
+            - name: SPRING_REDIS_MESSAGE_PORT
+              value: "6382"
+            - name: SPRING_REDIS_COMMENT_HOST
+              value: "redis-comment-service"
+            - name: SPRING_REDIS_COMMENT_PORT
+              value: "6380"
+            - name: SPRING_REDIS_STORY_HOST
+              value: "redis-story-service"
+            - name: SPRING_REDIS_STORY_PORT
+              value: "6383"
+
+            # 🔹 Tắt health check tạm thời
+            - name: MANAGEMENT_HEALTH_REDIS_ENABLED
+              value: "false"
+            - name: MANAGEMENT_HEALTH_DB_ENABLED
+              value: "false"
+            - name: MANAGEMENT_HEALTH_RABBIT_ENABLED
+              value: "false"
+
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
           resources:
             requests:
               cpu: "200m"
@@ -27,3 +118,22 @@ spec:
             limits:
               cpu: "500m"
               memory: "512Mi"
+<<<<<<< HEAD
+=======
+
+          # 🔹 Liveness & Readiness Probes
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 5
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c

@@ -27,8 +27,12 @@ public class CustomUserDetailService implements UserDetailsService{
 		}
 		GrantedAuthority authorities = new SimpleGrantedAuthority(user.getRole());
 		MyUserDetail myUserDetail = new MyUserDetail(username, user.getPassword(), true, true, true, true,  List.of(authorities));
+<<<<<<< HEAD
 		myUserDetail.setId(user.getUserId());
 		myUserDetail.setProvider(user.getProviderID());
+=======
+		myUserDetail.setId(user.getUserID());
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 		myUserDetail.setProvider(user.getProvider());
 		myUserDetail.setFullName(user.getFullName());
 

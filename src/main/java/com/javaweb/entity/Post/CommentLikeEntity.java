@@ -1,5 +1,10 @@
 package com.javaweb.entity.Post;
 
+<<<<<<< HEAD
+=======
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import com.javaweb.entity.UserEntity;
 
 import javax.persistence.*;
@@ -16,6 +21,10 @@ public class CommentLikeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commentID")
+<<<<<<< HEAD
+=======
+    @JsonManagedReference
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     private CommentEntity comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,7 +41,10 @@ public class CommentLikeEntity {
     public void setUser(UserEntity user) {
         this.user = user;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public CommentEntity getComment() {
         return comment;
     }

@@ -3,10 +3,18 @@ package com.javaweb.api.User;
 import java.util.Map;
 
 import com.javaweb.entity.UserEntity;
+<<<<<<< HEAD
+=======
+import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.GoogleAuthService;
 import org.apache.catalina.User;
 import org.apache.coyote.Response;
+<<<<<<< HEAD
+=======
+import org.modelmapper.ModelMapper;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +42,11 @@ public class UserAPI {
 	private GoogleAuthService googleAuthService;
 	@Autowired
 	private IUserRepository userRepository;
+<<<<<<< HEAD
+=======
+	@Autowired
+	private ModelMapper modelMapper;
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
 	//user logout
 	@PostMapping("/api/auth/logout")
@@ -43,7 +56,11 @@ public class UserAPI {
 		Long userId = myUserDetail.getId();
 		return userService.userLogout(userId);
 	}
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	//user signup
 	@PostMapping("/api/auth/register")
 	public ResponseEntity<Object> userRegister(@RequestBody UserDTO userDTO) {
@@ -53,6 +70,10 @@ public class UserAPI {
 	//user login
 	@PostMapping("/api/auth/login")
 	public ResponseEntity<Object> userLogin(@RequestBody UserDTO userDTO) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 		return userService.userLogin(userDTO);
 	}
 	

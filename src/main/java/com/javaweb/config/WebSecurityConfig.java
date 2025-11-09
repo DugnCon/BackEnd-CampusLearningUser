@@ -92,9 +92,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+<<<<<<< HEAD
         configuration.setAllowedOrigins(List.of(
             "http://localhost:5004",
             "http://localhost:5001"
+=======
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "https://*.ngrok-free.app"
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
@@ -122,8 +128,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/blogs/**", "/api/public/**").permitAll()
+<<<<<<< HEAD
                 .antMatchers("/uploads/**").permitAll()
                 .antMatchers("/api/events").permitAll()
+=======
+                .antMatchers("/uploads/**", "/ws/**").permitAll()
+                .antMatchers("/api/events").permitAll()
+                .antMatchers("/api/competitions").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/api/gemini").permitAll()
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
                 
                 //Các api test dữ liệu trước khi đưa vào authenticated()
                 .antMatchers("/api/courses/enrolled").authenticated()
@@ -131,21 +145,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/lessons/*/progress").authenticated()
                 .antMatchers("/api/courses/*/lessons/*/code-server", "/api/courses/*/lessons/*/submit-code").authenticated()
                 .antMatchers("/api/events/*", "/api/events/*/register", "/api/events/*/registration-status", "/api/events/*/cancel-registration").authenticated()
+<<<<<<< HEAD
                 .antMatchers("/api/posts", "/api/posts/*").authenticated()
                 .antMatchers("/api/enrollments").authenticated()
                 .antMatchers("/api/user/payment-history").authenticated()
+=======
+                .antMatchers("/api/posts", "/api/posts/**", "/api/posts/*/like", "/api/posts/*/comments", "/api/posts/comments/*", "/api/posts/*/comments/*").authenticated()
+                .antMatchers("/api/enrollments").authenticated()
+                .antMatchers("/api/settings/profile-picture").authenticated()
+                .antMatchers("/api/user/payment-history", "/api/users/search", "/api/chat/users/search", "/api/chat/conversations").authenticated()
+                .antMatchers("/api/friendships/suggestions/random" , "/api/friendships", "/api/friendships/**").authenticated()
+                .antMatchers("/api/chat/conversations/*/messages", "/api/chat/messages/*", "/api/chat/conversations/*/files").authenticated()
+                .antMatchers("/api/stories/**").authenticated()
+                .antMatchers("/api/competitions/*", "/api/competitions/*/register", "/api/competitions/*/start", "/api/competitions/*/problems/*", "/api/competitions/submissions/*", "/api/competitions/*/scoreboard").authenticated()
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
                 
                 //Authenticated
                 .antMatchers("/api/courses/**/enroll", "/api/courses/**/create-paypal-order", "/api/courses/**/learn").authenticated()
                 .antMatchers("/api/payment/paypal/success").authenticated()
                 .antMatchers("/api/auth/oauth/**").authenticated()
                 .antMatchers("/api/courses/*/check-enrollment").authenticated()
+<<<<<<< HEAD
                 .antMatchers("/api/user/**").authenticated()
                 .antMatchers("/api/auth/logout","/api/auth/check").authenticated()
                 .antMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "TEACHER")
                 .anyRequest().authenticated()
             .and()
                 /*.oauth2Login()
+=======
+                .antMatchers("/api/user/**", "/api/users/**").authenticated()
+                .antMatchers("/api/auth/logout","/api/auth/check", "/api/auth/me").authenticated()
+                .antMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "TEACHER")
+                .anyRequest().authenticated()
+            .and()
+                .oauth2Login()
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
                 .loginPage("/api/auth/google") // FE trigger login
                 //.loginPage("/api/auth/login/test")
                 .authorizationEndpoint()
@@ -167,7 +201,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler((request, response, exception) -> {
                     response.sendRedirect("http://localhost:5004/login?error");
                 })
+<<<<<<< HEAD
             .and()*/
+=======
+            .and()
+>>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
             //.logout() => cái này là logout của spring nếu làm thuần java
               //  .logoutUrl("/api/auth/logout")
                 //.logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout", "POST"))
