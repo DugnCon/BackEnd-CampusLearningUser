@@ -19,10 +19,6 @@ public class SettingsController {
     @Autowired
     private SettingsService settingsService;
 
-    /**
-     * API cho dispatch(getUserSettings())
-     * Lấy tất cả cài đặt và thông tin profile
-     */
     @GetMapping
     public ResponseEntity<CombinedSettingsResponseDTO> getSettings(Principal principal) {
         // principal.getName() sẽ trả về username (đã xác thực)
@@ -31,10 +27,6 @@ public class SettingsController {
         return ResponseEntity.ok(data);
     }
 
-    /**
-     * API cho dispatch(updateUserSettings(localSettings))
-     * Cập nhật các cài đặt (Notifications, Accessibility, Preferences)
-     */
     @PutMapping
     public ResponseEntity<UserSettingsDTO> updateSettings(Principal principal, @RequestBody UserSettingsDTO settingsDTO) {
         String username = principal.getName();
@@ -42,16 +34,4 @@ public class SettingsController {
         return ResponseEntity.ok(updatedSettings);
     }
 
-    /**
-     * API cho dispatch(uploadProfilePicture(formData))
-     * Cập nhật ảnh đại diện
-     */
-    @PostMapping("/profile-picture")
-    public ResponseEntity<?> uploadProfilePicture(Principal principal, @RequestParam("image") MultipartFile file) {
-        String username = principal.getName();
-        String fileUrl = settingsService.updateProfilePicture(username, file);
-
-        // Trả về JSON object: { "profileImageUrl": "..." }
-        return ResponseEntity.ok(Map.of("profileImageUrl", fileUrl));
-    }
 }
