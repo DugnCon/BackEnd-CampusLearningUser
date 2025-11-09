@@ -13,15 +13,6 @@ spec:
     metadata:
       labels:
         app: spring-be
-<<<<<<< HEAD
-    spec:
-      containers:
-        - name: spring-be
-          image: campuslearning-spring-app:latest
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-=======
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
@@ -110,7 +101,6 @@ spec:
             - name: MANAGEMENT_HEALTH_RABBIT_ENABLED
               value: "false"
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
           resources:
             requests:
               cpu: "200m"
@@ -118,8 +108,6 @@ spec:
             limits:
               cpu: "500m"
               memory: "512Mi"
-<<<<<<< HEAD
-=======
 
           # 🔹 Liveness & Readiness Probes
           livenessProbe:
@@ -136,4 +124,3 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 20
             failureThreshold: 5
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c

@@ -8,11 +8,6 @@ spec:
     app: spring-be
   ports:
     - protocol: TCP
-<<<<<<< HEAD
-      port: 80
-      targetPort: 8080
-=======
       port: 8080
       targetPort: 8080
       nodePort: 30080
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
