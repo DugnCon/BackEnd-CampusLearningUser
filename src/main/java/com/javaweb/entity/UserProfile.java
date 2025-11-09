@@ -15,10 +15,7 @@ import java.util.Map;
 @Table(name = "userprofiles")
 public class UserProfile {
 
-    // Helper static final ObjectMapper để xử lý JSON
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    // ... (Các trường fields, Constructor, và Getters/Setters cơ bản giữ nguyên)
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

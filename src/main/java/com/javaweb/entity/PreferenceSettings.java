@@ -4,8 +4,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class PreferenceSettings {
-    private String theme = "light"; // 'light' hoặc 'dark'
+    private String theme = "light";
     private String language = "vi";
 
-    // Getters and Setters...
 }
