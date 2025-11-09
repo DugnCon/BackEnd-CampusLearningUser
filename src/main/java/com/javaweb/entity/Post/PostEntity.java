@@ -5,27 +5,18 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.javaweb.entity.UserEntity;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
-<<<<<<< HEAD
-import org.hibernate.annotations.UpdateTimestamp;
-
-import javax.persistence.*;
-=======
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import java.util.*;
 
 @Entity
 @Table(name = "posts")
-<<<<<<< HEAD
-=======
 @DynamicUpdate
 @EntityListeners(AuditingEntityListener.class)
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 public class PostEntity {
 
     @Id
@@ -35,11 +26,7 @@ public class PostEntity {
 
     @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
-<<<<<<< HEAD
-    private Set<PostMediaEntity> media = new TreeSet<>();
-=======
     private Set<PostMediaEntity> media = new HashSet<>();
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID")
@@ -51,11 +38,7 @@ public class PostEntity {
     private List<PostLikeEntity> postlike = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-<<<<<<< HEAD
-    @JsonBackReference
-=======
     @JsonManagedReference
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     private List<CommentEntity> comment = new ArrayList<>();
 
     @ManyToMany
@@ -65,13 +48,9 @@ public class PostEntity {
             joinColumns = @JoinColumn(name = "PostID"),
             inverseJoinColumns = @JoinColumn(name = "TagID")
     )
-<<<<<<< HEAD
-    private Set<TagsEntity> tags = new TreeSet<>();
-=======
     private Set<TagsEntity> tags = new HashSet<>();
 
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
     @JsonManagedReference
     public Set<PostMediaEntity> getMedia() {
@@ -81,11 +60,7 @@ public class PostEntity {
     public List<PostLikeEntity> getPostlike() {
         return postlike;
     }
-<<<<<<< HEAD
-    @JsonBackReference
-=======
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public List<CommentEntity> getComment() {
         return comment;
     }
@@ -116,30 +91,18 @@ public class PostEntity {
 
     @Column(name = "CreatedAt")
     @CreationTimestamp
-<<<<<<< HEAD
-    private Date createdAt;
-
-    @Column(name = "UpdatedAt")
-    @UpdateTimestamp
-    private Date updatedAt;
-=======
     private LocalDateTime createdAt;
 
     @Column(name = "UpdatedAt")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DeletedAt")
     private Date deletedAt;
 
     @Column(name = "LikesCount")
-<<<<<<< HEAD
-    private Integer likesCount;
-=======
     private Integer likesCount = 0;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
     @Column(name = "CommentsCount")
     private Integer commentsCount;
@@ -164,10 +127,6 @@ public class PostEntity {
     private Boolean isDeleted;
 
     @Transient
-<<<<<<< HEAD
-    private String fullName;
-
-=======
     private boolean isLiked;
 
     @Transient
@@ -192,7 +151,6 @@ public class PostEntity {
         isLiked = liked;
     }
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public String getFullName() {
         return fullName;
     }
@@ -273,24 +231,6 @@ public class PostEntity {
         this.location = location;
     }
 
-<<<<<<< HEAD
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-=======
     public boolean isLiked() {
         return isLiked;
     }
@@ -311,7 +251,6 @@ public class PostEntity {
         this.createdAt = createdAt;
     }
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public Date getDeletedAt() {
         return deletedAt;
     }

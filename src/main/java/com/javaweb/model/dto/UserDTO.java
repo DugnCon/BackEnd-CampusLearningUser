@@ -1,18 +1,12 @@
 package com.javaweb.model.dto;
 
 public class UserDTO {
-<<<<<<< HEAD
-	private Long id;
-    private String username;
-    private String email;
-=======
-	private Long userID;
+    private Long userID;
     private String username;
     private String email;
     private String avatar;
     private String image;
     private String status;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     private String password;
     private String fullName;
     private String dateOfBirth;
@@ -21,13 +15,8 @@ public class UserDTO {
 
     public UserDTO() {}
 
-<<<<<<< HEAD
-    public UserDTO(Long id, String username, String email, String password, String fullName, String dateOfBirth, String school) {
-    	this.id = id;
-=======
     public UserDTO(Long userID, String username, String email, String password, String fullName, String dateOfBirth, String school) {
-    	this.userID = userID;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
+        this.userID = userID;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -35,9 +24,6 @@ public class UserDTO {
         this.dateOfBirth = dateOfBirth;
         this.school = school;
     }
-<<<<<<< HEAD
-    
-=======
 
     public String getStatus() {
         return status;
@@ -63,16 +49,15 @@ public class UserDTO {
         this.avatar = avatar;
     }
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public String getAccountStatus() {
-		return accountStatus;
-	}
+        return accountStatus;
+    }
 
-	public void setAccountStatus(String accountStatus) {
-		this.accountStatus = accountStatus;
-	}
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
 
-	public String getUsername() {
+    public String getUsername() {
         return username;
     }
     public void setUsername(String username) {
@@ -93,10 +78,10 @@ public class UserDTO {
         this.password = password;
     }
 
-    public String getFullName() { 
+    public String getFullName() {
         return fullName;
     }
-    public void setFullName(String fullName) {  
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
@@ -114,17 +99,6 @@ public class UserDTO {
         this.school = school;
     }
 
-<<<<<<< HEAD
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-    
-=======
     public Long getUserID() {
         return userID;
     }
@@ -132,5 +106,4 @@ public class UserDTO {
     public void setUserID(Long userID) {
         this.userID = userID;
     }
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 }

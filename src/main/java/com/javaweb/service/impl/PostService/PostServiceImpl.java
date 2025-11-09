@@ -1,10 +1,5 @@
 package com.javaweb.service.impl.PostService;
 
-<<<<<<< HEAD
-import com.javaweb.entity.Post.PostEntity;
-import com.javaweb.entity.UserEntity;
-import com.javaweb.model.dto.PostDTO;
-=======
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaweb.entity.Post.CommentEntity;
@@ -17,18 +12,10 @@ import com.javaweb.model.dto.Post.PostDetailDTO;
 import com.javaweb.model.dto.Post.PostMediaDTO;
 import com.javaweb.repository.ICommentRepository;
 import com.javaweb.repository.IPostLikeRepository;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import com.javaweb.repository.IPostRepository;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.FileStorageService;
 import com.javaweb.service.IPostService;
-<<<<<<< HEAD
-import com.javaweb.service.MediaConsumer;
-import com.javaweb.service.MediaProducer;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-=======
 import com.javaweb.service.SolvingByRabbitMQ.Media.MediaConsumer;
 import com.javaweb.service.SolvingByRabbitMQ.Media.MediaProducer;
 import org.modelmapper.ModelMapper;
@@ -36,28 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-<<<<<<< HEAD
-import org.springframework.ui.ModelMap;
-import org.springframework.web.multipart.MultipartFile;
-
-import org.springframework.data.domain.Pageable;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-=======
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 import java.util.stream.Collectors;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
 
 @Service
@@ -74,8 +49,6 @@ public class PostServiceImpl implements IPostService {
     private IUserRepository userRepository;
     @Autowired
     private FileStorageService fileStorageService;
-<<<<<<< HEAD
-=======
     @Autowired
     private IPostLikeRepository postLikeRepository;
     @Autowired
@@ -85,7 +58,6 @@ public class PostServiceImpl implements IPostService {
     private RedisTemplate<String, String> commentRedisTemplate;
     @Autowired
     private ICommentRepository commentRepository;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
@@ -120,21 +92,6 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-<<<<<<< HEAD
-    public ResponseEntity<Object> getPostLimit(int limit) {
-        try {
-            Pageable pageable = PageRequest.of(0, limit); // ví dụ limit = 20
-            List<PostEntity> posts = postRepository.getPostLimit(pageable);
-            List<PostEntity> postEntityList = new ArrayList<>();
-            for(PostEntity data : posts) {
-                UserEntity userEntity = data.getUser();
-                String fullName = userEntity.getFullName();
-
-                data.setFullName(fullName);
-                postEntityList.add(data);
-            }
-            return ResponseEntity.ok(Map.of("posts" , postEntityList, "success", true, "message", "Thành công"));
-=======
     public ResponseEntity<Object> getPostLimit(int limit, Long userId) {
         try {
             Pageable pageable = PageRequest.of(0, limit);
@@ -181,14 +138,11 @@ public class PostServiceImpl implements IPostService {
                 postEntityList.add(postDetailDTO);
             }
             return ResponseEntity.ok(Map.of("posts", postEntityList, "success", true, "message", "Thành công"));
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-<<<<<<< HEAD
-=======
     private List<PostCommentDTO> getCommentsFromRedis(Long postId) throws JsonProcessingException {
         List<PostCommentDTO> comments = new ArrayList<>();
         String postCommentsKey = "post:" + postId + ":comments";
@@ -289,7 +243,6 @@ public class PostServiceImpl implements IPostService {
         }
     }
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     @Override
     public ResponseEntity<Object> getSinglePost(Long userId, Long postId) {
         try {

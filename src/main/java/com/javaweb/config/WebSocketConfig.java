@@ -5,21 +5,11 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-<<<<<<< HEAD
-=======
 import org.springframework.web.socket.config.annotation.StompWebSocketEndpointRegistration;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-<<<<<<< HEAD
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws") // đổi từ /socket.io thành /ws
-                .setAllowedOrigins("http://localhost:5004")
-                .withSockJS();
-=======
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -43,18 +33,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setHeartbeatTime(25000);    // Heartbeat 25s
 
         System.out.println("✅ WebSocket endpoint registered at /ws with CORS for ngrok");
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-<<<<<<< HEAD
-        registry.enableSimpleBroker("/topic", "/queue");
-        registry.setApplicationDestinationPrefixes("/app");
-    }
-}
-
-=======
         // 🔥 SIMPLE BROKER - cho các topic/queue
         registry.enableSimpleBroker(
                 "/topic",
@@ -80,4 +62,3 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
     */
 }
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c

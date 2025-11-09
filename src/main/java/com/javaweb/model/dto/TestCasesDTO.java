@@ -4,10 +4,7 @@ public class TestCasesDTO {
 	private String input;
 	private String output;
 	private String description;
-<<<<<<< HEAD
-=======
 	private String explanation;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 	public String getInput() {
 		return input;
 	}
@@ -26,8 +23,6 @@ public class TestCasesDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-<<<<<<< HEAD
-=======
 
 	public String getExplanation() {
 		return explanation;
@@ -36,5 +31,4 @@ public class TestCasesDTO {
 	public void setExplanation(String explanation) {
 		this.explanation = explanation;
 	}
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 }

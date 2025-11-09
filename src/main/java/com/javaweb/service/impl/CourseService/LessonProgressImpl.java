@@ -23,10 +23,7 @@ public class LessonProgressImpl implements ILessonProgressService {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public ResponseEntity<Object> lessonCompleted(String status, Long lessonId, Long userId) {
-<<<<<<< HEAD
-=======
-        
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
+
         CourseEnrollmentEntity courseEnrollment = courseEnrollmentRepository.getCourseEnrollmentForProgress(userId);
         LessonProgressEntity progressEntity = lessonProgressRepository.updateStatusLessonProgress(courseEnrollment.getEnrollmentID(), lessonId);
         //return ResponseEntity.ok(progressEntity);

@@ -33,23 +33,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
-                                    throws ServletException, IOException {
-<<<<<<< HEAD
-=======
+            throws ServletException, IOException {
         System.out.println("Request: " + request.getMethod() + " " + request.getRequestURI());
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
         String header = request.getHeader("Authorization");
-        
+
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = header.substring(7);
-        
+
         //System.out.println(header + "  " + token);
-        
+
         if (jwtService.isTokenExpired(token)) {
             filterChain.doFilter(request, response);
             return;

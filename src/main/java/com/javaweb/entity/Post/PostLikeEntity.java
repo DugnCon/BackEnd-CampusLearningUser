@@ -1,23 +1,17 @@
 package com.javaweb.entity.Post;
 
 import com.javaweb.entity.UserEntity;
-<<<<<<< HEAD
-=======
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "postlikes")
-<<<<<<< HEAD
-=======
 @DynamicUpdate
 @EntityListeners(AuditingEntityListener.class)
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 public class PostLikeEntity {
 
     @Id
@@ -34,10 +28,6 @@ public class PostLikeEntity {
     private UserEntity user;
 
     @Column(name = "CreatedAt", nullable = false)
-<<<<<<< HEAD
-    private LocalDateTime createdAt;
-
-=======
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -52,7 +42,6 @@ public class PostLikeEntity {
         isLiked = liked;
     }
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public UserEntity getUser() {
         return user;
     }
@@ -84,8 +73,5 @@ public class PostLikeEntity {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 }

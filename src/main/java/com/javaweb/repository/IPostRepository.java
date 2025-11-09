@@ -15,9 +15,6 @@ public interface IPostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> getPostLimit(Pageable pageable);
     @Query("select p from PostEntity p join fetch p.user u where u.UserID = :userId and p.postID = :postId")
     PostEntity getSinglePost(@Param("userId") Long userId, @Param("postId") Long postId);
-<<<<<<< HEAD
-=======
     @Query("select p from PostEntity p join fetch p.user u where u.UserID = :userId order by p.createdAt desc")
     List<PostEntity> getProfilePostLimit(@Param("userId") Long userId, Pageable pageable);
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 }

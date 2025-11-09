@@ -1,11 +1,6 @@
 package com.javaweb.entity.Post;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-<<<<<<< HEAD
-import com.javaweb.entity.UserEntity;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-=======
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.javaweb.entity.UserEntity;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,7 +8,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,12 +16,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "comments")
-<<<<<<< HEAD
-=======
 @DynamicUpdate
 @DynamicInsert
 @EntityListeners(AuditingEntityListener.class)
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 public class CommentEntity {
 
     @Id
@@ -37,18 +28,12 @@ public class CommentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postID")
-<<<<<<< HEAD
-=======
     @JsonBackReference
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     private PostEntity post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserID")
-<<<<<<< HEAD
-=======
     @JsonBackReference
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     private UserEntity user;
 
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -81,8 +66,6 @@ public class CommentEntity {
     @Column(name = "IsDeleted")
     private Boolean isDeleted = false;
 
-<<<<<<< HEAD
-=======
     @Transient
     private Long userID;
 
@@ -106,7 +89,6 @@ public class CommentEntity {
     }
 
     @JsonBackReference
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public List<CommentLikeEntity> getCommentlike() {
         return commentlike;
     }
@@ -139,10 +121,7 @@ public class CommentEntity {
         isEdited = edited;
     }
 
-<<<<<<< HEAD
-=======
     @JsonBackReference
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public UserEntity getUser() {
         return user;
     }
@@ -151,10 +130,7 @@ public class CommentEntity {
         this.user = user;
     }
 
-<<<<<<< HEAD
-=======
     @JsonBackReference
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
     public PostEntity getPost() {
         return post;
     }
