@@ -33,10 +33,10 @@ import com.javaweb.service.CustomUserDetailService;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
-	private CustomUserDetailService customUserDetailService;
-	@Autowired
-	private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private JwtService jwtService;
 
@@ -109,11 +109,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .cors().configurationSource(corsConfigurationSource())
-            .and()
-            .csrf().disable()
-            .authorizeRequests()
-            	//Permitall
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
+                .csrf().disable()
+                .authorizeRequests()
+                //Permitall
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/api/auth/login", "/api/auth/register", "/api/passkeys/check-registration").permitAll()
                 .antMatchers("/api/courses/paypal/success", "/api/courses/paypal/cancel").permitAll()
@@ -127,7 +127,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/competitions").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/api/gemini").permitAll()
-                
+
                 //Các api test dữ liệu trước khi đưa vào authenticated()
                 .antMatchers("/api/courses/enrolled").authenticated()
                 .antMatchers("/api/courses/*/progress", "/api/courses/*/payment-history").authenticated()
@@ -142,7 +142,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/chat/conversations/*/messages", "/api/chat/messages/*", "/api/chat/conversations/*/files").authenticated()
                 .antMatchers("/api/stories/**").authenticated()
                 .antMatchers("/api/competitions/*", "/api/competitions/*/register", "/api/competitions/*/start", "/api/competitions/*/problems/*", "/api/competitions/submissions/*", "/api/competitions/*/scoreboard").authenticated()
-                
+
                 //Authenticated
                 .antMatchers("/api/courses/**/enroll", "/api/courses/**/create-paypal-order", "/api/courses/**/learn").authenticated()
                 .antMatchers("/api/payment/paypal/success").authenticated()
@@ -152,7 +152,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/logout","/api/auth/check", "/api/auth/me").authenticated()
                 .antMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "TEACHER")
                 .anyRequest().authenticated()
-            .and()
+                .and()
                 .oauth2Login()
                 .loginPage("/api/auth/google") // FE trigger login
                 //.loginPage("/api/auth/login/test")
@@ -163,28 +163,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .baseUri("/oauth2/callback/*")
                 .and()
                 .successHandler((request, response, authentication) -> { //Nó sẽ callback về BE để làm token rồi gửi lại lên Fe để check Authenticated
-                	
+
                     OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
                     String email = oAuth2User.getAttribute("email");
                     String name = oAuth2User.getAttribute("name");
-                    
+
                     String token = jwtService.generateTokenWithClaims(Map.of("email", email, "name", name));
-                    
+
                     response.sendRedirect("http://localhost:5004/oauth2/redirect?token=" + token);
                 })
                 .failureHandler((request, response, exception) -> {
                     response.sendRedirect("http://localhost:5004/login?error");
                 })
-            .and()
-            //.logout() => cái này là logout của spring nếu làm thuần java
-              //  .logoutUrl("/api/auth/logout")
+                .and()
+                //.logout() => cái này là logout của spring nếu làm thuần java
+                //  .logoutUrl("/api/auth/logout")
                 //.logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout", "POST"))
                 //.deleteCookies("JSESSIONID")
                 //.logoutSuccessHandler((request, response, authentication) -> {
-                  //  response.setStatus(200);
+                //  response.setStatus(200);
                 //})
-            //.and()
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                //.and()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 }

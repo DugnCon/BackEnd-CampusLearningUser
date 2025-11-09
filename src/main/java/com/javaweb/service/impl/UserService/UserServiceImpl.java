@@ -46,19 +46,19 @@ public class UserServiceImpl implements IUserService{
 	@Transactional(rollbackOn = Exception.class)
 	public ResponseEntity<Object> userRegister(UserDTO userDTO) {
 		if (userDTO == null ||
-	        userDTO.getUsername() == null || userDTO.getUsername().trim().isEmpty() ||
-	        userDTO.getEmail() == null || userDTO.getEmail().trim().isEmpty() ||
-	        userDTO.getPassword() == null || userDTO.getPassword().trim().isEmpty() ||
-	        userDTO.getFullName() == null || userDTO.getFullName().trim().isEmpty() ||
-	        userDTO.getDateOfBirth() == null || userDTO.getDateOfBirth().trim().isEmpty() ||
-	        userDTO.getSchool() == null || userDTO.getSchool().trim().isEmpty()
-	    ) {
-	        Map<String, Object> error = new HashMap<>();
-	        error.put("status", HttpStatus.BAD_REQUEST.value());
-	        error.put("message", "All fields are required and cannot be null or empty");
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-	    } else {
-	    	String password = passwordEncoder.encode(userDTO.getPassword());
+				userDTO.getUsername() == null || userDTO.getUsername().trim().isEmpty() ||
+				userDTO.getEmail() == null || userDTO.getEmail().trim().isEmpty() ||
+				userDTO.getPassword() == null || userDTO.getPassword().trim().isEmpty() ||
+				userDTO.getFullName() == null || userDTO.getFullName().trim().isEmpty() ||
+				userDTO.getDateOfBirth() == null || userDTO.getDateOfBirth().trim().isEmpty() ||
+				userDTO.getSchool() == null || userDTO.getSchool().trim().isEmpty()
+		) {
+			Map<String, Object> error = new HashMap<>();
+			error.put("status", HttpStatus.BAD_REQUEST.value());
+			error.put("message", "All fields are required and cannot be null or empty");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+		} else {
+			String password = passwordEncoder.encode(userDTO.getPassword());
 			UserEntity user = new UserEntity();
 			user.setUsername(userDTO.getUsername());
 			user.setEmail(userDTO.getEmail());
@@ -69,7 +69,7 @@ public class UserServiceImpl implements IUserService{
 			user.setRole("STUDENT");
 			userRepository.save(user);
 			return ResponseEntity.ok().body(Map.of("success","Signup Successfully!"));
-	    }
+		}
 	}
 
 	@Override
@@ -83,10 +83,10 @@ public class UserServiceImpl implements IUserService{
 		try {
 			UserEntity user = userRepository.userLogin(email);
 			if(passwordEncoder.matches(password, user.getPassword())) {
-				
+
 				user.setStatus("ONLINE");
 				userRepository.save(user);
-				
+
 				String token = jwtService.generateTokenWithClaims(Map.of(
 						"id", user.getUserID(),
 						"email",user.getEmail(),
@@ -94,10 +94,10 @@ public class UserServiceImpl implements IUserService{
 				));
 				UserDTO userResponse = modelMapper.map(user, UserDTO.class);
 				return ResponseEntity.ok(Map.of(
-					"user", userResponse,
-					"token", token
+						"user", userResponse,
+						"token", token
 				));
-				
+
 			} else {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Sai tài khoản hoặc mật khẩu. Vui lòng nhập lại"));
 			}
@@ -112,7 +112,7 @@ public class UserServiceImpl implements IUserService{
 		if(user == null) {
 			UUID uuid = UUID.randomUUID();
 			String password = uuid.toString();
-			
+
 			UserEntity userEntity = new UserEntity();
 			userEntity.setEmail(email);
 			userEntity.setUsername(username);
@@ -122,7 +122,7 @@ public class UserServiceImpl implements IUserService{
 			userEntity.setPassword(password);
 			userEntity.setSchool("None");
 			userEntity.setProvider("google");
-			
+
 			userRepository.save(userEntity);
 			return userEntity;
 		} else {

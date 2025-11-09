@@ -15,5 +15,5 @@ public interface IUserService{
 	ResponseEntity<Object> userConnectGoogle(Long userId);
 	ResponseEntity<Object> findAllUser(Long userId);
 	UserEntity userVerifyByGoogle(String id,String email, String name, String picture, String username);
-	
+
 }

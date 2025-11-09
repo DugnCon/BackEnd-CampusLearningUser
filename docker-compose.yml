@@ -146,7 +146,7 @@ services:
     networks:
       - app-net
     restart: always
-  
+
   # 🔹 Grafana
   grafana:
     image: grafana/grafana:latest
