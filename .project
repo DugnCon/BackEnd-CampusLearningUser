@@ -34,8 +34,6 @@
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 	</natures>
-<<<<<<< HEAD
-=======
 	<filteredResources>
 		<filter>
 			<id>1762196026516</id>
@@ -47,5 +45,4 @@
 			</matcher>
 		</filter>
 	</filteredResources>
->>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 </projectDescription>

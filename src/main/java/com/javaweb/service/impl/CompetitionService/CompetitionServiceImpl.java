@@ -247,7 +247,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
                 // Theo FE requirement: already registered vẫn là success
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", true);
-                response.put("message", "You are already registered for this competition");
+                response.put("message", "Bạn đã đăng kí cho cuộc thi này rồi");
                 response.put("alreadyRegistered", true);
                 response.put("code", "ALREADY_REGISTERED");
                 return ResponseEntity.ok(response);
@@ -257,7 +257,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (competition.getCurrentParticipants() >= competition.getMaxParticipants()) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "This competition is full. No more registrations are being accepted.");
+                response.put("message", "Cuộc thi đã đầy, bạn không thể đăng kí thêm");
                 response.put("isFull", true);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
@@ -267,7 +267,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (!"upcoming".equals(status) && !"draft".equals(status)) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "This competition is not open for registration at this time.");
+                response.put("message", "Bạn hiện tại chưa thể đăng kí cuộc thi này");
                 response.put("notOpen", true);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
@@ -314,7 +314,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             // Return success response
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Registration successful");
+            response.put("message", "Đăng kí cuộc thi hoàn thành");
             response.put("registrationID", savedRegistration.getRegistrationID());
             response.put("participantID", savedParticipant.getParticipantID());
             return ResponseEntity.ok(response);
@@ -350,7 +350,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (!isRegistered) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "You are not registered for this competition");
+                response.put("message", "Bạn không đủ điều kiện đăng ký tham gia cuộc thi");
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
             }
 
@@ -362,7 +362,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (now.isBefore(startTime)) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "This competition cannot be started right now. It may not have begun yet or has already ended.");
+                response.put("message", "Cuộc thi này vẫn chưa bắt đầu. Có thể nó đã hết hạn hoặc chửa mở");
                 response.put("notOngoing", true);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
@@ -370,7 +370,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (now.isAfter(endTime)) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "This competition has already ended.");
+                response.put("message", "Cuộc thi hiện tại đã kết thúc");
                 response.put("notOngoing", true);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
@@ -383,7 +383,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
                 // ĐÃ BẮT ĐẦU RỒI - trả về success với flag
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", true);
-                response.put("message", "You have already started this competition");
+                response.put("message", "Bạn đã bắt đầu cuộc thi rồi");
                 response.put("alreadyStarted", true);
 
                 // Lấy danh sách problem IDs
@@ -471,7 +471,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             // Return success response
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Competition started successfully");
+            response.put("message", "Cuộc thi đã hoàn thành");
 
             Map<String, Object> data = new HashMap<>();
             data.put("participantStatus", participantStatus);
@@ -482,7 +482,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Unable to start competition due to a server error. Please try again later.");
+            response.put("message", "Không thể bắt đầu cuộc thi. Khả năng server đang bị trục trặc");
             response.put("isServerError", true);
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -504,7 +504,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (competition == null) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Competition not found");
+                response.put("message", "Không có cuộc thi nào cả");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
@@ -519,7 +519,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (!isRegistered) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "You must be logged in to view problem details.");
+                response.put("message", "Bạn phải đăng ký mới có thể xem cuộc thi.");
                 response.put("isAuthError", true);
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
@@ -531,7 +531,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (participant == null || "disqualified".equals(participant.getStatus())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "You do not have permission to view this problem.");
+                response.put("message", "Bạn không có quyền xem bài thi này.");
                 response.put("isPermissionError", true);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
             }
@@ -541,7 +541,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (now.isBefore(competition.getStartTime()) || now.isAfter(competition.getEndTime())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Competition is not currently ongoing.");
+                response.put("message", "Cuộc thi hiện không diễn ra.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
@@ -552,7 +552,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (problem == null) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Problem not found");
+                response.put("message", "Không thấy bài thi");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
@@ -643,7 +643,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (competition == null) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Competition not found");
+                response.put("message", "Không tìm thấy cuộc thi");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
@@ -658,7 +658,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (!isRegistered) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "You must be registered for this competition to submit solutions.");
+                response.put("message", "Bạn phải đăng ký tham gia cuộc thi này để gửi giải pháp.");
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
             }
 
@@ -669,7 +669,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (participant == null || !"active".equals(participant.getStatus())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "You must start the competition to submit solutions.");
+                response.put("message", "Bạn phải bắt đầu cuộc thi để nộp giải pháp.");
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
             }
 
@@ -678,7 +678,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (now.isBefore(competition.getStartTime()) || now.isAfter(competition.getEndTime())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Competition is not currently ongoing.");
+                response.put("message", "Cuộc thi hiện không diễn ra.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
@@ -1034,7 +1034,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
     }
 
     /**
-     * Lấy kết quả test cases - không có column TestCasesResult trong DB
+     * Lấy kết quả test cases không có column TestCasesResult trong DB
      */
     private List<Map<String, Object>> getTestCaseResults(CompetitionSubmissionEntity submission) {
         List<Map<String, Object>> results = new ArrayList<>();
