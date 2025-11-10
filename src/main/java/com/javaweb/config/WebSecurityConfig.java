@@ -154,7 +154,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
-                .loginPage("/user/api/auth/google") // FE trigger login
+                //.loginPage("/user/api/auth/google") // FE trigger login
                 //.loginPage("/api/auth/login/test")
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorization") // Spring default
