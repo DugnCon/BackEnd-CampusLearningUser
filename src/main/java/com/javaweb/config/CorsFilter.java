@@ -45,6 +45,6 @@ public class CorsFilter implements Filter {
         return origin.equals("http://localhost:5004") ||
                 origin.equals("http://localhost:3000") ||
                 origin.startsWith("http://192.168.") ||
-                origin.equals("https://yourdomain.com"); // thêm domain production
+                origin.equals("https://campuslearning.site"); // thêm domain production
     }
 }
