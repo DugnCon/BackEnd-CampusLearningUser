@@ -16,15 +16,17 @@ public class CorsFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
+
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        // CHO PHÉP TẤT CẢ TRONG DEV (ngrok + localhost)
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin") != null
-                ? request.getHeader("Origin")
-                : "*");
+        String origin = request.getHeader("Origin");
 
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+        if (origin != null && isAllowedOrigin(origin)) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+        }
+
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers",
                 "Origin, Content-Type, Accept, Authorization, X-Requested-With");
@@ -35,6 +37,14 @@ public class CorsFilter implements Filter {
             return;
         }
 
-        chain.doFilter(req, res);
+        chain.doFilter(request, response);
+    }
+
+    private boolean isAllowedOrigin(String origin) {
+        // Danh sách whitelist
+        return origin.equals("http://localhost:5004") ||
+                origin.equals("http://localhost:3000") ||
+                origin.startsWith("http://192.168.") ||
+                origin.equals("https://yourdomain.com"); // thêm domain production
     }
 }
