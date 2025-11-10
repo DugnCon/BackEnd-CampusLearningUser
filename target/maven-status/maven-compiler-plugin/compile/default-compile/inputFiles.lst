@@ -5,6 +5,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\JwtService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Friend\FriendshipEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitMQ\Story\StoryConsumer.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredentialDTO\CredentialResponseBody.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\chatAI\ChatAIAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\PreferenceSettings.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\ChatAndCall\MessageEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IUserService.java
@@ -34,7 +35,6 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\UserProfile.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Competition\CompetitionSubmissionEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Event\EventPrizesEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredential\CredentialResponseBody.java
-C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ConversationServiceImpl\ConversationServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\SettingsServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitMQ\Media\MediaProducer.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\PayPalService.java
@@ -42,6 +42,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\TransactionIDD
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\UserService\UserServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Competition\CompetitionParticipantEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICourseModulesRepository.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ConversationService\ConversationServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Payment\PaymentTransactionEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredentialDTO\CredentialResponse.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredential\CredentialVerifyRequest.java
@@ -77,11 +78,14 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Course\CourseEnro
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\WebSocketConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\CustomUserDetailService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\CallDTO.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatRequestDTO.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\GeminiService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICodingExerciseRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\PostCommentService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Post\PostDetailDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\competition\CompetitionAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ILessonProgressService.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatMessageDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\notification\NotificationAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\events\EventAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ICompetitionService.java

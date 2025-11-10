@@ -83,6 +83,7 @@ com\javaweb\repository\IStoryRepository.class
 com\javaweb\entity\UserSettings.class
 com\javaweb\entity\UserProfile$6.class
 com\javaweb\service\IConservationService.class
+com\javaweb\model\dto\ChatMessageDTO.class
 com\javaweb\api\profile\ProfileAPI$WorkExperienceUpdateRequest.class
 com\javaweb\service\ICompetitionService.class
 com\javaweb\service\impl\PostService\PostServiceImpl.class
@@ -95,6 +96,7 @@ com\javaweb\service\SolvingByRabbitMQ\Message\MessageFileProducer.class
 com\javaweb\model\dto\CompetitionRegistrationDTO.class
 com\javaweb\service\JwtService.class
 com\javaweb\service\impl\StoryService\StoryServiceImpl.class
+com\javaweb\service\impl\ConversationService\ConversationServiceImpl.class
 com\javaweb\repository\IUserRepository.class
 com\javaweb\model\dto\TransactionIDDTO.class
 com\javaweb\entity\Event\EventPrizesEntity.class
@@ -107,7 +109,6 @@ com\javaweb\service\SolvingByRabbitMQ\Media\MediaConsumer.class
 com\javaweb\repository\UserSettingsRepository.class
 com\javaweb\service\CodeServerService.class
 com\javaweb\service\ICallService.class
-com\javaweb\service\impl\ConversationServiceImpl\ConversationServiceImpl.class
 com\javaweb\config\WebSocketConfig.class
 com\javaweb\api\chat\ChatAPI.class
 com\javaweb\api\events\EventAPI.class
@@ -131,10 +132,12 @@ com\javaweb\repository\impl\UserRepositoryCustom\UserRepositoryCustom.class
 com\javaweb\entity\Story\StoryEntity.class
 com\javaweb\repository\ICodingExerciseRepository.class
 com\javaweb\model\dto\MyUserDetail.class
+com\javaweb\service\GeminiService.class
 com\javaweb\repository\IFriendshipRepository.class
 com\javaweb\service\PostLikeService.class
 com\javaweb\service\SolvingByRabbitMQ\Comment\CommentProducer.class
 com\javaweb\repository\IEventScheduleRepository.class
+com\javaweb\model\dto\ChatRequestDTO.class
 com\javaweb\service\IPaymentService.class
 com\javaweb\entity\UserProfile$3.class
 com\javaweb\entity\Competition\CompetitionProblemEntity.class
@@ -182,6 +185,7 @@ com\javaweb\entity\Course\CourseLessonsEntity.class
 com\javaweb\config\GoogleVerifier.class
 com\javaweb\service\CodeServerService$CodeServerInstance.class
 com\javaweb\entity\Competition\CompetitionEntity.class
+com\javaweb\api\chatAI\ChatAIAPI.class
 com\javaweb\model\dto\UserSuggestions\UserSuggestionDTO.class
 com\javaweb\config\WebMvcConfig.class
 com\javaweb\service\impl\UserSettingsHelperService.class
@@ -201,5 +205,6 @@ com\javaweb\api\profile\ProfileAPI.class
 com\javaweb\config\CorsFilter.class
 com\javaweb\model\dto\PostDTO.class
 com\javaweb\service\ICodingExerciseService.class
+com\javaweb\api\chatAI\ErrorResponse.class
 com\javaweb\entity\Post\PostEntity.class
 com\javaweb\model\dto\Post\PostMediaDTO.class

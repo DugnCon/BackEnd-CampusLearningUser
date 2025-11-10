@@ -66,6 +66,3 @@ class ErrorResponse {
     public void setMessage(String message) { this.message = message; }
 
 }
-
-
-// 💡 Cần tạo DTO ErrorResponse (Hoặc dùng Map<String, String>)
