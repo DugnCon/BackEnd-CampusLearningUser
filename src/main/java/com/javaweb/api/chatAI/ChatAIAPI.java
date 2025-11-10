@@ -12,11 +12,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ai/chat")
 @CrossOrigin(origins = "http://localhost:5004")
-public class ChatAPI {
+public class ChatAIAPI {
 
     private final GeminiService geminiService;
 
-    public ChatAPI(GeminiService geminiService) {
+    public ChatAIAPI(GeminiService geminiService) {
         this.geminiService = geminiService;
     }
 
