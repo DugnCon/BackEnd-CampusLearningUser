@@ -89,7 +89,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (competition == null) {
                 Map<String, Object> errorResponse = new HashMap<>();
                 errorResponse.put("success", false);
-                errorResponse.put("message", "Competition not found");
+                errorResponse.put("message", "Không có cuộc thi");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
             }
 
@@ -277,7 +277,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (now.isAfter(competition.getStartTime())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Registration period has ended. Competition has already started.");
+                response.put("message", "Thời gian đăng ký đã hết. Cuộc thi đã được bắt đầu");
                 response.put("registrationClosed", true);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }

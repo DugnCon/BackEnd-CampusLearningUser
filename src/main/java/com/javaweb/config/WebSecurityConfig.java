@@ -126,7 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/events").permitAll()
                 .antMatchers("/api/competitions").permitAll()
                 .antMatchers("/actuator/**").permitAll()
-                .antMatchers("/api/gemini").permitAll()
+                .antMatchers("/api/ai/chat").permitAll()
 
                 //Các api test dữ liệu trước khi đưa vào authenticated()
                 .antMatchers("/api/courses/enrolled").authenticated()
