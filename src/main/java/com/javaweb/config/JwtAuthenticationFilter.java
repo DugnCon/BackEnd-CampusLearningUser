@@ -34,7 +34,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("Request: " + request.getMethod() + " " + request.getRequestURI());
+
+        String path = request.getServletPath();
+
+        // Bỏ qua vì chưa có token để nó gọi tới Oauth2 mới có token
+        if (path.startsWith("/auth/google") || path.startsWith("/auth/facebook") || path.startsWith("/oauth2/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String header = request.getHeader("Authorization");
 
