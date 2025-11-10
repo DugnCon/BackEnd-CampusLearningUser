@@ -115,6 +115,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // PermitAll
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/user/api/auth/google").permitAll()
                 .antMatchers("/user/api/auth/login", "/user/api/auth/register", "/user/api/passkeys/check-registration").permitAll()
                 .antMatchers("/user/api/courses/paypal/success", "/user/api/courses/paypal/cancel").permitAll()
                 .antMatchers("/user/api/courses", "/user/api/courses/{courseId}").permitAll()
@@ -128,7 +129,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/api/ai/chat").permitAll()
 
                 // Các api authenticated
-                .antMatchers("/user/api/auth/google").authenticated()
                 .antMatchers("/user/api/courses/enrolled").authenticated()
                 .antMatchers("/user/api/courses/*/progress", "/user/api/courses/*/payment-history").authenticated()
                 .antMatchers("/user/api/lessons/*/progress").authenticated()
@@ -153,7 +153,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/api/admin/**").hasAnyAuthority("ADMIN", "TEACHER")
                 .anyRequest().authenticated()
                 .and()
-                .oauth2Login()
+                /*.oauth2Login()
                 //.loginPage("/user/api/auth/google") // FE trigger login
                 //.loginPage("/api/auth/login/test")
                 .authorizationEndpoint()
@@ -183,7 +183,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.logoutSuccessHandler((request, response, authentication) -> {
                 //  response.setStatus(200);
                 //})
-                //.and()
+                //.and()*/
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

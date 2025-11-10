@@ -11,6 +11,7 @@ import java.util.Map;
 @Component
 public class ChatSocketHandler {
 
+    //Cái này thay thê MessageMapping và sendTo và nó đảm nhận cả 2 việc
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
