@@ -20,3 +20,5 @@
 
 <img width="1884" height="857" alt="Ảnh chụp màn hình 2025-11-10 120719" src="https://github.com/user-attachments/assets/7322958a-4138-413c-8a2c-b5fab1705aba" />
 
+<img width="1278" height="643" alt="image" src="https://github.com/user-attachments/assets/5e3c23fd-6c1b-445c-a8c1-a8b6a6ee5cef" />
+
