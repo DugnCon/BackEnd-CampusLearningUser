@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/user/api/chat")
 public class ChatAPI {
     @Autowired
     private IConservationService conservationService;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user/api")
 public class FriendAPI {
     @Autowired
     private IUserService userService;

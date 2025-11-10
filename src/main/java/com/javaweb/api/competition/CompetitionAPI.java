@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user/api")
 public class CompetitionAPI {
     @Autowired
     private ICompetitionService competitionService;

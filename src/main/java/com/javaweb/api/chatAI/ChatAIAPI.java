@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ai/chat")
+@RequestMapping("/user/api/ai/chat")
 @CrossOrigin(origins = "http://localhost:5004")
 public class ChatAIAPI {
 

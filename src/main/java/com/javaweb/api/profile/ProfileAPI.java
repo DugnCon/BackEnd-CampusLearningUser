@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user/api")
 public class ProfileAPI {
     @Autowired
     private IUserRepository userRepository;

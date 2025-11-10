@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/profile") // Endpoint mới
+@RequestMapping("/user/api/profile") // Endpoint mới
 public class UserProfileController {
 
     @Autowired

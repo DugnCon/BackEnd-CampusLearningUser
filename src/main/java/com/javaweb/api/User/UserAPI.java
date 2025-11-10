@@ -26,7 +26,7 @@ import com.javaweb.service.IUserService;
 import com.javaweb.service.JwtService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/user/")
 public class UserAPI {
 	@Autowired
 	private IUserService userService;

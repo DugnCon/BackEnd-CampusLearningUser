@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/user/api/posts")
 public class PostAPI {
     @Autowired
     private IPostService postService;

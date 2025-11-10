@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/stories")
+@RequestMapping("/user/api/stories")
 public class StoryAPI {
     @Autowired
     private IStoryService storyService;
