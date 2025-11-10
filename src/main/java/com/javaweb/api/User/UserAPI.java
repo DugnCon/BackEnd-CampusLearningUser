@@ -26,7 +26,7 @@ import com.javaweb.service.IUserService;
 import com.javaweb.service.JwtService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping
 public class UserAPI {
 	@Autowired
 	private IUserService userService;
@@ -40,7 +40,7 @@ public class UserAPI {
 	private ModelMapper modelMapper;
 
 	//user logout
-	@PostMapping("/api/auth/logout")
+	@PostMapping("/auth/logout")
 	public ResponseEntity<Object> userLogout() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
@@ -49,13 +49,13 @@ public class UserAPI {
 	}
 
 	//user signup
-	@PostMapping("/api/auth/register")
+	@PostMapping("/auth/register")
 	public ResponseEntity<Object> userRegister(@RequestBody UserDTO userDTO) {
 		return userService.userRegister(userDTO);
 	}
 
 	//user login
-	@PostMapping("/api/auth/login")
+	@PostMapping("/auth/login")
 	public ResponseEntity<Object> userLogin(@RequestBody UserDTO userDTO) {
 
 		return userService.userLogin(userDTO);
