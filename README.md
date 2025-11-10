@@ -21,3 +21,8 @@
 <img width="1299" height="860" alt="Ảnh chụp màn hình 2025-11-03 103721" src="https://github.com/user-attachments/assets/d3c09712-cba0-44d5-9438-a34749ee0a73" />
 >>>>>>> 923e3092c89befcef8151ac54e3c33b5f467d36c
 
+## Mongo
+<img width="1919" height="973" alt="Ảnh chụp màn hình 2025-11-10 120650" src="https://github.com/user-attachments/assets/6fa2ce02-7f72-4220-b7de-1bdfd1565d04" />
+
+<img width="1884" height="857" alt="Ảnh chụp màn hình 2025-11-10 120719" src="https://github.com/user-attachments/assets/7322958a-4138-413c-8a2c-b5fab1705aba" />
+
