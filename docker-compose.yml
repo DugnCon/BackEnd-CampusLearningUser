@@ -135,6 +135,20 @@ services:
     volumes:
       - ./uploads:/app/uploads
 
+  # 🔹 Code-Server
+  code-server:
+    image: codercom/code-server:4.105.0
+    container_name: code_server_container
+    restart: always
+    environment:
+      PASSWORD: ""  # để trống = không yêu cầu mật khẩu
+    ports:
+      - "8100:8080"
+    volumes:
+      - ./workspace:/home/coder/project
+    networks:
+      - app-net
+
   # 🔹 Prometheus
   prometheus:
     image: prom/prometheus:latest
