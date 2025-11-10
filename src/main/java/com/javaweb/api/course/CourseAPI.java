@@ -64,6 +64,9 @@ public class CourseAPI {
     @GetMapping("/courses")
     public ResponseEntity<Object> getCourses() {
         List<CourseEntity> courses = courseService.getAllCourse();
+        if(courses.isEmpty()) {
+            return ResponseEntity.ok(Map.of("success", false, "data", courses, "message", "Chưa có khóa học nào"));
+        }
         return ResponseEntity.ok(Map.of("success", true, "data", courses));
     }
 

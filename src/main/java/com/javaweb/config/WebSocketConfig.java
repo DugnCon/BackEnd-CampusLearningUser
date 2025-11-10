@@ -51,7 +51,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         System.out.println("Message broker configured with topics, queues and user destinations");
     }
 
-    // THÊM CẤU HÌNH TRANSPORT (OPTIONAL)
+    //Thêm cấu hình
     /*
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
