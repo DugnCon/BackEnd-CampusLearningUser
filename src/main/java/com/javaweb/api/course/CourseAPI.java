@@ -61,7 +61,7 @@ public class CourseAPI {
     @Autowired
     private ICodingExerciseService codingExerciseService;
 
-    @GetMapping("/user/api/courses")
+    @GetMapping("/courses")
     public ResponseEntity<Object> getCourses() {
         List<CourseEntity> courses = courseService.getAllCourse();
         if(courses.isEmpty()) {
