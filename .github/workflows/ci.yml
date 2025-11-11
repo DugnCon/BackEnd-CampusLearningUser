@@ -1,3 +1,4 @@
+# File: .github/workflows/cicd.yml
 name: CI/CD - Deploy to VPS
 
 on:
@@ -56,12 +57,14 @@ jobs:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.VPS_IP }}
-          username: ${{ secrets.VPS_USER }}
+          host: campuslearning.site
+          username: nguyenducduong
           key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
           script: |
-            cd /home/${{ secrets.VPS_USER }}/campuslearning/BackEnd-CampusLearningUser
+            echo "Bắt đầu deploy..."
+            cd /home/nguyenducduong/campuslearning/BackEnd-CampusLearningUser
             docker-compose pull spring-app
             docker-compose up -d spring-app
-            docker system prune -f --volumes
+            docker image prune -f
             echo "Deploy thành công! Website campuslearning.site đã cập nhật."
