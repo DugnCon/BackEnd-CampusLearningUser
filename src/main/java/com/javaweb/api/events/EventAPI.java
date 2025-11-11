@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/user/api")
+@RequestMapping
 public class EventAPI {
     @Autowired
     private IEventService eventService;

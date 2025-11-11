@@ -62,7 +62,7 @@ public class UserAPI {
 	}
 
 	//Làm mới jwt khi hết hạn
-	@PostMapping("/api/auth/refresh-token")
+	@PostMapping("/auth/refresh-token")
 	public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
 		String refreshToken = request.get("refreshToken");
 
@@ -84,7 +84,7 @@ public class UserAPI {
 	}
 
 	//Kiểm tra tàu khoản
-	@GetMapping("/api/auth/check")
+	@GetMapping("/auth/check")
 	public ResponseEntity<Object> checkUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
@@ -97,14 +97,14 @@ public class UserAPI {
 	}
 
 	//Check xem tài khoản dùng 2FA không
-	@PostMapping("/api/passkeys/check-registration")
+	@PostMapping("/passkeys/check-registration")
 	public ResponseEntity<Object> checkRegisFromUser(@RequestBody Map<String,Object> passkey) {
 		String email = passkey.get("email").toString();
 		return ResponseEntity.ok(Map.of("hasPasskey",true));
 	}
 
 	//Xác thưc tài khoản google
-	@PostMapping("/api/auth/google")
+	@PostMapping("/auth/google")
 	public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> payload) {
 		try {
 
@@ -142,7 +142,7 @@ public class UserAPI {
 	}
 
 	//Cái này spring cứ gọi, không biết ném nó đi kiểu gì
-	@GetMapping("/api/auth/google")
+	@GetMapping("/auth/google")
 	public ResponseEntity<?> loginWithGoogleGetData(@RequestParam Map<String, String> payload) {
 		/*try {
 			String idToken = payload.get("token");
@@ -179,7 +179,7 @@ public class UserAPI {
 	}
 
 	//Khi từ disconect tới conect thì setProviderID = googleId và provider = google, status = off
-	@PostMapping("/api/auth/oauth/connect/google")
+	@PostMapping("/auth/oauth/connect/google")
 	public ResponseEntity<Object> connectOAuthProvider(@RequestBody Map<String,Object> payload) {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -193,7 +193,7 @@ public class UserAPI {
 	}
 
 	//Tài khoản google khi disconnect
-	@DeleteMapping("/api/auth/oauth/disconnect/google")
+	@DeleteMapping("/auth/oauth/disconnect/google")
 	public ResponseEntity<Object> disconnectOAuthProvider() {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -206,7 +206,7 @@ public class UserAPI {
 		}
 	}
 
-	@GetMapping("/api/auth/oauth/connections")
+	@GetMapping("/auth/oauth/connections")
 	public ResponseEntity<Object> getOAuthConnections() {
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();

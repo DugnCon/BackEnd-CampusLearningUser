@@ -12,7 +12,7 @@ import com.javaweb.model.dto.CallDTO;
 import com.javaweb.service.ICallService;
 
 @RestController
-@RequestMapping("/user/api/calls")
+@RequestMapping("/calls")
 public class CallAPI {
 	@Autowired
 	private ICallService callService;

@@ -9,12 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user/api")
+@RequestMapping
 public class NotificationAPI {
-    
-	/**
-	 * ĐANG TRONG QUÁ TRÌNH KIỂM THỬ
-	 * **/
     @GetMapping("/notifications")
     public ResponseEntity<Object> getNotifications() {
         List<Map<String, Object>> notifications = List.of(
