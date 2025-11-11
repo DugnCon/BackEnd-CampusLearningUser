@@ -1,13 +1,12 @@
-name: CI - Build & Push Spring Image
+name: CI/CD - Deploy to VPS
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -19,27 +18,24 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn clean package -DskipTests -B
 
       - name: Create Dockerfile
         run: |
           cat > Dockerfile << 'EOF'
-          # Build stage
           FROM maven:3.9.6-eclipse-temurin-17 AS build
           WORKDIR /app
           COPY pom.xml .
-          RUN mvn dependency:go-offline -B
           COPY src ./src
-          RUN mvn clean package -DskipTests
+          RUN mvn clean package -DskipTests -B
 
-          # Production stage
           FROM eclipse-temurin:17-jre-jammy
           WORKDIR /app
           COPY --from=build /app/target/*.jar app.jar
-          RUN groupadd -r spring && useradd -r -g spring spring
+          RUN addgroup --system spring && adduser --system --ingroup spring spring
           USER spring
           EXPOSE 8080
-          ENTRYPOINT ["java", "-jar", "app.jar"]
+          ENTRYPOINT ["java", "-jar", "/app.jar"]
           EOF
 
       - name: Login to DockerHub
@@ -49,6 +45,23 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/campuslearning:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/campuslearning:latest
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            damdung/campuslearning-spring-app:latest
+            damdung/campuslearning-spring-app:${{ github.run_number }}
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /home/${{ secrets.VPS_USER }}/campuslearning/BackEnd-CampusLearningUser
+            docker-compose pull spring-app
+            docker-compose up -d spring-app
+            docker system prune -f --volumes
+            echo "Deploy thành công! Website campuslearning.site đã cập nhật."

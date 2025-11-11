@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-  # 🔹 MySQL
   mysql:
     image: mysql:8.0
     container_name: mysql_container
@@ -21,7 +20,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # 🔹 RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq_container
@@ -40,7 +38,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # 🔹 Redis
   redis:
     image: redis:7-alpine
     container_name: redis_container
@@ -86,11 +83,9 @@ services:
     networks:
       - app-net
 
-  # 🔹 Spring Boot (build từ source code clone về)
+  # DÙNG IMAGE TỪ DOCKERHUB
   spring-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: damdung/campuslearning-spring-app:latest
     container_name: spring_container_2
     restart: always
     depends_on:
@@ -123,19 +118,18 @@ services:
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
       SPRING_REDIS_COMMENT_HOST: redis-comment
-      SPRING_REDIS_COMMENT_PORT: 6380
+      SPRING_REDIS_COMMENT_PORT: 6379
       SPRING_REDIS_CONVERSATION_HOST: redis-conversation
-      SPRING_REDIS_CONVERSATION_PORT: 6381
+      SPRING_REDIS_CONVERSATION_PORT: 6379
       SPRING_REDIS_MESSAGE_HOST: redis-message
-      SPRING_REDIS_MESSAGE_PORT: 6382
+      SPRING_REDIS_MESSAGE_PORT: 6379
       SPRING_REDIS_STORY_HOST: redis-story
-      SPRING_REDIS_STORY_PORT: 6383
+      SPRING_REDIS_STORY_PORT: 6379
     networks:
       - app-net
     volumes:
       - ./uploads:/app/uploads
 
-  # 🔹 Code-Server
   code-server:
     image: codercom/code-server:4.105.0
     container_name: code_server_container
@@ -148,7 +142,6 @@ services:
     networks:
       - app-net
 
-  # 🔹 Prometheus
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -160,7 +153,6 @@ services:
       - app-net
     restart: always
 
-  # 🔹 Grafana
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -175,25 +167,22 @@ services:
       - app-net
     restart: always
 
-  # 🔹 Jenkins
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
     restart: always
     ports:
-      - "8085:8080"   # web Jenkins
-      - "50000:50000" # agent
+      - "8085:8080"
+      - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - app-net
 
-# 🔹 Networks
 networks:
   app-net:
 
-# 🔹 Volumes
 volumes:
   mysql_data:
   jenkins_home:
