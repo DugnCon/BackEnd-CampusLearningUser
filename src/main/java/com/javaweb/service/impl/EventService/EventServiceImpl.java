@@ -117,6 +117,7 @@ public class EventServiceImpl implements IEventService {
         }
     }
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public ResponseEntity<Object> eventCancelRegistration(Long eventId, Long userId) {
         //EventEntity eventEntity = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("not found event"));
         //UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("not found user"));

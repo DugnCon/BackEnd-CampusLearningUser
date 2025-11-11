@@ -29,6 +29,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
@@ -138,6 +140,7 @@ public class ConversationServiceImpl implements IConservationService {
      * Tạo conversation (cả private và group)
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> createConversation(Long userId, Map<String, Object> conversationData) {
         long startTime = System.currentTimeMillis();
 

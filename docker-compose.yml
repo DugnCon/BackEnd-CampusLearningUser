@@ -85,6 +85,10 @@ services:
 
   # DÙNG IMAGE TỪ DOCKERHUB
   spring-app:
+    #Khi nào CI/CD được thì comment cái build lại
+    build:
+      context: .                     # <-- MÀY MUỐN THÊM
+      dockerfile: Dockerfile
     image: damdung/campuslearning-spring-app:latest
     container_name: spring_container_2
     restart: always

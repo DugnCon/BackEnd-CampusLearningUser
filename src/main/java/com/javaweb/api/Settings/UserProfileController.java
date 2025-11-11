@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/profile") // Endpoint mới
+@RequestMapping // Endpoint mới
 public class UserProfileController {
 
     @Autowired
     private UserProfileService userProfileService;
 
-    @GetMapping
+    @GetMapping("/profile")
     public ResponseEntity<UserProfileDTO> getProfile(Principal principal) {
         String username = principal.getName();
         UserProfileDTO dto = userProfileService.getProfile(username);
         return ResponseEntity.ok(dto);
     }
 
-    @PutMapping
+    @PutMapping("/users/profile")
     public ResponseEntity<UserProfileDTO> updateProfile(
             Principal principal,
             @RequestBody UserProfileDTO profileDTO) {

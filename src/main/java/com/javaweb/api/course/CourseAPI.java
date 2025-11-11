@@ -248,8 +248,8 @@ public class CourseAPI {
                     "paypal",
                     "sale",
                     "Thanh toán khóa học ID = " + courseId,
-                    "http://112.137.129.158:8888/api/courses/paypal/cancel",
-                    "http://112.137.129.158:8888/api/courses/paypal/success?courseId=" + courseId
+                    "http://campuslearning.site/courses/paypal/cancel",
+                    "http://campuslearning.site/courses/paypal/success?courseId=" + courseId
             );
 
             Payment payment = payPalService.createPayment(dto);

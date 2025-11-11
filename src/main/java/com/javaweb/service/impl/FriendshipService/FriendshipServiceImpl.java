@@ -58,7 +58,7 @@ public class FriendshipServiceImpl implements IFriendshipService {
     }
     @Override
     @Async
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public ResponseEntity<Object> acceptFriend(Long friendId, Long userId) {
         //FriendshipEntity friendshipEntity = friendshipRepository.findById(friendId).orElseThrow(() -> new RuntimeException("not found friendship"));
         FriendshipEntity friendshipEntity = friendshipRepository.AcceptOrRejectFriend(userId, friendId);
@@ -68,7 +68,7 @@ public class FriendshipServiceImpl implements IFriendshipService {
     }
     @Override
     @Async
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public ResponseEntity<Object> rejectFriend(Long friendId , Long userId) {
         //FriendshipEntity friendshipEntity = friendshipRepository.findById(friendId).orElseThrow(() -> new RuntimeException("not found friendship"));
         FriendshipEntity friendshipEntity = friendshipRepository.AcceptOrRejectFriend(userId, friendId);;
