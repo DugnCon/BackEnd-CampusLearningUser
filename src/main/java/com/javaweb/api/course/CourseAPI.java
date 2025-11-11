@@ -36,7 +36,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/user/api")
+@RequestMapping
 public class CourseAPI {
     @Autowired
     private CodeServerService codeServerService;
