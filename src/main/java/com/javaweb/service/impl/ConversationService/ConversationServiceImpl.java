@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
 import java.awt.print.Pageable;
 
@@ -28,6 +29,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,7 +139,7 @@ public class ConversationServiceImpl implements IConservationService {
     // ============ CONVERSATION METHODS ============
 
     /**
-     * Tạo conversation (cả private và group)
+     * Tạo conversation (cả private và group) - BẤT ĐỒNG BỘ TỐI ƯU
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -149,7 +151,7 @@ public class ConversationServiceImpl implements IConservationService {
             String type = (String) conversationData.get("type");
             String title = (String) conversationData.get("title");
 
-            // Validate input
+            // Validation
             if (type == null || (!"private".equals(type) && !"group".equals(type))) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "success", false,
@@ -164,7 +166,6 @@ public class ConversationServiceImpl implements IConservationService {
                 ));
             }
 
-            // Validate private conversation
             if ("private".equals(type) && participants.size() != 1) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "success", false,
@@ -172,7 +173,6 @@ public class ConversationServiceImpl implements IConservationService {
                 ));
             }
 
-            // Validate group conversation
             if ("group".equals(type)) {
                 if (title == null || title.trim().isEmpty()) {
                     return ResponseEntity.badRequest().body(Map.of(
@@ -191,15 +191,52 @@ public class ConversationServiceImpl implements IConservationService {
             UserEntity currentUser = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
 
-            // Kiểm tra conversation đã tồn tại chưa (chỉ cho private)
+            // 🔥 BẤT ĐỒNG BỘ: Kiểm tra conversation tồn tại VÀ tìm users cùng lúc
             if ("private".equals(type)) {
                 Long friendId = Long.valueOf(participants.get(0));
-                ConversationEntity existingConversation = checkExistingPrivateConversation(userId, friendId);
+
+                // Chạy song song 2 task
+                CompletableFuture<ConversationEntity> existingConversationFuture =
+                        CompletableFuture.supplyAsync(() -> {
+                            try {
+                                // Thử lấy từ cache trước (nhanh)
+                                String cacheKey = generateDirectConversationKey(userId, friendId);
+                                ConversationDTO cached = getConversationFromCache(cacheKey);
+                                if (cached != null) {
+                                    return conversationRepository.findById(cached.getConversationID()).orElse(null);
+                                }
+
+                                // Tìm trong database
+                                ConversationEntity conversation = conversationRepository.findPrivateConversationBetweenUsers(userId, friendId);
+
+                                if (conversation != null) {
+                                    // Cache kết quả để lần sau nhanh hơn
+                                    cacheDirectConversation(userId, friendId, conversation);
+                                }
+                                return conversation;
+                            } catch (Exception e) {
+                                log.error("Error checking existing conversation between {} and {}: {}", userId, friendId, e.getMessage());
+                                return null;
+                            }
+                        }, taskExecutor);
+
+                CompletableFuture<List<UserEntity>> participantEntitiesFuture = findUsersAsync(participants);
+
+                // Đợi cả 2 hoàn thành (chỉ mất thời gian của task lâu nhất)
+                CompletableFuture.allOf(existingConversationFuture, participantEntitiesFuture).join();
+
+                ConversationEntity existingConversation = existingConversationFuture.get();
+                List<UserEntity> participantEntities = participantEntitiesFuture.get();
+
+                // Nếu conversation đã tồn tại, trả về luôn
                 if (existingConversation != null) {
                     List<UserSuggestionDTO> existingParticipants = getConversationParticipantsAsync(existingConversation.getConversationID()).join();
                     ConversationDTO existingDTO = convertToConversationDTO(existingConversation, existingParticipants, userId);
 
-                    log.info("Conversation already exists between {} and {}: {}", userId, friendId, existingConversation.getConversationID());
+                    log.info("Conversation already exists between {} and {}: {} - {}ms",
+                            userId, friendId, existingConversation.getConversationID(),
+                            System.currentTimeMillis() - startTime);
+
                     return ResponseEntity.ok(Map.of(
                             "success", true,
                             "data", existingDTO,
@@ -207,24 +244,44 @@ public class ConversationServiceImpl implements IConservationService {
                             "existing", true
                     ));
                 }
+
+                // Tiếp tục tạo conversation mới
+                return createNewConversation(userId, type, title, currentUser, participantEntities, startTime);
+
+            } else {
+                // Group conversation: chỉ cần tìm participants
+                List<UserEntity> participantEntities = findUsersAsync(participants).join();
+                return createNewConversation(userId, type, title, currentUser, participantEntities, startTime);
             }
 
-            ConversationEntity conversationEntity = new ConversationEntity();
+        } catch (Exception e) {
+            log.error("Error creating conversation for user {}: {}", userId, e.getMessage());
+            return ResponseEntity.status(500).body(Map.of(
+                    "success", false,
+                    "message", "Không thể tạo cuộc trò chuyện: " + e.getMessage()
+            ));
+        }
+    }
 
-            conversationEntity.setUser(currentUser);
-            conversationEntity.setType(type);
-            conversationEntity.setIsActive(true);
-            conversationEntity.setCreatedAt(LocalDateTime.now());
-
-            // Tìm participants bất đồng bộ
-            List<UserEntity> participantEntities = findUsersAsync(participants).join();
-
+    /**
+     * Tạo conversation mới (tách riêng để tái sử dụng)
+     */
+    private ResponseEntity<Object> createNewConversation(Long userId, String type, String title,
+                                                         UserEntity currentUser, List<UserEntity> participantEntities,
+                                                         long startTime) {
+        try {
             if (participantEntities.isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "success", false,
                         "message", "Không tìm thấy người dùng tham gia"
                 ));
             }
+
+            ConversationEntity conversationEntity = new ConversationEntity();
+            conversationEntity.setUser(currentUser);
+            conversationEntity.setType(type);
+            conversationEntity.setIsActive(true);
+            conversationEntity.setCreatedAt(LocalDateTime.now());
 
             List<UserSuggestionDTO> userSuggestionDTOS = participantEntities.stream()
                     .map(user -> modelMapper.map(user, UserSuggestionDTO.class))
@@ -235,36 +292,52 @@ public class ConversationServiceImpl implements IConservationService {
 
             // Xử lý theo loại conversation
             if ("private".equals(type)) {
-                // Private conversation: set title là tên của người kia
                 if (!participantEntities.isEmpty()) {
                     conversationEntity.setTitle(participantEntities.get(0).getFullName());
                 }
             } else {
-                // Group conversation: set title từ input
                 conversationEntity.setTitle(title);
-                // Có thể set avatar cho group nếu có
             }
 
             // Lưu conversation và participants
             ConversationEntity savedConversation = conversationRepository.save(conversationEntity);
             conversationParticipantRepository.saveAll(conversationParticipants);
 
-            // Cache conversation
-            cacheConversation(savedConversation, userSuggestionDTOS);
+            // Cache conversation (bất đồng bộ)
+            CompletableFuture.runAsync(() -> {
+                try {
+                    cacheConversation(savedConversation, userSuggestionDTOS);
+                } catch (Exception e) {
+                    log.warn("Failed to cache conversation {}: {}", savedConversation.getConversationID(), e.getMessage());
+                }
+            }, taskExecutor);
 
-            // Cache direct conversation mapping (chỉ cho private)
+            // Cache direct conversation mapping (bất đồng bộ)
             if ("private".equals(type) && !participantEntities.isEmpty()) {
                 Long friendId = participantEntities.get(0).getUserID();
-                cacheDirectConversation(userId, friendId, savedConversation);
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        cacheDirectConversation(userId, friendId, savedConversation);
+                    } catch (Exception e) {
+                        log.warn("Failed to cache direct conversation between {} and {}: {}", userId, friendId, e.getMessage());
+                    }
+                }, taskExecutor);
             }
 
-            // Invalidate cache cho tất cả participants
+            // Invalidate cache cho tất cả participants (bất đồng bộ)
             List<Long> allUserIds = new ArrayList<>();
             allUserIds.add(userId);
             allUserIds.addAll(participantEntities.stream()
                     .map(UserEntity::getUserID)
                     .collect(Collectors.toList()));
-            evictUserConversationsCache(allUserIds);
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    evictUserConversationsCache(allUserIds);
+                } catch (Exception e) {
+                    log.warn("Failed to evict cache for users {}: {}", allUserIds, e.getMessage());
+                }
+            }, taskExecutor);
 
             ConversationDTO responseDTO = toConversationDTO(savedConversation, userSuggestionDTOS);
 
@@ -280,7 +353,7 @@ public class ConversationServiceImpl implements IConservationService {
             ));
 
         } catch (Exception e) {
-            log.error("Error creating conversation for user {}: {}", userId, e.getMessage());
+            log.error("Error creating new conversation for user {}: {}", userId, e.getMessage());
             return ResponseEntity.status(500).body(Map.of(
                     "success", false,
                     "message", "Không thể tạo cuộc trò chuyện: " + e.getMessage()
@@ -289,25 +362,44 @@ public class ConversationServiceImpl implements IConservationService {
     }
 
     /**
-     * Kiểm tra conversation private đã tồn tại chưa
+     * Kiểm tra conversation private đã tồn tại chưa (BẤT ĐỒNG BỘ)
      */
-    private ConversationEntity checkExistingPrivateConversation(Long user1Id, Long user2Id) {
-        // Thử lấy từ cache trước
-        String cacheKey = generateDirectConversationKey(user1Id, user2Id);
-        ConversationDTO cached = getConversationFromCache(cacheKey);
-        if (cached != null) {
-            return conversationRepository.findById(cached.getConversationID()).orElse(null);
-        }
+    private CompletableFuture<ConversationEntity> checkExistingPrivateConversationAsync(Long user1Id, Long user2Id) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                // Thử lấy từ cache trước (nhanh)
+                String cacheKey = generateDirectConversationKey(user1Id, user2Id);
+                ConversationDTO cached = getConversationFromCache(cacheKey);
+                if (cached != null) {
+                    return conversationRepository.findById(cached.getConversationID()).orElse(null);
+                }
 
-        // Tìm trong database
-        ConversationEntity conversation = conversationRepository.findPrivateConversationBetweenUsers(user1Id, user2Id);
+                // Tìm trong database
+                ConversationEntity conversation = conversationRepository.findPrivateConversationBetweenUsers(user1Id, user2Id);
 
-        if (conversation != null) {
-            // Cache kết quả
-            cacheDirectConversation(user1Id, user2Id, conversation);
-        }
+                if (conversation != null) {
+                    // Cache kết quả để lần sau nhanh hơn
+                    cacheDirectConversation(user1Id, user2Id, conversation);
+                }
 
-        return conversation;
+                return conversation;
+            } catch (Exception e) {
+                log.error("Error checking existing conversation between {} and {}: {}", user1Id, user2Id, e.getMessage());
+                return null;
+            }
+        }, taskExecutor);
+    }
+
+    // Hoặc tự cấu hình (thêm vào @Configuration class)
+    @Bean
+    public TaskExecutor asyncTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(50);
+        executor.setQueueCapacity(100);
+        executor.setThreadNamePrefix("ConversationAsync-");
+        executor.initialize();
+        return executor;
     }
 
     /**
@@ -358,7 +450,6 @@ public class ConversationServiceImpl implements IConservationService {
         return conversations;
     }
 
-    @SuppressWarnings("unchecked")
     private List<ConversationDTO> getConversationsFromCache(Long userId) {
         try {
             String key = USER_CONVERSATIONS_KEY_PREFIX + userId;
