@@ -3,14 +3,7 @@ package com.javaweb.model.dto;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
-// ... các imports khác
-
-/**
- * DTO chứa TẤT CẢ các trường từ UserEntity và UserProfile để giao tiếp với Frontend.
- */
 public class UserProfileDTO {
-
-    // --- I. Fields từ UserEntity (Bảng users) ---
     @JsonProperty("FullName")
     private String fullName;
 
@@ -27,7 +20,11 @@ public class UserProfileDTO {
     @JsonProperty("School")
     private String school;
 
+    @JsonProperty("Avatar")
+    private String avatar;
 
+    @JsonProperty("Image")
+    private String image;
 
     @JsonProperty("Address")
     private String address;
@@ -41,11 +38,9 @@ public class UserProfileDTO {
     @JsonProperty("PhoneNumber")
     private String phoneNumber;
 
-    // Lưu ý: Đảm bảo format ngày tháng ở Service/DTO là YYYY-MM-DD
     @JsonProperty("DateOfBirth")
     private String dateOfBirth;
 
-    // --- II. Fields từ UserProfile (Bảng userprofiles) ---
     @JsonProperty("SocialLinks")
     private Map<String, String> socialLinks;
 
@@ -74,9 +69,22 @@ public class UserProfileDTO {
     @JsonProperty("NotificationPreferences")
     private Map<String, Boolean> notificationPreferences;
 
-    // --- Getters and Setters ---
+    public String getAvatar() {
+        return avatar;
+    }
 
-    // I. Getters/Setters cho UserEntity Fields
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public String getFullName() {
         return fullName;
     }

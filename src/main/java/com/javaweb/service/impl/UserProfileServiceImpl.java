@@ -39,7 +39,8 @@ public class UserProfileServiceImpl implements UserProfileService {
         dto.setFullName(userEntity.getFullName());
         dto.setEmail(userEntity.getEmail());
         dto.setUsername(userEntity.getUsername());
-
+        dto.setImage(userEntity.getImage());
+        dto.setAvatar(userEntity.getAvatar());
         dto.setBio(userEntity.getBio());
         dto.setSchool(userEntity.getSchool());
         dto.setPhoneNumber(userEntity.getPhoneNumber());
