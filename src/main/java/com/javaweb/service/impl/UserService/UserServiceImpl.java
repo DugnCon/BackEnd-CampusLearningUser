@@ -123,6 +123,9 @@ public class UserServiceImpl implements IUserService{
 			userEntity.setPassword(password);
 			userEntity.setSchool("None");
 			userEntity.setProvider("google");
+			userEntity.setRole("STUDENT");
+			userEntity.setAccountStatus("ACTIVE");
+			userEntity.setLastLoginAt(LocalDateTime.now());
 
 			userRepository.save(userEntity);
 			return userEntity;
