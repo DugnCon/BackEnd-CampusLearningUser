@@ -149,7 +149,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "TEACHER")
                 .anyRequest().authenticated()
                 .and()
-                /*.oauth2Login()
+                .oauth2Login()
                 //.loginPage("/user/api/auth/google") // FE trigger login
                 //.loginPage("/api/auth/login/test")
                 .authorizationEndpoint()
