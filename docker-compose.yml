@@ -132,7 +132,7 @@ services:
     networks:
       - app-net
     volumes:
-      - ./uploads:/app/uploads
+      - /home/nguyenducduong/campuslearning/uploads:/app/uploads
 
   code-server:
     image: codercom/code-server:4.105.0
