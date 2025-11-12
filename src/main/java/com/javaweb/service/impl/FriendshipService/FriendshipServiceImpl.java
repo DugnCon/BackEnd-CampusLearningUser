@@ -39,7 +39,7 @@ public class FriendshipServiceImpl implements IFriendshipService {
     private ModelMapper modelMapper;
 
     @Override
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> addFriend(Long userId, Map<String,Object> data) {
         Long friendId = MapUtils.getObject(data, "addresseeId", Long.class);
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("can not find user in friendship"));
@@ -57,8 +57,7 @@ public class FriendshipServiceImpl implements IFriendshipService {
         }
     }
     @Override
-    @Async
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> acceptFriend(Long friendId, Long userId) {
         //FriendshipEntity friendshipEntity = friendshipRepository.findById(friendId).orElseThrow(() -> new RuntimeException("not found friendship"));
         FriendshipEntity friendshipEntity = friendshipRepository.AcceptOrRejectFriend(userId, friendId);
@@ -67,7 +66,6 @@ public class FriendshipServiceImpl implements IFriendshipService {
         return ResponseEntity.ok(Map.of("success", true));
     }
     @Override
-    @Async
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public ResponseEntity<Object> rejectFriend(Long friendId , Long userId) {
         //FriendshipEntity friendshipEntity = friendshipRepository.findById(friendId).orElseThrow(() -> new RuntimeException("not found friendship"));
@@ -77,7 +75,6 @@ public class FriendshipServiceImpl implements IFriendshipService {
         return ResponseEntity.ok(Map.of("success", true));
     }
     @Override
-    @Async
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> deleteFrienḍ(Long friendId, Long userId) {
         FriendshipEntity friendshipEntity = friendshipRepository.DeleteFriend(userId, friendId);;
