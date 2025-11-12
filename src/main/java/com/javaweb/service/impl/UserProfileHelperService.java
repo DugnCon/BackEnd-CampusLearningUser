@@ -15,12 +15,6 @@ public class UserProfileHelperService { // 👈 Class mới
     @Autowired
     private UserProfileRepository userProfileRepository;
 
-    /**
-     * Phương thức Tìm hoặc Tạo Profile.
-     * Sử dụng REQUIRES_NEW để đảm bảo:
-     * 1. Có thể INSERT (vì nó không phải readOnly).
-     * 2. Ngăn race condition (giống như logic Settings).
-     */
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     public UserProfile findOrCreateProfile(UserEntity user) {
         // Cố gắng tìm Profile dựa trên UserEntity

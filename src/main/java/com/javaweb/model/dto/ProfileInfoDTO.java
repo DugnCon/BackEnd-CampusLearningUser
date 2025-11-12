@@ -11,10 +11,35 @@ public class ProfileInfoDTO {
     private String email;
     private String username;
 
-    public ProfileInfoDTO(UserEntity user) {
-        this.fullName = user.getFullName();
-        this.profileImage = user.getAvatar(); // Map 'avatar' sang 'profileImage'
-        this.email = user.getEmail();
-        this.username = user.getUsername();
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

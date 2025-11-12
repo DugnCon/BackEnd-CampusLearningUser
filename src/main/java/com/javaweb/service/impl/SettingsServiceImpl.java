@@ -7,6 +7,7 @@ import com.javaweb.repository.IUserRepository;
 import com.javaweb.repository.UserSettingsRepository;
 import com.javaweb.service.FileStorageService;
 import com.javaweb.service.SettingsService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,8 @@ public class SettingsServiceImpl implements SettingsService {
     private FileStorageService fileStorageService;
     @Autowired
     private UserSettingsHelperService userSettingsHelperService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     private UserEntity getUserByUsername(String identifier) {
         return userRepository.findByEmail(identifier)
@@ -62,7 +65,12 @@ public class SettingsServiceImpl implements SettingsService {
 
         UserSettings settingsEntity = userSettingsHelperService.findOrCreateSettings(user);
 
-        ProfileInfoDTO profileInfo = new ProfileInfoDTO(user);
+        ProfileInfoDTO profileInfo = new ProfileInfoDTO();
+        profileInfo.setProfileImage(user.getAvatar());
+        profileInfo.setFullName(user.getFullName());
+        profileInfo.setUsername(user.getUsername());
+        profileInfo.setEmail(user.getEmail());
+
         UserSettingsDTO settingsDTO = mapEntityToDTO(settingsEntity);
 
         CombinedSettingsResponseDTO response = new CombinedSettingsResponseDTO();
