@@ -21,7 +21,7 @@ import java.util.Map;
 public class FileStorageService {
 
     // Đường dẫn uploads dùng chung trên VPS
-    private final String uploadDir = "/home/nguyenducduong/campuslearning/uploads";
+    private final String uploadDir = "/app/uploads";
 
     public String saveFile(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) return null;
