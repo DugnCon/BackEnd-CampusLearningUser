@@ -10,4 +10,13 @@ import lombok.NoArgsConstructor;
 public class ChatRequestDTO {
     // Frontend gửi toàn bộ lịch sử (bao gồm tin nhắn mới nhất của User)
     private List<ChatMessageDTO> messages;
+
+	public List<ChatMessageDTO> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<ChatMessageDTO> messages) {
+		this.messages = messages;
+	}
+    
 }

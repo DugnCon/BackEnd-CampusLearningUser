@@ -1,7 +1,6 @@
 package com.javaweb.model.dto.Profile;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.javaweb.model.dto.Profile.ProfileInformation.EducationDTO;
 import com.javaweb.model.dto.Profile.ProfileInformation.SocialLinkDTO;
 import com.javaweb.model.dto.Profile.ProfileInformation.WorkExperienceDTO;
@@ -13,73 +12,33 @@ import java.util.Map;
 public class UserProfileDetailDTO {
 
     // Basic Info
-    @JsonProperty("FullName")
     private String fullName;
-
-    @JsonProperty("Email")
     private String email;
-
-    @JsonProperty("Username")
     private String username;
-
-    @JsonProperty("Bio")
     private String bio;
-
-    @JsonProperty("Pronouns")
     private String pronouns;
-
-    @JsonProperty("Url")
     private String url;
-
-    @JsonProperty("OrcidId")
     private String orcidId;
 
     // Location & Contact
-    @JsonProperty("School")
     private String school;
-
-    @JsonProperty("Address")
     private String address;
-
-    @JsonProperty("City")
     private String city;
-
-    @JsonProperty("Country")
     private String country;
-
-    @JsonProperty("PhoneNumber")
     private String phoneNumber;
-
-    @JsonProperty("DateOfBirth")
     private String dateOfBirth;
 
     // References to other DTOs
-    @JsonProperty("SocialLinks")
     private SocialLinkDTO socialLinks;
-
-    @JsonProperty("Education")
     private List<EducationDTO> education;
-
-    @JsonProperty("WorkExperience")
     private List<WorkExperienceDTO> workExperience;
-
-    @JsonProperty("Skills")
     private List<String> skills;
-
-    @JsonProperty("Interests")
     private List<String> interests;
-
-    @JsonProperty("Achievements")
     private List<String> achievements;
 
     // Settings
-    @JsonProperty("PreferredLanguage")
     private String preferredLanguage;
-
-    @JsonProperty("TimeZone")
     private String timeZone;
-
-    @JsonProperty("NotificationPreferences")
     private Map<String, Boolean> notificationPreferences;
 
     // Getters & Setters
