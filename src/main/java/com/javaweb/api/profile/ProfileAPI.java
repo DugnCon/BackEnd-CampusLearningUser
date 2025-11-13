@@ -2,7 +2,7 @@ package com.javaweb.api.profile;
 
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.MyUserDetail;
-import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
+import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IProfileService;
 import org.modelmapper.ModelMapper;

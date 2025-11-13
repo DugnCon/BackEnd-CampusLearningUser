@@ -6,7 +6,7 @@ import com.javaweb.entity.ChatAndCall.ConversationParticipantEntity;
 import com.javaweb.entity.ChatAndCall.MessageEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.ChatAndCall.ConversationDTO;
-import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
+import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
 import com.javaweb.repository.IConversationParticipantRepository;
 import com.javaweb.repository.IConversationRepository;
 import com.javaweb.repository.IMessageRepository;
@@ -31,7 +31,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 

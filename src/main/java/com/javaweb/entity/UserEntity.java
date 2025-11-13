@@ -74,6 +74,20 @@ public class UserEntity {
 	private LocalDateTime createdAt;
 	@Column(name = "LastLoginAt")
 	private LocalDateTime lastLoginAt;
+	@Column(name = "Bio", columnDefinition = "TEXT")
+	private String bio;
+
+	@Column(name = "PhoneNumber")
+	private String phoneNumber;
+
+	@Column(name = "Address")
+	private String address;
+
+	@Column(name = "City")
+	private String city;
+
+	@Column(name = "Country")
+	private String country;
 
 
 	@OneToMany(mappedBy = "initiator", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -134,6 +148,19 @@ public class UserEntity {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<CompetitionParticipantEntity> participant;
+
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private UserProfileEntity profile;
+
+	@JsonBackReference
+	public UserProfileEntity getProfile() {
+		return profile;
+	}
+
+	public void setProfile(UserProfileEntity profile) {
+		this.profile = profile;
+	}
 
 	@JsonBackReference
 	public List<CompetitionParticipantEntity> getParticipant() {
@@ -367,26 +394,6 @@ public class UserEntity {
 	public void setUserID(Long userID) {
 		UserID = userID;
 	}
-
-
-
-
-
-	@Column(name = "Bio", columnDefinition = "TEXT") // Dùng TEXT cho Bio nếu có thể dài
-	private String bio;
-
-	@Column(name = "PhoneNumber")
-	private String phoneNumber;
-
-	@Column(name = "Address")
-	private String address;
-
-	@Column(name = "City")
-	private String city;
-
-	@Column(name = "Country")
-	private String country;
-
 
 	public String getBio() {
 		return bio;

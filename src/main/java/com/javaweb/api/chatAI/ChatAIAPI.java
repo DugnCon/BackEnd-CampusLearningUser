@@ -1,8 +1,7 @@
 package com.javaweb.api.chatAI;
-import com.javaweb.model.dto.ChatMessageDTO;
-import com.javaweb.model.dto.ChatRequestDTO;
+import com.javaweb.model.dto.ChatAndCall.ChatMessageDTO;
+import com.javaweb.model.dto.ChatAndCall.ChatRequestDTO;
 import com.javaweb.service.GeminiService;
-import com.javaweb.api.chatAI.ErrorResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

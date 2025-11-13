@@ -1,7 +1,7 @@
 package com.javaweb.model.dto;
 
-import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
-import lombok.Data;
+import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
+
 import java.time.LocalDateTime;
 
 public class StoryDTO {

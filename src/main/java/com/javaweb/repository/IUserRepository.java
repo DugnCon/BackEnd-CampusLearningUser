@@ -1,19 +1,15 @@
 package com.javaweb.repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.entity.UserEntity;
-import com.javaweb.model.dto.UserDTO;
 
 @Repository
 public interface IUserRepository extends JpaRepository<UserEntity, Long> {
@@ -44,15 +40,12 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 	List<UserEntity> findByFullName(String query);
 	List<UserEntity> findBySchool(String query);
 
-	// Tìm users by list of IDs (cho get participants)
 	@Query("SELECT u FROM UserEntity u WHERE u.UserID IN :userIds AND u.accountStatus = 'ACTIVE'")
 	List<UserEntity> findByIdIn(@Param("userIds") List<Long> userIds);
 
-	// Tìm users gần đây nhất (cho cache warm-up) - LIMIT syntax cho MySQL
 	@Query(value = "SELECT u FROM UserEntity u WHERE u.accountStatus = 'ACTIVE' ORDER BY u.UserID DESC")
 	List<UserEntity> findRecentActiveUsers(@Param("limit") int limit);
 
-	// Search users tổng hợp (cho search chung trong conversation)
 	@Query("SELECT u FROM UserEntity u WHERE " +
 			"(LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
 			"LOWER(u.fullName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +

@@ -1,14 +1,12 @@
 package com.javaweb.service.impl.StoryService;
 
-import antlr.ASTFactory;
-import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaweb.entity.Friend.FriendshipEntity;
 import com.javaweb.entity.Story.StoryEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.ChatAndCall.ConversationDTO;
 import com.javaweb.model.dto.StoryDTO;
-import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
+import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
 import com.javaweb.repository.IFriendshipRepository;
 import com.javaweb.repository.IStoryRepository;
 import com.javaweb.repository.IUserRepository;

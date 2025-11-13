@@ -1,6 +1,5 @@
 package com.javaweb.service.impl.UserService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -9,25 +8,20 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
-import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
+import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.javaweb.entity.UserEntity;
-import com.javaweb.model.dto.MyUserDetail;
-import com.javaweb.model.dto.UserDTO;
+import com.javaweb.model.dto.User.UserDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IUserService;
 import com.javaweb.service.JwtService;
-import org.springframework.transaction.annotation.Isolation;
 
 @Service
 public class UserServiceImpl implements IUserService{

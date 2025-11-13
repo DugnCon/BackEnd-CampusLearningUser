@@ -2,7 +2,7 @@ package com.javaweb.service;
 
 import com.javaweb.entity.Post.PostEntity;
 import com.javaweb.entity.Post.PostLikeEntity;
-import com.javaweb.model.dto.PostLikeDTO;
+import com.javaweb.model.dto.Post.PostLikeDTO;
 import com.javaweb.repository.IPostLikeRepository;
 import com.javaweb.repository.IPostRepository;
 import com.javaweb.repository.IUserRepository;

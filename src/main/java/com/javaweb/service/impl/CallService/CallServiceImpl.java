@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.javaweb.model.dto.CallDTO;
+import com.javaweb.model.dto.ChatAndCall.CallDTO;
 import com.javaweb.service.ICallService;
 
 @Service

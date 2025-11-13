@@ -2,8 +2,7 @@ package com.javaweb.service.impl.FriendshipService;
 
 import com.javaweb.entity.Friend.FriendshipEntity;
 import com.javaweb.entity.UserEntity;
-import com.javaweb.model.dto.UserDTO;
-import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
+import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
 import com.javaweb.repository.IFriendshipRepository;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IFriendshipService;
@@ -11,7 +10,6 @@ import com.javaweb.utils.MapUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -24,7 +22,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

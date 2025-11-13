@@ -1,7 +1,7 @@
 package com.javaweb.service;
 
-import com.javaweb.model.dto.CombinedSettingsResponseDTO;
-import com.javaweb.model.dto.UserSettingsDTO;
+import com.javaweb.model.dto.Profile.CombinedSettingsResponseDTO;
+import com.javaweb.model.dto.User.UserSettingsDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface SettingsService {

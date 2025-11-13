@@ -1,0 +1,23 @@
+package com.javaweb.model.dto.Profile;
+import com.javaweb.model.dto.ProfileInfoDTO;
+import com.javaweb.model.dto.User.UserSettingsDTO;
+import lombok.Data;
+
+@Data
+public class CombinedSettingsResponseDTO {
+    private ProfileInfoDTO profileInfo;
+    private UserSettingsDTO settings;
+	public ProfileInfoDTO getProfileInfo() {
+		return profileInfo;
+	}
+	public void setProfileInfo(ProfileInfoDTO profileInfo) {
+		this.profileInfo = profileInfo;
+	}
+	public UserSettingsDTO getSettings() {
+		return settings;
+	}
+	public void setSettings(UserSettingsDTO settings) {
+		this.settings = settings;
+	}
+    
+}

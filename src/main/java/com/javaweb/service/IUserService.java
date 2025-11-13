@@ -1,11 +1,10 @@
 package com.javaweb.service;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.javaweb.entity.UserEntity;
-import com.javaweb.model.dto.UserDTO;
+import com.javaweb.model.dto.User.UserDTO;
 
 @Service
 public interface IUserService{

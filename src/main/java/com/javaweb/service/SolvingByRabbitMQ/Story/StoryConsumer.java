@@ -5,7 +5,7 @@ import com.javaweb.config.RabbitMQConfig;
 import com.javaweb.entity.Story.StoryEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.StoryDTO;
-import com.javaweb.model.dto.UserSuggestions.UserSuggestionDTO;
+import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
 import com.javaweb.repository.IStoryRepository;
 import com.javaweb.repository.IUserRepository;
 import org.modelmapper.ModelMapper;
