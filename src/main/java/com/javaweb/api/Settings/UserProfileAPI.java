@@ -20,14 +20,14 @@ public class UserProfileAPI {
     @Autowired
     private UserProfileService userProfileService;
 
-    /*@GetMapping("/users/profile")
+    @GetMapping("/users/profile")
     public ResponseEntity<Object> getProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
         return userProfileService.getUserProfile(userId);
-    }*/
+    }
 
     @PutMapping("/users/profile")
     public ResponseEntity<Object> updateProfile(

@@ -87,6 +87,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\Ca
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\notification\NotificationAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\events\EventAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ICompetitionService.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\converter\SocialLinkConverter.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\RabbitMQConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\UserProfileRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\Settings\UserProfileAPI.java

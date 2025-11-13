@@ -202,6 +202,7 @@ com\javaweb\entity\Course\LessonProgressEntity.class
 com\javaweb\model\dto\Post\PostDTO.class
 com\javaweb\api\profile\ProfileAPI.class
 com\javaweb\config\CorsFilter.class
+com\javaweb\converter\SocialLinkConverter.class
 com\javaweb\service\ICodingExerciseService.class
 com\javaweb\api\chatAI\ErrorResponse.class
 com\javaweb\entity\Post\PostEntity.class

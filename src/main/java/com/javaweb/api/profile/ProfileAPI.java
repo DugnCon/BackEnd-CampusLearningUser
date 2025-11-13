@@ -40,7 +40,7 @@ public class ProfileAPI {
         return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("/users/profile")
+    /*@GetMapping("/users/profile")
     public ResponseEntity<?> getUserProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
@@ -52,7 +52,7 @@ public class ProfileAPI {
         UserSuggestionDTO userDTO = modelMapper.map(user, UserSuggestionDTO.class);
 
         return ResponseEntity.ok(Map.of("success", true, "data", userDTO));
-    }
+    }*/
 
     @GetMapping("/posts/user/{targetUserId}")
     public ResponseEntity<?> getUserMedia(@PathVariable Long targetUserId, @RequestParam(value = "limit") int limit) {
