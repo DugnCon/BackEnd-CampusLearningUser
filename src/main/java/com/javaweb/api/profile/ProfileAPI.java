@@ -36,7 +36,16 @@ public class ProfileAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
-        return userProfileService.getUserProfile(userId);
+        ResponseEntity<?> response = userProfileService.getUserProfile(userId);
+        Object body = response.getBody();
+        if(body instanceof Map) {
+            Map<String,Object> value = (Map<String, Object>) body;
+            Object profile = value.get("profile");
+            if(profile instanceof UserProfileDetailDTO) {
+                return ResponseEntity.ok(profile);
+            }
+        }
+        return ResponseEntity.ok(Map.of("success", true, "message", "Không có thông tin hồ sơ"));
     }
 
     @GetMapping("users/{friendId}")
@@ -44,8 +53,17 @@ public class ProfileAPI {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
-        Long userId = myUserDetail.getId();
-       return userProfileService.getUserProfile(friendId);
+        //Long userId = myUserDetail.getId();
+        ResponseEntity<?> response = userProfileService.getUserProfile(friendId);
+        Object body = response.getBody();
+        if(body instanceof Map) {
+            Map<String,Object> value = (Map<String, Object>) body;
+            Object profile = value.get("profile");
+            if(profile instanceof UserProfileDetailDTO) {
+                return ResponseEntity.ok(profile);
+            }
+        }
+        return ResponseEntity.ok(Map.of("success", true, "message", "Không có thông tin hồ sơ"));
     }
 
     /*@GetMapping("/users/profile")
