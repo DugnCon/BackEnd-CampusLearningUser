@@ -2,9 +2,11 @@ package com.javaweb.api.profile;
 
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.MyUserDetail;
+import com.javaweb.model.dto.Profile.UserProfileDetailDTO;
 import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IProfileService;
+import com.javaweb.service.UserProfileService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,8 @@ public class ProfileAPI {
     private IProfileService profileService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private UserProfileService userProfileService;
 
     @GetMapping("/auth/me")
     public ResponseEntity<?> getCurrentUserProfile() {
@@ -32,12 +36,16 @@ public class ProfileAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
+        return userProfileService.getUserProfile(userId);
+    }
 
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("not found"));
+    @GetMapping("users/{friendId}")
+    public ResponseEntity<Object> getProfileFriend(@PathVariable Long friendId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
-        UserSuggestionDTO userDTO = modelMapper.map(user, UserSuggestionDTO.class);
-
-        return ResponseEntity.ok(userDTO);
+        Long userId = myUserDetail.getId();
+       return userProfileService.getUserProfile(friendId);
     }
 
     /*@GetMapping("/users/profile")

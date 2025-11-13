@@ -73,10 +73,13 @@ public class UserServiceImpl implements IUserService{
 		String email = userDTO.getEmail();
 		String password = userDTO.getPassword();
 		if(!email.contains("@")) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản không đúng định dạng. Vui lòng nhâpj lại"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản không đúng định dạng. Vui lòng nhâp lại"));
 		}
 		try {
 			UserEntity user = userRepository.userLogin(email);
+			if(user == null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản này không tồn tại hoặc sai tài khoản mật khẩu"));
+			}
 			if(passwordEncoder.matches(password, user.getPassword())) {
 
 				user.setStatus("ONLINE");
