@@ -2,11 +2,9 @@ package com.javaweb.api.profile;
 
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.MyUserDetail;
-import com.javaweb.model.dto.Profile.UserProfileDetailDTO;
 import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IProfileService;
-import com.javaweb.service.UserProfileService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -19,7 +17,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class ProfileAPI {
     @Autowired
     private IUserRepository userRepository;
@@ -27,8 +25,6 @@ public class ProfileAPI {
     private IProfileService profileService;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private UserProfileService userProfileService;
 
     @GetMapping("/auth/me")
     public ResponseEntity<?> getCurrentUserProfile() {
@@ -36,37 +32,15 @@ public class ProfileAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
-        ResponseEntity<?> response = userProfileService.getUserProfile(userId);
-        Object body = response.getBody();
-        if(body instanceof Map) {
-            Map<String,Object> value = (Map<String, Object>) body;
-            Object profile = value.get("profile");
-            if(profile instanceof UserProfileDetailDTO) {
-                return ResponseEntity.ok(profile);
-            }
-        }
-        return ResponseEntity.ok(Map.of("success", true, "message", "Không có thông tin hồ sơ"));
+
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("not found"));
+
+        UserSuggestionDTO userDTO = modelMapper.map(user, UserSuggestionDTO.class);
+
+        return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("users/{friendId}")
-    public ResponseEntity<Object> getProfileFriend(@PathVariable Long friendId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
-
-        //Long userId = myUserDetail.getId();
-        ResponseEntity<?> response = userProfileService.getUserProfile(friendId);
-        Object body = response.getBody();
-        if(body instanceof Map) {
-            Map<String,Object> value = (Map<String, Object>) body;
-            Object profile = value.get("profile");
-            if(profile instanceof UserProfileDetailDTO) {
-                return ResponseEntity.ok(profile);
-            }
-        }
-        return ResponseEntity.ok(Map.of("success", true, "message", "Không có thông tin hồ sơ"));
-    }
-
-    /*@GetMapping("/users/profile")
+    @GetMapping("/users/profile")
     public ResponseEntity<?> getUserProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
@@ -78,7 +52,7 @@ public class ProfileAPI {
         UserSuggestionDTO userDTO = modelMapper.map(user, UserSuggestionDTO.class);
 
         return ResponseEntity.ok(Map.of("success", true, "data", userDTO));
-    }*/
+    }
 
     @GetMapping("/posts/user/{targetUserId}")
     public ResponseEntity<?> getUserMedia(@PathVariable Long targetUserId, @RequestParam(value = "limit") int limit) {
