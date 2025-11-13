@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaweb.converter.JsonConverter;
+import com.javaweb.converter.SocialLinkConverter;
 import com.javaweb.model.dto.Profile.ProfileInformation.EducationDTO;
 import com.javaweb.model.dto.Profile.ProfileInformation.SocialLinkDTO;
 import com.javaweb.model.dto.Profile.ProfileInformation.WorkExperienceDTO;
@@ -50,7 +51,7 @@ public class UserProfileEntity {
     private List<String> interests;
 
     @Column(name = "SocialLinks")
-    @Convert(converter = JsonConverter.class)
+    @Convert(converter = SocialLinkConverter.class)
     private SocialLinkDTO socialLinks;
 
     @Column(name = "Achievements")
