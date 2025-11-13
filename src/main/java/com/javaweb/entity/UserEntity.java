@@ -8,6 +8,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.javaweb.entity.ChatAndCall.CallEntity;
+import com.javaweb.entity.ChatAndCall.CallParticipantEntity;
 import com.javaweb.entity.ChatAndCall.ConversationEntity;
 import com.javaweb.entity.ChatAndCall.ConversationParticipantEntity;
 import com.javaweb.entity.Competition.CompetitionParticipantEntity;
@@ -152,6 +153,32 @@ public class UserEntity {
 	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference
 	private UserProfileEntity profile;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CallParticipantEntity> callparticipant = new ArrayList<>();
+
+	@OneToMany(mappedBy = "initiator", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<CallEntity> call;
+
+	@JsonBackReference
+	public List<CallEntity> getCall() {
+		return call;
+	}
+
+	public void setCall(List<CallEntity> call) {
+		this.call = call;
+	}
+
+	@JsonBackReference
+	public List<CallParticipantEntity> getCallparticipant() {
+		return callparticipant;
+	}
+
+	public void setCallparticipant(List<CallParticipantEntity> callparticipant) {
+		this.callparticipant = callparticipant;
+	}
 
 	@JsonBackReference
 	public UserProfileEntity getProfile() {

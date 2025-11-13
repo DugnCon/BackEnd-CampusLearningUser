@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface UserProfileService {
+public interface IUserProfileService {
     ResponseEntity<Object> getUserProfile(Long userId);
     ResponseEntity<Object> updateEducation(Long userId, List<EducationDTO> educationDTO);
     ResponseEntity<Object> updateWorkExperience(Long userId, List<WorkExperienceDTO> workExperienceDTO);

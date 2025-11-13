@@ -1,114 +1,242 @@
 package com.javaweb.api.call;
 
-import java.util.List;
-
+import com.javaweb.model.dto.ChatAndCall.CallDTO;
+import com.javaweb.model.dto.ChatAndCall.InitiateCallRequest;
+import com.javaweb.model.dto.MyUserDetail;
+import com.javaweb.service.ICallService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.javaweb.model.dto.ChatAndCall.CallDTO;
-import com.javaweb.service.ICallService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/calls")
+@Slf4j
 public class CallAPI {
 
     @Autowired
     private ICallService callService;
 
-    @GetMapping("/active")
-    public ResponseEntity<List<CallDTO>> getActiveCalls() {
-        List<CallDTO> calls = callService.getActiveCalls();
-        return ResponseEntity.ok(calls);
+    /**
+     * Lấy thông tin user từ authentication
+     */
+    private Long getCurrentUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new RuntimeException("User chưa đăng nhập");
+        }
+
+        Object principal = auth.getPrincipal();
+        if (principal instanceof MyUserDetail) {
+            MyUserDetail myUserDetail = (MyUserDetail) principal;
+            return myUserDetail.getId();
+        } else {
+            throw new RuntimeException("Không thể lấy thông tin user");
+        }
     }
 
+    /**
+     * Khởi tạo cuộc gọi mới
+     */
     @PostMapping("/initiate")
-    public ResponseEntity<?> initiateCall(@RequestBody Object callData) {
-        return null;
+    public ResponseEntity<?> initiateCall(@RequestBody InitiateCallRequest request) {
+        try {
+            Long userId = getCurrentUserId();
+            log.info("INITIATE CALL - userId: {}, conversationId: {}, type: {}",
+                    userId, request.getConversationID(), request.getType());
+
+            CallDTO call = callService.initiateCall(request, userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Cuộc gọi đã được khởi tạo");
+            response.put("data", call);
+
+            log.info("INITIATE CALL SUCCESS - callId: {}", call.getCallID());
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("INITIATE CALL ERROR: {}", e.getMessage());
+
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 
+    /**
+     * Trả lời cuộc gọi
+     */
     @PostMapping("/answer")
-    public ResponseEntity<?> answerCall(@RequestBody Object callData) {
-        return null;
+    public ResponseEntity<?> answerCall(@RequestBody Map<String, Object> request) {
+        try {
+            Long callId = convertToLong(request.get("callId"));
+            Long userId = getCurrentUserId();
+
+            log.info("ANSWER CALL - userId: {}, callId: {}", userId, callId);
+
+            CallDTO call = callService.answerCall(callId, userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Đã trả lời cuộc gọi");
+            response.put("data", call);
+
+            log.info("ANSWER CALL SUCCESS - callId: {}", callId);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("ANSWER CALL ERROR: {}", e.getMessage());
+
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 
+    /**
+     * Kết thúc cuộc gọi
+     */
     @PostMapping("/end")
-    public ResponseEntity<?> endCall(@RequestBody Object callData) {
-        return null;
+    public ResponseEntity<?> endCall(@RequestBody Map<String, Object> request) {
+        try {
+            Long callId = convertToLong(request.get("callId"));
+            String reason = request.get("reason") != null ? (String) request.get("reason") : "normal";
+            Long userId = getCurrentUserId();
+
+            log.info("END CALL - userId: {}, callId: {}, reason: {}", userId, callId, reason);
+
+            CallDTO call = callService.endCall(callId, reason, userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Đã kết thúc cuộc gọi");
+            response.put("data", call);
+
+            log.info("END CALL SUCCESS - callId: {}", callId);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("END CALL ERROR: {}", e.getMessage());
+
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 
+    /**
+     * Từ chối cuộc gọi
+     */
     @PostMapping("/reject")
-    public ResponseEntity<?> rejectCall(@RequestBody Object callData) {
-        return null;
+    public ResponseEntity<?> rejectCall(@RequestBody Map<String, Object> request) {
+        try {
+            Long callId = convertToLong(request.get("callId"));
+            Long userId = getCurrentUserId();
+
+            log.info("REJECT CALL - userId: {}, callId: {}", userId, callId);
+
+            CallDTO call = callService.rejectCall(callId, userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Đã từ chối cuộc gọi");
+            response.put("data", call);
+
+            log.info("REJECT CALL SUCCESS - callId: {}", callId);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("REJECT CALL ERROR: {}", e.getMessage());
+
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 
-    @GetMapping("/history")
-    public ResponseEntity<?> getCallHistory(@RequestParam(required = false) Object params) {
-        return null;
-    }
-
-    @GetMapping("/missed")
-    public ResponseEntity<?> getMissedCalls(@RequestParam(required = false) Object params) {
-        return null;
-    }
-
-    @GetMapping("/active-calls")
-    public ResponseEntity<?> getAllActiveCalls() {
-        return null;
-    }
-
-    @PostMapping("/join")
-    public ResponseEntity<?> joinCall(@RequestBody Object callData) {
-        return null;
-    }
-
-    @PostMapping("/leave")
-    public ResponseEntity<?> leaveCall(@RequestBody Object callData) {
-        return null;
-    }
-
-    @PutMapping("/{callId}/status")
-    public ResponseEntity<?> updateCallStatus(@PathVariable String callId, @RequestBody Object statusData) {
-        return null;
-    }
-
+    /**
+     * Lấy thông tin cuộc gọi theo ID
+     */
     @GetMapping("/{callId}")
-    public ResponseEntity<?> getCallDetails(@PathVariable String callId) {
-        return null;
+    public ResponseEntity<?> getCallDetails(@PathVariable Long callId) {
+        try {
+            Long userId = getCurrentUserId();
+            log.info("GET CALL DETAILS - userId: {}, callId: {}", userId, callId);
+
+            CallDTO call = callService.getCallById(callId, userId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("data", call);
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("GET CALL DETAILS ERROR: {}", e.getMessage());
+
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 
-    @PutMapping("/{callId}/settings")
-    public ResponseEntity<?> updateCallSettings(@PathVariable String callId, @RequestBody Object settings) {
-        return null;
+    /**
+     * Lấy danh sách cuộc gọi đang active
+     */
+    @GetMapping("/active")
+    public ResponseEntity<?> getActiveCalls() {
+        try {
+            Long userId = getCurrentUserId();
+            log.info("GET ACTIVE CALLS - userId: {}", userId);
+
+            List<CallDTO> calls = callService.getActiveCalls();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("data", calls);
+
+            log.info("GET ACTIVE CALLS SUCCESS - count: {}", calls.size());
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("GET ACTIVE CALLS ERROR: {}", e.getMessage());
+
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.internalServerError().body(errorResponse);
+        }
     }
 
-    @PostMapping("/{callId}/screen-share/start")
-    public ResponseEntity<?> startScreenShare(@PathVariable String callId, @RequestBody Object shareData) {
-        return null;
-    }
-
-    @PostMapping("/{callId}/screen-share/stop")
-    public ResponseEntity<?> stopScreenShare(@PathVariable String callId) {
-        return null;
-    }
-
-    @PutMapping("/{callId}/audio")
-    public ResponseEntity<?> toggleAudio(@PathVariable String callId, @RequestBody Object audioData) {
-        return null;
-    }
-
-    @PutMapping("/{callId}/video")
-    public ResponseEntity<?> toggleVideo(@PathVariable String callId, @RequestBody Object videoData) {
-        return null;
-    }
-
-    @PostMapping("/{callId}/quality")
-    public ResponseEntity<?> reportCallQuality(@PathVariable String callId, @RequestBody Object qualityData) {
-        return null;
-    }
-
-    @GetMapping("/{callId}/stats")
-    public ResponseEntity<?> getCallStats(@PathVariable String callId) {
-        return null;
+    /**
+     * Helper method để convert object sang Long
+     */
+    private Long convertToLong(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("ID không được null");
+        }
+        if (obj instanceof String) {
+            try {
+                return Long.parseLong((String) obj);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("ID phải là số hợp lệ: " + obj);
+            }
+        } else if (obj instanceof Number) {
+            return ((Number) obj).longValue();
+        } else {
+            throw new IllegalArgumentException("ID phải là số: " + obj.getClass().getSimpleName());
+        }
     }
 }

@@ -1,4 +1,3 @@
-C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SettingsService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ProfileAndSetting\UserProfileHelperService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\CompetitionRegistrationDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\JwtService.java
@@ -20,6 +19,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IEventService.ja
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\RedisConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\ChatAndCall\CallEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\CompetitionDTO.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\CallEndMessage.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\posts\PostAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IConversationRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IEventScheduleRepository.java
@@ -36,6 +36,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Competition\Compe
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Profile\UserProfileDetailDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Event\EventPrizesEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredential\CredentialResponseBody.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\CallAnswerMessage.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitMQ\Media\MediaProducer.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\PayPalService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\Settings\SettingsAPI.java
@@ -46,6 +47,8 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICourseModule
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ConversationService\ConversationServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Payment\PaymentTransactionEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredentialDTO\CredentialResponse.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ProfileAndSetting\IUserProfileServiceImpl.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\utils\CallSocketController.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredential\CredentialVerifyRequest.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IEventParticipantsRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\friend\FriendAPI.java
@@ -64,6 +67,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ICodingExerciseS
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\impl\CourseRepositoryCustom\CourseRepositoryCustom.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitMQ\Message\MessageFileProducer.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ProfileInfoDTO.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IUserProfileService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitMQ\Message\MessageFileConsumer.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Profile\ProfileInformation\SocialLinkDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Competition\CompetitionRegistrationEntity.java
@@ -112,12 +116,10 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Competition\Compe
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\PostLikeService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\CorsFilter.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\CommentEntity.java
-C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ProfileAndSetting\SettingsServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\CustomOAuth2UserService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IPostMediaRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\converter\TestCaseConverter.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredential\CredentialResponse.java
-C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ProfileAndSetting\UserProfileServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PayPalPaymentDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\PayPalConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Post\PostLikeDTO.java
@@ -125,6 +127,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IProfileService.
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\PostEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\course\CourseAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\PostLikeEntity.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\ChatAndCall\CallParticipantEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\profile\ProfileAPI.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\PrometheusConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\MyUserDetail.java
@@ -141,7 +144,6 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Course\LessonProg
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICompetitionRegistrationRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\security\utils\SecurityUtils.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ICourseService.java
-C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\UserProfileService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Post\PostCommentDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Event\EventScheduleEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\UserEntity.java
@@ -155,6 +157,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\PaymentServ
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICompetitionProblemRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\PostMediaEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\ConversationDTO.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICallParticipantRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Story\StoryEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\scheduler\LikeSyncScheduler.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\NotificationSettingsDTO.java
@@ -170,8 +173,10 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\EventServic
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IFriendshipService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\ModelMapperConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitMQ\Story\StoryProducer.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICallRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\User\UserProfileDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IPostLikeRepository.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ProfileAndSetting\ISettingsServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Payment\PaymentHistoryEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\CommentLikeEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\JacksonConfig.java
@@ -181,12 +186,15 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitM
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Profile\EmailDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\impl\UserRepositoryImpl\UserRepositoryImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IUserRepository.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\InitiateCallRequest.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICompetitionParticipantRepository.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\CallInitiateMessage.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IMessageRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\AccessibilitySettingsDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IPaymentService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\TagsEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\User\UserDTO.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\CallParticipantDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ProfileAndSetting\UserSettingsHelperService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\jdbc\JDBC.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\CallService\CallServiceImpl.java
@@ -196,6 +204,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PreferenceSett
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\impl\CourseRepositoryImpl\CourseRepositoryImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICourseRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\CodeServerService.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ISettingsService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Post\PostDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IPostService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\FriendshipService\FriendshipServiceImpl.java

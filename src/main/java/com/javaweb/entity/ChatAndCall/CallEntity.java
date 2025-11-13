@@ -1,12 +1,19 @@
 package com.javaweb.entity.ChatAndCall;
 
 import com.javaweb.entity.UserEntity;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "calls")
+@DynamicUpdate
+@EntityListeners(AuditingEntityListener.class)
 public class CallEntity {
 
 	@Id
@@ -14,17 +21,22 @@ public class CallEntity {
 	@Column(name = "CallID")
 	private Long callID;
 
-	@Column(name = "ConversationID", nullable = false)
-	private Long conversationID;
+	@OneToMany(mappedBy = "call", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<CallParticipantEntity> callParticipant = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "InitiatorID", nullable = false)
+	@JoinColumn(name = "conversationID")
+	private ConversationEntity conversation;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "InitiatorID", referencedColumnName = "UserID")
 	private UserEntity initiator;
 
 	@Column(name = "Type", length = 20, nullable = false)
 	private String type; // "audio", "video"
 
 	@Column(name = "StartTime", nullable = false)
+	@CreationTimestamp
 	private LocalDateTime startTime;
 
 	@Column(name = "EndTime")
@@ -42,7 +54,6 @@ public class CallEntity {
 	@Column(name = "RecordingUrl", length = 255)
 	private String recordingUrl;
 
-	// Getters and Setters
 	public Long getCallID() {
 		return callID;
 	}
@@ -51,12 +62,20 @@ public class CallEntity {
 		this.callID = callID;
 	}
 
-	public Long getConversationID() {
-		return conversationID;
+	public ConversationEntity getConversation() {
+		return conversation;
 	}
 
-	public void setConversationID(Long conversationID) {
-		this.conversationID = conversationID;
+	public void setConversation(ConversationEntity conversation) {
+		this.conversation = conversation;
+	}
+
+	public List<CallParticipantEntity> getCallParticipant() {
+		return callParticipant;
+	}
+
+	public void setCallParticipant(List<CallParticipantEntity> callParticipant) {
+		this.callParticipant = callParticipant;
 	}
 
 	public UserEntity getInitiator() {

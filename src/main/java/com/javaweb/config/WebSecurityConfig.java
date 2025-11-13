@@ -145,7 +145,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/stories/**", "/profile").authenticated()
                 .antMatchers("/competitions/**").authenticated()
                 .antMatchers("/auth/oauth/**").authenticated()
-                .antMatchers("/auth/logout", "/auth/check", "/auth/me").authenticated()
+                .antMatchers("/auth/logout", "/auth/check", "/auth/me", "/calls/**").authenticated()
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "TEACHER")
                 .anyRequest().authenticated()
                 .and()

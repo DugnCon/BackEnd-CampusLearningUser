@@ -8,7 +8,7 @@ import com.javaweb.model.dto.User.UserSettingsDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.repository.UserSettingsRepository;
 import com.javaweb.service.FileStorageService;
-import com.javaweb.service.SettingsService;
+import com.javaweb.service.ISettingsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 
 @Service
-public class SettingsServiceImpl implements SettingsService {
+public class ISettingsServiceImpl implements ISettingsService {
 
     @Autowired
     private IUserRepository userRepository;

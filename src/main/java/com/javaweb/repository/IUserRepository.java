@@ -14,6 +14,9 @@ import com.javaweb.entity.UserEntity;
 @Repository
 public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 
+	@Query("SELECT u FROM UserEntity u WHERE u.UserID != :excludeUserId")
+	List<UserEntity> findOtherUsers(@Param("excludeUserId") Long excludeUserId);
+
 	@Procedure(procedureName="user_register")
 	String userRegister(String username, String email, String password, String fullname, String dateOfBirth, String school);
 

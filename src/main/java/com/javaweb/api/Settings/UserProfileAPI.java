@@ -4,13 +4,13 @@ import com.javaweb.model.dto.MyUserDetail;
 import com.javaweb.model.dto.Profile.ProfileInformation.EducationDTO;
 import com.javaweb.model.dto.Profile.ProfileInformation.WorkExperienceDTO;
 import com.javaweb.model.dto.Profile.UserProfileDetailDTO;
-import com.javaweb.service.UserProfileService; // Dùng Service mới
+import com.javaweb.service.IUserProfileService; // Dùng Service mới
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import java.security.Principal;
+
 import java.util.List;
 
 @RestController
@@ -18,7 +18,7 @@ import java.util.List;
 public class UserProfileAPI {
 
     @Autowired
-    private UserProfileService userProfileService;
+    private IUserProfileService IUserProfileService;
 
     @GetMapping("/users/profile")
     public ResponseEntity<Object> getProfile() {
@@ -26,7 +26,7 @@ public class UserProfileAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
-        return userProfileService.getUserProfile(userId);
+        return IUserProfileService.getUserProfile(userId);
     }
 
     @PutMapping("/users/profile")
@@ -36,7 +36,7 @@ public class UserProfileAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
-        return userProfileService.updateProfile(userId, profileDTO);
+        return IUserProfileService.updateProfile(userId, profileDTO);
     }
 
 
@@ -46,7 +46,7 @@ public class UserProfileAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
-        return userProfileService.getUserEmails(userId);
+        return IUserProfileService.getUserEmails(userId);
     }
 
     @PutMapping("/users/education")
@@ -56,7 +56,7 @@ public class UserProfileAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
-        return userProfileService.updateEducation(userId, education);
+        return IUserProfileService.updateEducation(userId, education);
     }
 
     @PutMapping("/users/work-experience")
@@ -66,6 +66,6 @@ public class UserProfileAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         Long userId = myUserDetail.getId();
-        return userProfileService.updateWorkExperience(userId, workExperience);
+        return IUserProfileService.updateWorkExperience(userId, workExperience);
     }
 }

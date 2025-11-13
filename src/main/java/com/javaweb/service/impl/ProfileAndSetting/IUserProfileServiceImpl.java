@@ -11,7 +11,7 @@ import com.javaweb.model.dto.Profile.ProfileInformation.WorkExperienceDTO;
 import com.javaweb.model.dto.Profile.UserProfileDetailDTO;
 import com.javaweb.repository.IUserRepository;
 import com.javaweb.repository.UserProfileRepository;
-import com.javaweb.service.UserProfileService;
+import com.javaweb.service.IUserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserProfileServiceImpl implements UserProfileService {
+public class IUserProfileServiceImpl implements IUserProfileService {
 
     @Autowired
     private IUserRepository userRepository;

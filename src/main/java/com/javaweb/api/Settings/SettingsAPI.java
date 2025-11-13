@@ -3,7 +3,7 @@ package com.javaweb.api.Settings;
 import com.javaweb.model.dto.Profile.CombinedSettingsResponseDTO;
 import com.javaweb.model.dto.MyUserDetail;
 import com.javaweb.model.dto.User.UserSettingsDTO;
-import com.javaweb.service.SettingsService;
+import com.javaweb.service.ISettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication; // Dùng Spring Security
@@ -17,7 +17,7 @@ import java.security.Principal;
 public class SettingsAPI {
 
     @Autowired
-    private SettingsService settingsService;
+    private ISettingsService ISettingsService;
 
     @GetMapping
     public ResponseEntity<CombinedSettingsResponseDTO> getSettings() {
@@ -25,14 +25,14 @@ public class SettingsAPI {
         MyUserDetail myUserDetail = (MyUserDetail) auth.getPrincipal();
 
         String email = myUserDetail.getUsername();
-        CombinedSettingsResponseDTO data = settingsService.getUserSettingsAndProfile(email);
+        CombinedSettingsResponseDTO data = ISettingsService.getUserSettingsAndProfile(email);
         return ResponseEntity.ok(data);
     }
 
     @PutMapping
     public ResponseEntity<UserSettingsDTO> updateSettings(Principal principal, @RequestBody UserSettingsDTO settingsDTO) {
         String username = principal.getName();
-        UserSettingsDTO updatedSettings = settingsService.updateUserSettings(username, settingsDTO);
+        UserSettingsDTO updatedSettings = ISettingsService.updateUserSettings(username, settingsDTO);
         return ResponseEntity.ok(updatedSettings);
     }
 

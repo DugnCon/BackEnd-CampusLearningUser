@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,6 +27,10 @@ public class ConversationEntity {
     @OneToMany(mappedBy = "conversation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ConversationParticipantEntity> conversationParticipant;
+
+    @OneToMany(mappedBy = "conversation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<CallEntity> call = new ArrayList<>();
 
     @Column(name = "Type", length = 20, nullable = false)
     private String type; // "private", "group"
@@ -50,6 +55,14 @@ public class ConversationEntity {
 
     @Column(name = "IsActive", nullable = false)
     private Boolean isActive = true;
+
+    public List<CallEntity> getCall() {
+        return call;
+    }
+
+    public void setCall(List<CallEntity> call) {
+        this.call = call;
+    }
 
     @JsonBackReference
     public List<ConversationParticipantEntity> getConversationParticipant() {
