@@ -21,7 +21,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 "http://127.0.0.1:*",        // Cho IPv4 local
                 "https://localhost:*",       // HTTPS local
                 "http://192.168.*:*",        // Cho mạng local
-                "*"                          // Fallback (chỉ dùng trong dev)
+                "http://campuslearning.site",
+                "https://campuslearning.site",
+                "https://campuslearning.site/**",
+                "http://campuslearning.site/**",
+                "http://code.campuslearning.site",
+                "https://code.campuslearning.site"                  // Fallback (chỉ dùng trong dev)
         );
 
         endpoint
