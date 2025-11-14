@@ -98,6 +98,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "https://localhost:*",
                 "http://campuslearning.site",
                 "https://campuslearning.site",
+                "https://campuslearning.site/**",
+                "http://campuslearning.site/**",
                 "http://code.campuslearning.site",
                 "https://code.campuslearning.site"
         ));

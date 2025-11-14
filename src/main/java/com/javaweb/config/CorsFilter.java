@@ -45,6 +45,7 @@ public class CorsFilter implements Filter {
         return origin.equals("http://localhost:5004") ||
                 origin.equals("http://localhost:3000") ||
                 origin.startsWith("http://192.168.") ||
-                origin.equals("https://campuslearning.site") || origin.contains("ngrok-free.app"); // thêm domain production
+                origin.equals("https://campuslearning.site") ||
+                origin.equals("http://campuslearning.site");
     }
 }
