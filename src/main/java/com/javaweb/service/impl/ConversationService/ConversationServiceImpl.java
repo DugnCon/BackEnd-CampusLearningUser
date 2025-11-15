@@ -190,7 +190,7 @@ public class ConversationServiceImpl implements IConservationService {
             UserEntity currentUser = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
 
-            // 🔥 BẤT ĐỒNG BỘ: Kiểm tra conversation tồn tại VÀ tìm users cùng lúc
+            // Kiểm tra conversation tồn tại VÀ tìm users cùng lúc
             if ("private".equals(type)) {
                 Long friendId = Long.valueOf(participants.get(0));
 
