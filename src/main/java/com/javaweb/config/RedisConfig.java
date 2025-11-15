@@ -17,10 +17,23 @@ public class RedisConfig {
     /**
      * Factory mặc định cho post (dùng @Primary)
      * **/
+    @Value("${spring.redis.host}")
+    private String postHost;
+
+    @Value("${spring.redis.port}")
+    private int postPort;
+
+    @Value("${spring.redis.password:}")
+    private String postPassword;
+
     @Bean
     @Primary
-    public RedisConnectionFactory defaultRedisConnectionFactory() {
-        return new LettuceConnectionFactory("localhost", 6379);
+    public LettuceConnectionFactory defaultRedisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(postHost, postPort);
+        if (postPassword != null && !postPassword.isEmpty()) {
+            config.setPassword(postPassword);
+        }
+        return new LettuceConnectionFactory(config);
     }
 
     @Bean
