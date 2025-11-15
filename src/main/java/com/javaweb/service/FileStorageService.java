@@ -36,8 +36,8 @@ public class FileStorageService {
 
         // Nén ảnh nếu là JPEG hoặc PNG
         String contentType = file.getContentType();
-        if (contentType != null && (contentType.equals("image/jpeg") || contentType.equals("image/png"))) {
-            compressImage(file, filePath.toFile(), 0.8f); // nén nhẹ, giữ nét
+        if (contentType != null && (contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("image/jpg"))) {
+            compressImage(file, filePath.toFile(), 0.6f); // nén nhẹ, giữ nét
         } else {
             // File không phải ảnh thì lưu bình thường
             file.transferTo(filePath.toFile());
