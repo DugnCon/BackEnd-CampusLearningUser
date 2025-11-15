@@ -43,10 +43,7 @@ services:
     container_name: redis_container
     restart: always
     ports:
-      - "127.0.0.1:6384:6379"
-    command: redis-server --appendonly yes --requirepass redis_password_123
-    volumes:
-      - redis_data:/data
+      - "6384:6379"
     networks:
       - app-net
 
@@ -55,10 +52,7 @@ services:
     container_name: redis_comment_container
     restart: always
     ports:
-      - "127.0.0.1:6380:6379"
-    command: redis-server --appendonly yes --requirepass redis_comment_password_123
-    volumes:
-      - redis_comment_data:/data
+      - "6380:6379"
     networks:
       - app-net
 
@@ -67,10 +61,7 @@ services:
     container_name: redis_conversation_container
     restart: always
     ports:
-      - "127.0.0.1:6381:6379"
-    command: redis-server --appendonly yes --requirepass redis_conversation_password_123
-    volumes:
-      - redis_conversation_data:/data
+      - "6381:6379"
     networks:
       - app-net
 
@@ -79,10 +70,7 @@ services:
     container_name: redis_message_container
     restart: always
     ports:
-      - "127.0.0.1:6382:6379"
-    command: redis-server --appendonly yes --requirepass redis_message_password_123
-    volumes:
-      - redis_message_data:/data
+      - "6382:6379"
     networks:
       - app-net
 
@@ -91,10 +79,7 @@ services:
     container_name: redis_story_container
     restart: always
     ports:
-      - "127.0.0.1:6383:6379"
-    command: redis-server --appendonly yes --requirepass redis_story_password_123
-    volumes:
-      - redis_story_data:/data
+      - "6383:6379"
     networks:
       - app-net
 
@@ -136,19 +121,14 @@ services:
       SPRING_RABBITMQ_PASSWORD: guest
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_PASSWORD: redis_password_123
       SPRING_REDIS_COMMENT_HOST: redis-comment
       SPRING_REDIS_COMMENT_PORT: 6379
-      SPRING_REDIS_COMMENT_PASSWORD: redis_comment_password_123
       SPRING_REDIS_CONVERSATION_HOST: redis-conversation
       SPRING_REDIS_CONVERSATION_PORT: 6379
-      SPRING_REDIS_CONVERSATION_PASSWORD: redis_conversation_password_123
       SPRING_REDIS_MESSAGE_HOST: redis-message
       SPRING_REDIS_MESSAGE_PORT: 6379
-      SPRING_REDIS_MESSAGE_PASSWORD: redis_message_password_123
       SPRING_REDIS_STORY_HOST: redis-story
       SPRING_REDIS_STORY_PORT: 6379
-      SPRING_REDIS_STORY_PASSWORD: redis_story_password_123
     networks:
       - app-net
     volumes:
@@ -210,8 +190,3 @@ networks:
 volumes:
   mysql_data:
   jenkins_home:
-  redis_data:
-  redis_comment_data:
-  redis_conversation_data:
-  redis_message_data:
-  redis_story_data:
