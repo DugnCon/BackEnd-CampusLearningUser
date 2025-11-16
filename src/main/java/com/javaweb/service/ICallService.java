@@ -9,7 +9,6 @@ import com.javaweb.model.dto.ChatAndCall.CallDTO;
 
 @Service
 public interface ICallService {
-	void notifyCallInitiated(CallDTO call, Long initiatorId);
 	/**
 	 * Lấy danh sách cuộc gọi đang active
 	 */

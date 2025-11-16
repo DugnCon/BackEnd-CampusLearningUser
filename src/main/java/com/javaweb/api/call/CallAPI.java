@@ -53,9 +53,6 @@ public class CallAPI {
 
             CallDTO call = callService.initiateCall(request, userId);
 
-            //Gửi WebSocket notification đến các participants
-            callService.notifyCallInitiated(call, userId);
-
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Cuộc gọi đã được khởi tạo");
@@ -85,7 +82,6 @@ public class CallAPI {
 
             log.info("ANSWER CALL - userId: {}, callId: {}", userId, callId);
 
-            // Service xử lý mọi logic (cả WebSocket)
             CallDTO call = callService.answerCall(callId, userId);
 
             Map<String, Object> response = new HashMap<>();
@@ -105,7 +101,6 @@ public class CallAPI {
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
-
 
     /**
      * Kết thúc cuộc gọi
