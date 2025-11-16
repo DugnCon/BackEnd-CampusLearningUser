@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ICallRepository extends JpaRepository<CallEntity, Long> {
 
+
     // Tìm call bằng callId (UUID)
     Optional<CallEntity> findByCallID(Long callId);
 

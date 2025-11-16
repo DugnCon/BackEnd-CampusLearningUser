@@ -11,6 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface ICallParticipantRepository extends JpaRepository<CallParticipantEntity, Long> {
+    @Query("SELECT COUNT(cp) > 0 FROM CallParticipantEntity cp WHERE cp.call.callID = :callId AND cp.user.UserID = :userId")
+    boolean existsByCallCallIDAndUserUserID(@Param("callId") Long callId, @Param("userId") Long userId);
 
     @Query("SELECT cp FROM CallParticipantEntity cp WHERE cp.call.callID = :callId and cp.user.UserID = :userId")
     Optional<CallParticipantEntity> findByCallAndUser(@Param("callId") Long callId,@Param("userId") Long userId);

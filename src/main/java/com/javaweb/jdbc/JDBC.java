@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:application-uat.properties")
+@PropertySource("classpath:application-pro.properties")
 public class JDBC {
     private static String url;
     private static String username;

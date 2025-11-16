@@ -14,14 +14,12 @@ import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.ICallService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,13 +39,15 @@ public class CallServiceImpl implements ICallService {
 	@Autowired
 	private IUserRepository userRepository;
 
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
+
 	@Override
 	public CallDTO initiateCall(InitiateCallRequest request, Long userId) {
 		try {
 			log.info("INITIATE CALL - conversationId: {}, type: {}, userId: {}",
 					request.getConversationID(), request.getType(), userId);
 
-			// Validate request
 			if (request.getConversationID() == null || request.getType() == null) {
 				throw new IllegalArgumentException("Thiếu conversationId hoặc type");
 			}
@@ -56,15 +56,12 @@ public class CallServiceImpl implements ICallService {
 				throw new IllegalArgumentException("Type phải là 'audio' hoặc 'video'");
 			}
 
-			// Tìm conversation
 			ConversationEntity conversation = conversationRepository.findById(request.getConversationID())
 					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy conversation với ID: " + request.getConversationID()));
 
-			// Tìm initiator
 			UserEntity initiator = userRepository.findById(userId)
 					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy user initiator"));
 
-			// Tạo Call Entity
 			CallEntity callEntity = new CallEntity();
 			callEntity.setConversation(conversation);
 			callEntity.setInitiator(initiator);
@@ -72,15 +69,14 @@ public class CallServiceImpl implements ICallService {
 			callEntity.setStatus("initiated");
 			callEntity.setStartTime(LocalDateTime.now());
 
-			// Lưu call
 			CallEntity savedCall = callRepository.save(callEntity);
 			log.info("CALL ENTITY CREATED - callId: {}", savedCall.getCallID());
 
-			// Tạo participants
 			createCallParticipants(savedCall, conversation, initiator);
 
-			// Convert to DTO và return
 			CallDTO callDTO = convertToDTO(savedCall);
+
+			notifyCallInitiated(callDTO, userId);
 
 			log.info("INITIATE CALL SUCCESS - callId: {}, participants: {}",
 					savedCall.getCallID(), callDTO.getParticipants().size());
@@ -94,22 +90,70 @@ public class CallServiceImpl implements ICallService {
 	}
 
 	@Override
+	public void notifyCallInitiated(CallDTO call, Long initiatorId) {
+		try {
+			log.info("SENDING CALL INITIATE NOTIFICATION - callId: {}, initiator: {}",
+					call.getCallID(), initiatorId);
+
+			Map<String, Object> message = new HashMap<>();
+			message.put("type", "CALL_INITIATED");
+			message.put("data", Map.of(
+					"callId", call.getCallID(),
+					"conversationId", call.getConversationID(),
+					"type", call.getType(),
+					"initiatorId", initiatorId,
+					"initiatorName", getInitiatorName(call),
+					"participants", call.getParticipants(),
+					"timestamp", System.currentTimeMillis()
+			));
+			message.put("timestamp", System.currentTimeMillis());
+
+			for (CallParticipantDTO participant : call.getParticipants()) {
+				if (!participant.getUserID().equals(initiatorId)) {
+					messagingTemplate.convertAndSendToUser(
+							participant.getUserID().toString(),
+							"/queue/call-invite",
+							message
+					);
+					log.info("CALL INVITE SENT TO USER: {}", participant.getUserID());
+				}
+			}
+
+			messagingTemplate.convertAndSend(
+					"/topic/conversation." + call.getConversationID() + ".call",
+					message
+			);
+
+			log.info("CALL INITIATE NOTIFICATION SENT SUCCESSFULLY");
+
+		} catch (Exception e) {
+			log.error("ERROR SENDING CALL INITIATE NOTIFICATION: {}", e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public CallDTO answerCall(Long callId, Long userId) {
 		try {
 			log.info("ANSWER CALL - callId: {}, userId: {}", callId, userId);
 
-			// Tìm call
 			CallEntity call = callRepository.findById(callId)
 					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy cuộc gọi với ID: " + callId));
 
-			// Cập nhật trạng thái call
-			call.markAsActive();
+			if (!isParticipant(callId, userId)) {
+				throw new IllegalArgumentException("Bạn không phải là participant của cuộc gọi này");
+			}
 
-			// Cập nhật participant status (người trả lời)
+			if (call.isEnded()) {
+				throw new IllegalArgumentException("Cuộc gọi đã kết thúc");
+			}
+
+			call.markAsActive();
 			updateParticipantStatus(call.getCallID(), userId, "joined");
 
 			CallEntity updatedCall = callRepository.save(call);
 			CallDTO callDTO = convertToDTO(updatedCall);
+
+			notifyCallAnswered(callDTO, userId);
 
 			log.info("ANSWER CALL SUCCESS - callId: {}", callId);
 			return callDTO;
@@ -125,18 +169,16 @@ public class CallServiceImpl implements ICallService {
 		try {
 			log.info("END CALL - callId: {}, reason: {}, userId: {}", callId, reason, userId);
 
-			// Tìm call
 			CallEntity call = callRepository.findById(callId)
 					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy cuộc gọi với ID: " + callId));
 
-			// Kết thúc call
 			call.endCall();
-
-			// Cập nhật tất cả participants status
 			updateAllParticipantsStatus(call.getCallID(), "left");
 
 			CallEntity endedCall = callRepository.save(call);
 			CallDTO callDTO = convertToDTO(endedCall);
+
+			notifyCallEnded(callDTO, userId, reason);
 
 			log.info("END CALL SUCCESS - callId: {}, duration: {}s", callId, callDTO.getDuration());
 			return callDTO;
@@ -152,18 +194,16 @@ public class CallServiceImpl implements ICallService {
 		try {
 			log.info("REJECT CALL - callId: {}, userId: {}", callId, userId);
 
-			// Tìm call
 			CallEntity call = callRepository.findById(callId)
 					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy cuộc gọi với ID: " + callId));
 
-			// Đánh dấu là rejected
 			call.markAsRejected();
-
-			// Cập nhật participant status (người từ chối) - SỬA: 'rejected' -> 'declined'
 			updateParticipantStatus(call.getCallID(), userId, "declined");
 
 			CallEntity rejectedCall = callRepository.save(call);
 			CallDTO callDTO = convertToDTO(rejectedCall);
+
+			notifyCallRejected(callDTO, userId);
 
 			log.info("REJECT CALL SUCCESS - callId: {}", callId);
 			return callDTO;
@@ -209,25 +249,153 @@ public class CallServiceImpl implements ICallService {
 		}
 	}
 
-	/**
-	 * Tạo participants cho call
-	 */
+	// ========== WEBSOCKET NOTIFICATION METHODS ========== //
+
+	private void notifyCallAnswered(CallDTO call, Long respondentId) {
+		try {
+			log.info("SENDING CALL ANSWERED NOTIFICATION - callId: {}, respondent: {}",
+					call.getCallID(), respondentId);
+
+			UserEntity respondent = userRepository.findById(respondentId)
+					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy user"));
+
+			Map<String, Object> message = new HashMap<>();
+			message.put("type", "CALL_ANSWERED");
+			message.put("data", Map.of(
+					"callId", call.getCallID(),
+					"conversationId", call.getConversationID(),
+					"respondentId", respondentId,
+					"respondentName", respondent.getFullName(),
+					"respondentPicture", respondent.getAvatar(),
+					"callStatus", call.getStatus(),
+					"callType", call.getType(),
+					"participants", call.getParticipants(),
+					"timestamp", System.currentTimeMillis()
+			));
+			message.put("timestamp", System.currentTimeMillis());
+
+			for (CallParticipantDTO participant : call.getParticipants()) {
+				if (!participant.getUserID().equals(respondentId)) {
+					messagingTemplate.convertAndSendToUser(
+							participant.getUserID().toString(),
+							"/queue/call-events",
+							message
+					);
+					log.info("CALL ANSWERED NOTIFICATION SENT TO USER: {}", participant.getUserID());
+				}
+			}
+
+			log.info("CALL ANSWERED NOTIFICATION SENT SUCCESSFULLY");
+
+		} catch (Exception e) {
+			log.error("ERROR SENDING CALL ANSWERED NOTIFICATION: {}", e.getMessage(), e);
+		}
+	}
+
+	private void notifyCallEnded(CallDTO call, Long endedById, String reason) {
+		try {
+			log.info("SENDING CALL ENDED NOTIFICATION - callId: {}, endedBy: {}, reason: {}",
+					call.getCallID(), endedById, reason);
+
+			UserEntity endedByUser = userRepository.findById(endedById)
+					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy user"));
+
+			Map<String, Object> message = new HashMap<>();
+			message.put("type", "CALL_ENDED");
+			message.put("data", Map.of(
+					"callId", call.getCallID(),
+					"conversationId", call.getConversationID(),
+					"endedById", endedById,
+					"endedByName", endedByUser.getFullName(),
+					"reason", reason,
+					"duration", call.getDuration(),
+					"callStatus", call.getStatus(),
+					"timestamp", System.currentTimeMillis()
+			));
+			message.put("timestamp", System.currentTimeMillis());
+
+			for (CallParticipantDTO participant : call.getParticipants()) {
+				messagingTemplate.convertAndSendToUser(
+						participant.getUserID().toString(),
+						"/queue/call-events",
+						message
+				);
+				log.info("CALL ENDED NOTIFICATION SENT TO USER: {}", participant.getUserID());
+			}
+
+			log.info("CALL ENDED NOTIFICATION SENT SUCCESSFULLY");
+
+		} catch (Exception e) {
+			log.error("ERROR SENDING CALL ENDED NOTIFICATION: {}", e.getMessage(), e);
+		}
+	}
+
+	private void notifyCallRejected(CallDTO call, Long rejectedById) {
+		try {
+			log.info("SENDING CALL REJECTED NOTIFICATION - callId: {}, rejectedBy: {}",
+					call.getCallID(), rejectedById);
+
+			UserEntity rejectedByUser = userRepository.findById(rejectedById)
+					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy user"));
+
+			Map<String, Object> message = new HashMap<>();
+			message.put("type", "CALL_REJECTED");
+			message.put("data", Map.of(
+					"callId", call.getCallID(),
+					"conversationId", call.getConversationID(),
+					"rejectedById", rejectedById,
+					"rejectedByName", rejectedByUser.getFullName(),
+					"callStatus", call.getStatus(),
+					"timestamp", System.currentTimeMillis()
+			));
+			message.put("timestamp", System.currentTimeMillis());
+
+			for (CallParticipantDTO participant : call.getParticipants()) {
+				if (!participant.getUserID().equals(rejectedById)) {
+					messagingTemplate.convertAndSendToUser(
+							participant.getUserID().toString(),
+							"/queue/call-events",
+							message
+					);
+					log.info("CALL REJECTED NOTIFICATION SENT TO USER: {}", participant.getUserID());
+				}
+			}
+
+			log.info("CALL REJECTED NOTIFICATION SENT SUCCESSFULLY");
+
+		} catch (Exception e) {
+			log.error("ERROR SENDING CALL REJECTED NOTIFICATION: {}", e.getMessage(), e);
+		}
+	}
+
+	// ========== HELPER METHODS ========== //
+
+	private String getInitiatorName(CallDTO call) {
+		return call.getParticipants().stream()
+				.filter(p -> p.getUserID().equals(call.getInitiatorID()))
+				.findFirst()
+				.map(CallParticipantDTO::getFullName)
+				.orElse("Unknown");
+	}
+
+	private boolean isParticipant(Long callId, Long userId) {
+		return callParticipantRepository.existsByCallCallIDAndUserUserID(callId, userId);
+	}
+
 	private void createCallParticipants(CallEntity call, ConversationEntity conversation, UserEntity initiator) {
 		try {
 			List<CallParticipantEntity> participants = new ArrayList<>();
 
-			// Thêm initiator
 			CallParticipantEntity initiatorParticipant = new CallParticipantEntity();
 			initiatorParticipant.setCall(call);
 			initiatorParticipant.setUser(initiator);
 			initiatorParticipant.setJoinTime(new Date());
-			initiatorParticipant.setStatus("joined"); // ✅ ĐÚNG constraint
+			initiatorParticipant.setStatus("joined");
 			participants.add(initiatorParticipant);
 
-			// Tìm user khác - SỬA: 'calling' -> 'invited'
 			List<UserEntity> allUsers = userRepository.findAll();
 			Optional<UserEntity> otherUserOpt = allUsers.stream()
-					.filter(u -> !u.getUserID().equals(initiator.getUserID())) // Sửa field thực tế
+					.filter(u -> !u.getUserID().equals(initiator.getUserID()))
 					.findFirst();
 
 			if (otherUserOpt.isPresent()) {
@@ -235,11 +403,10 @@ public class CallServiceImpl implements ICallService {
 				CallParticipantEntity otherParticipant = new CallParticipantEntity();
 				otherParticipant.setCall(call);
 				otherParticipant.setUser(otherUser);
-				otherParticipant.setStatus("invited"); // ✅ ĐÚNG constraint
+				otherParticipant.setStatus("invited");
 				participants.add(otherParticipant);
 			}
 
-			// Lưu participants
 			callParticipantRepository.saveAll(participants);
 			call.setCallParticipant(participants);
 
@@ -251,9 +418,6 @@ public class CallServiceImpl implements ICallService {
 		}
 	}
 
-	/**
-	 * Cập nhật status của participant
-	 */
 	private void updateParticipantStatus(Long callId, Long userId, String status) {
 		try {
 			Optional<CallParticipantEntity> participantOpt = callParticipantRepository
@@ -261,8 +425,6 @@ public class CallServiceImpl implements ICallService {
 
 			if (participantOpt.isPresent()) {
 				CallParticipantEntity participant = participantOpt.get();
-
-				// Map status cho khớp constraint
 				String mappedStatus = mapStatusToConstraint(status);
 				participant.setStatus(mappedStatus);
 
@@ -286,16 +448,12 @@ public class CallServiceImpl implements ICallService {
 		}
 	}
 
-	/**
-	 * Cập nhật status của tất cả participants
-	 */
 	private void updateAllParticipantsStatus(Long callId, String status) {
 		try {
 			List<CallParticipantEntity> participants = callParticipantRepository.findByCallId(callId);
 
 			for (CallParticipantEntity participant : participants) {
 				if (!"left".equals(participant.getStatus()) && !"declined".equals(participant.getStatus())) {
-					// Map status cho khớp constraint
 					String mappedStatus = mapStatusToConstraint(status);
 					participant.setStatus(mappedStatus);
 					participant.setLeaveTime(new Date());
@@ -310,40 +468,29 @@ public class CallServiceImpl implements ICallService {
 		}
 	}
 
-	/**
-	 * Map status values cho khớp với database constraint
-	 * Allowed: 'declined', 'left', 'joined', 'invited'
-	 */
 	private String mapStatusToConstraint(String status) {
 		switch (status.toLowerCase()) {
 			case "joined":
 			case "active":
 			case "answered":
 				return "joined";
-
 			case "calling":
 			case "pending":
 			case "ringing":
 				return "invited";
-
 			case "left":
 			case "ended":
 			case "completed":
 				return "left";
-
 			case "rejected":
 			case "declined":
 			case "cancelled":
 				return "declined";
-
 			default:
 				return "invited";
 		}
 	}
 
-	/**
-	 * Convert Entity to DTO
-	 */
 	private CallDTO convertToDTO(CallEntity entity) {
 		CallDTO dto = new CallDTO();
 		dto.setCallID(entity.getCallID());
@@ -357,7 +504,6 @@ public class CallServiceImpl implements ICallService {
 		dto.setEndedAt(entity.getEndTime());
 		dto.setDuration(entity.getDuration());
 
-		// Convert participants
 		List<CallParticipantDTO> participantDTOs = new ArrayList<>();
 		if (entity.getCallParticipant() != null) {
 			for (CallParticipantEntity participant : entity.getCallParticipant()) {
