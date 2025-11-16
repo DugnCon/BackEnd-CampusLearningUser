@@ -4,10 +4,17 @@ import lombok.Data;
 
 @Data
 public class CallInitiateMessage {
-    private Long conversationID;
-    private Long callID;
-    private String type; // "audio" or "video"
-    private String initiatorId;
-    private String initiatorName;
-    private String initiatorPicture;
+    private String callID;
+    private String receiverID;
+    private String type;           // "audio", "video"
+    private String conversationID; // Giữ cho compatibility
+
+    // Constructors
+    public CallInitiateMessage() {}
+
+    public CallInitiateMessage(String callID, String receiverID, String type) {
+        this.callID = callID;
+        this.receiverID = receiverID;
+        this.type = type;
+    }
 }

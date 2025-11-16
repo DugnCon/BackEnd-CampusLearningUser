@@ -4,8 +4,9 @@ import lombok.Data;
 
 @Data
 public class CallEndMessage {
-    private Long callID;
-    private Long endedByID;
-    private String endedByName;
-    private String reason; // "normal", "timeout", "rejected", "cancelled"
+    private String callID;
+    private String endedByID;
+    private String reason;
+    private Long duration;
+
 }

@@ -44,12 +44,12 @@ public class CallServiceImpl implements ICallService {
 	@Override
 	public CallDTO initiateCall(InitiateCallRequest request, Long userId) {
 		try {
-			log.info("INITIATE CALL - conversationId: {}, type: {}, userId: {}",
-					request.getConversationID(), request.getType(), userId);
+			log.info("📞 INITIATE CALL - conversationId: {}, receiverId: {}, type: {}, userId: {}",
+					request.getConversationID(), request.getReceiverID(), request.getType(), userId);
 
-			// Validate request
-			if (request.getConversationID() == null || request.getType() == null) {
-				throw new IllegalArgumentException("Thiếu conversationId hoặc type");
+			// Validate request - THÊM receiverId validation
+			if (request.getConversationID() == null || request.getType() == null || request.getReceiverID() == null) {
+				throw new IllegalArgumentException("Thiếu conversationId, receiverId hoặc type");
 			}
 
 			if (!request.getType().equals("audio") && !request.getType().equals("video")) {
@@ -64,6 +64,10 @@ public class CallServiceImpl implements ICallService {
 			UserEntity initiator = userRepository.findById(userId)
 					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy user initiator"));
 
+			// Tìm receiver
+			UserEntity receiver = userRepository.findById(Long.parseLong(request.getReceiverID()))
+					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy user receiver với ID: " + request.getReceiverID()));
+
 			// Tạo Call Entity
 			CallEntity callEntity = new CallEntity();
 			callEntity.setConversation(conversation);
@@ -74,21 +78,21 @@ public class CallServiceImpl implements ICallService {
 
 			// Lưu call
 			CallEntity savedCall = callRepository.save(callEntity);
-			log.info("CALL ENTITY CREATED - callId: {}", savedCall.getCallID());
+			log.info("✅ CALL ENTITY CREATED - callId: {}", savedCall.getCallID());
 
 			// Tạo participants
-			createCallParticipants(savedCall, conversation, initiator);
+			createCallParticipants(savedCall, conversation, initiator, receiver);
 
 			// Convert to DTO và return
 			CallDTO callDTO = convertToDTO(savedCall);
 
-			log.info("INITIATE CALL SUCCESS - callId: {}, participants: {}",
+			log.info("✅ INITIATE CALL SUCCESS - callId: {}, participants: {}",
 					savedCall.getCallID(), callDTO.getParticipants().size());
 
 			return callDTO;
 
 		} catch (Exception e) {
-			log.error("INITIATE CALL ERROR: {}", e.getMessage(), e);
+			log.error("❌ INITIATE CALL ERROR: {}", e.getMessage(), e);
 			throw new RuntimeException("Không thể khởi tạo cuộc gọi: " + e.getMessage());
 		}
 	}
@@ -96,7 +100,7 @@ public class CallServiceImpl implements ICallService {
 	@Override
 	public CallDTO answerCall(Long callId, Long userId) {
 		try {
-			log.info("ANSWER CALL - callId: {}, userId: {}", callId, userId);
+			log.info("📞 ANSWER CALL - callId: {}, userId: {}", callId, userId);
 
 			// Tìm call
 			CallEntity call = callRepository.findById(callId)
@@ -111,11 +115,11 @@ public class CallServiceImpl implements ICallService {
 			CallEntity updatedCall = callRepository.save(call);
 			CallDTO callDTO = convertToDTO(updatedCall);
 
-			log.info("ANSWER CALL SUCCESS - callId: {}", callId);
+			log.info("✅ ANSWER CALL SUCCESS - callId: {}", callId);
 			return callDTO;
 
 		} catch (Exception e) {
-			log.error("ANSWER CALL ERROR: {}", e.getMessage(), e);
+			log.error("❌ ANSWER CALL ERROR: {}", e.getMessage(), e);
 			throw new RuntimeException("Không thể trả lời cuộc gọi: " + e.getMessage());
 		}
 	}
@@ -123,7 +127,7 @@ public class CallServiceImpl implements ICallService {
 	@Override
 	public CallDTO endCall(Long callId, String reason, Long userId) {
 		try {
-			log.info("END CALL - callId: {}, reason: {}, userId: {}", callId, reason, userId);
+			log.info("📞 END CALL - callId: {}, reason: {}, userId: {}", callId, reason, userId);
 
 			// Tìm call
 			CallEntity call = callRepository.findById(callId)
@@ -138,11 +142,11 @@ public class CallServiceImpl implements ICallService {
 			CallEntity endedCall = callRepository.save(call);
 			CallDTO callDTO = convertToDTO(endedCall);
 
-			log.info("END CALL SUCCESS - callId: {}, duration: {}s", callId, callDTO.getDuration());
+			log.info("✅ END CALL SUCCESS - callId: {}, duration: {}s", callId, callDTO.getDuration());
 			return callDTO;
 
 		} catch (Exception e) {
-			log.error("END CALL ERROR: {}", e.getMessage(), e);
+			log.error("❌ END CALL ERROR: {}", e.getMessage(), e);
 			throw new RuntimeException("Không thể kết thúc cuộc gọi: " + e.getMessage());
 		}
 	}
@@ -150,7 +154,7 @@ public class CallServiceImpl implements ICallService {
 	@Override
 	public CallDTO rejectCall(Long callId, Long userId) {
 		try {
-			log.info("REJECT CALL - callId: {}, userId: {}", callId, userId);
+			log.info("📞 REJECT CALL - callId: {}, userId: {}", callId, userId);
 
 			// Tìm call
 			CallEntity call = callRepository.findById(callId)
@@ -159,17 +163,17 @@ public class CallServiceImpl implements ICallService {
 			// Đánh dấu là rejected
 			call.markAsRejected();
 
-			// Cập nhật participant status (người từ chối) - SỬA: 'rejected' -> 'declined'
+			// Cập nhật participant status (người từ chối)
 			updateParticipantStatus(call.getCallID(), userId, "declined");
 
 			CallEntity rejectedCall = callRepository.save(call);
 			CallDTO callDTO = convertToDTO(rejectedCall);
 
-			log.info("REJECT CALL SUCCESS - callId: {}", callId);
+			log.info("✅ REJECT CALL SUCCESS - callId: {}", callId);
 			return callDTO;
 
 		} catch (Exception e) {
-			log.error("REJECT CALL ERROR: {}", e.getMessage(), e);
+			log.error("❌ REJECT CALL ERROR: {}", e.getMessage(), e);
 			throw new RuntimeException("Không thể từ chối cuộc gọi: " + e.getMessage());
 		}
 	}
@@ -177,7 +181,7 @@ public class CallServiceImpl implements ICallService {
 	@Override
 	public CallDTO getCallById(Long callId, Long userId) {
 		try {
-			log.info("GET CALL BY ID - callId: {}, userId: {}", callId, userId);
+			log.info("📞 GET CALL BY ID - callId: {}, userId: {}", callId, userId);
 
 			CallEntity call = callRepository.findById(callId)
 					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy cuộc gọi với ID: " + callId));
@@ -185,7 +189,7 @@ public class CallServiceImpl implements ICallService {
 			return convertToDTO(call);
 
 		} catch (Exception e) {
-			log.error("GET CALL BY ID ERROR: {}", e.getMessage(), e);
+			log.error("❌ GET CALL BY ID ERROR: {}", e.getMessage(), e);
 			throw new RuntimeException("Không thể lấy thông tin cuộc gọi: " + e.getMessage());
 		}
 	}
@@ -193,26 +197,26 @@ public class CallServiceImpl implements ICallService {
 	@Override
 	public List<CallDTO> getActiveCalls() {
 		try {
-			log.info("GET ACTIVE CALLS");
+			log.info("📞 GET ACTIVE CALLS");
 
 			List<CallEntity> activeCalls = callRepository.findActiveCalls();
 			List<CallDTO> result = activeCalls.stream()
 					.map(this::convertToDTO)
 					.collect(Collectors.toList());
 
-			log.info("GET ACTIVE CALLS SUCCESS - count: {}", result.size());
+			log.info("✅ GET ACTIVE CALLS SUCCESS - count: {}", result.size());
 			return result;
 
 		} catch (Exception e) {
-			log.error("GET ACTIVE CALLS ERROR: {}", e.getMessage(), e);
+			log.error("❌ GET ACTIVE CALLS ERROR: {}", e.getMessage(), e);
 			throw new RuntimeException("Không thể lấy danh sách cuộc gọi active: " + e.getMessage());
 		}
 	}
 
 	/**
-	 * Tạo participants cho call
+	 * Tạo participants cho call - ĐÃ SỬA
 	 */
-	private void createCallParticipants(CallEntity call, ConversationEntity conversation, UserEntity initiator) {
+	private void createCallParticipants(CallEntity call, ConversationEntity conversation, UserEntity initiator, UserEntity receiver) {
 		try {
 			List<CallParticipantEntity> participants = new ArrayList<>();
 
@@ -224,29 +228,21 @@ public class CallServiceImpl implements ICallService {
 			initiatorParticipant.setStatus("joined"); // ✅ ĐÚNG constraint
 			participants.add(initiatorParticipant);
 
-			// Tìm user khác - SỬA: 'calling' -> 'invited'
-			List<UserEntity> allUsers = userRepository.findAll();
-			Optional<UserEntity> otherUserOpt = allUsers.stream()
-					.filter(u -> !u.getUserID().equals(initiator.getUserID())) // Sửa field thực tế
-					.findFirst();
-
-			if (otherUserOpt.isPresent()) {
-				UserEntity otherUser = otherUserOpt.get();
-				CallParticipantEntity otherParticipant = new CallParticipantEntity();
-				otherParticipant.setCall(call);
-				otherParticipant.setUser(otherUser);
-				otherParticipant.setStatus("invited"); // ✅ ĐÚNG constraint
-				participants.add(otherParticipant);
-			}
+			// Thêm receiver
+			CallParticipantEntity receiverParticipant = new CallParticipantEntity();
+			receiverParticipant.setCall(call);
+			receiverParticipant.setUser(receiver);
+			receiverParticipant.setStatus("invited"); // ✅ ĐÚNG constraint
+			participants.add(receiverParticipant);
 
 			// Lưu participants
 			callParticipantRepository.saveAll(participants);
 			call.setCallParticipant(participants);
 
-			log.info("CREATED PARTICIPANTS - callId: {}, count: {}", call.getCallID(), participants.size());
+			log.info("✅ CREATED PARTICIPANTS - callId: {}, count: {}", call.getCallID(), participants.size());
 
 		} catch (Exception e) {
-			log.error("CREATE PARTICIPANTS ERROR: {}", e.getMessage(), e);
+			log.error("❌ CREATE PARTICIPANTS ERROR: {}", e.getMessage(), e);
 			throw new RuntimeException("Không thể tạo participants cho cuộc gọi: " + e.getMessage());
 		}
 	}
@@ -273,15 +269,15 @@ public class CallServiceImpl implements ICallService {
 				}
 
 				callParticipantRepository.save(participant);
-				log.info("UPDATED PARTICIPANT STATUS - callId: {}, userId: {}, status: {}",
+				log.info("✅ UPDATED PARTICIPANT STATUS - callId: {}, userId: {}, status: {}",
 						callId, userId, mappedStatus);
 			} else {
-				log.warn("PARTICIPANT NOT FOUND - callId: {}, userId: {}", callId, userId);
+				log.warn("⚠️ PARTICIPANT NOT FOUND - callId: {}, userId: {}", callId, userId);
 				throw new IllegalArgumentException("Không tìm thấy participant");
 			}
 
 		} catch (Exception e) {
-			log.error("UPDATE PARTICIPANT STATUS ERROR: {}", e.getMessage(), e);
+			log.error("❌ UPDATE PARTICIPANT STATUS ERROR: {}", e.getMessage(), e);
 			throw new RuntimeException("Không thể cập nhật trạng thái participant: " + e.getMessage());
 		}
 	}
@@ -303,10 +299,10 @@ public class CallServiceImpl implements ICallService {
 			}
 
 			callParticipantRepository.saveAll(participants);
-			log.info("UPDATED ALL PARTICIPANTS STATUS - callId: {}, status: {}", callId, status);
+			log.info("✅ UPDATED ALL PARTICIPANTS STATUS - callId: {}, status: {}", callId, status);
 
 		} catch (Exception e) {
-			log.error("UPDATE ALL PARTICIPANTS STATUS ERROR: {}", e.getMessage(), e);
+			log.error("❌ UPDATE ALL PARTICIPANTS STATUS ERROR: {}", e.getMessage(), e);
 		}
 	}
 
@@ -324,6 +320,7 @@ public class CallServiceImpl implements ICallService {
 			case "calling":
 			case "pending":
 			case "ringing":
+			case "initiated":
 				return "invited";
 
 			case "left":

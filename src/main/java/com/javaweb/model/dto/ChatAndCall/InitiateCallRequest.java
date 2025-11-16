@@ -1,35 +1,19 @@
 package com.javaweb.model.dto.ChatAndCall;
 
 import lombok.Data;
-import java.util.List;
 
 @Data
 public class InitiateCallRequest {
     private Long conversationID;
-    private String type; // "audio" or "video"
-    private List<String> participantIds; // for group calls
+    private String receiverID;     // Thêm field này
+    private String type;           // "audio", "video"
 
-    public List<String> getParticipantIds() {
-        return participantIds;
-    }
+    // Constructors
+    public InitiateCallRequest() {}
 
-    public void setParticipantIds(List<String> participantIds) {
-        this.participantIds = participantIds;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Long getConversationID() {
-        return conversationID;
-    }
-
-    public void setConversationID(Long conversationID) {
+    public InitiateCallRequest(Long conversationID, String receiverID, String type) {
         this.conversationID = conversationID;
+        this.receiverID = receiverID;
+        this.type = type;
     }
 }
