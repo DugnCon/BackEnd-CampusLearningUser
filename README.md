@@ -22,3 +22,9 @@
 
 <img width="1278" height="643" alt="image" src="https://github.com/user-attachments/assets/5e3c23fd-6c1b-445c-a8c1-a8b6a6ee5cef" />
 
+## RabbitMQ
+<img width="1897" height="870" alt="Ảnh chụp màn hình 2025-11-17 120316" src="https://github.com/user-attachments/assets/b2851a27-268c-4b94-8c47-a298ede92d49" />
+<img width="1913" height="863" alt="Ảnh chụp màn hình 2025-11-17 120346" src="https://github.com/user-attachments/assets/e1104fa0-1111-456e-a151-2e7a3e7377b4" />
+<img width="800" height="424" alt="Ảnh chụp màn hình 2025-11-15 215538" src="https://github.com/user-attachments/assets/2707c424-2eb2-4402-a975-4f3d99e34c33" />
+
+
