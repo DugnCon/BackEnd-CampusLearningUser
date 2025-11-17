@@ -3,6 +3,7 @@ package com.javaweb.service.impl.CallService;
 import com.javaweb.entity.ChatAndCall.CallEntity;
 import com.javaweb.entity.ChatAndCall.CallParticipantEntity;
 import com.javaweb.entity.ChatAndCall.ConversationEntity;
+import com.javaweb.entity.ChatAndCall.ConversationParticipantEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.ChatAndCall.CallDTO;
 import com.javaweb.model.dto.ChatAndCall.CallParticipantDTO;
@@ -44,12 +45,12 @@ public class CallServiceImpl implements ICallService {
 	@Override
 	public CallDTO initiateCall(InitiateCallRequest request, Long userId) {
 		try {
-			log.info("📞 INITIATE CALL - conversationId: {}, receiverId: {}, type: {}, userId: {}",
-					request.getConversationID(), request.getReceiverID(), request.getType(), userId);
+			log.info("📞 INITIATE CALL - conversationId: {}, type: {}, userId: {}",
+					request.getConversationID(), request.getType(), userId);
 
-			// Validate request - THÊM receiverId validation
-			if (request.getConversationID() == null || request.getType() == null || request.getReceiverID() == null) {
-				throw new IllegalArgumentException("Thiếu conversationId, receiverId hoặc type");
+			// Validate request
+			if (request.getConversationID() == null || request.getType() == null) {
+				throw new IllegalArgumentException("Thiếu conversationId hoặc type");
 			}
 
 			if (!request.getType().equals("audio") && !request.getType().equals("video")) {
@@ -64,9 +65,19 @@ public class CallServiceImpl implements ICallService {
 			UserEntity initiator = userRepository.findById(userId)
 					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy user initiator"));
 
-			// Tìm receiver
-			UserEntity receiver = userRepository.findById(Long.parseLong(request.getReceiverID()))
-					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy user receiver với ID: " + request.getReceiverID()));
+			List<ConversationParticipantEntity> conversationParticipants = conversation.getConversationParticipant();
+
+			List<UserEntity> otherParticipants = conversationParticipants.stream()
+					.filter(participant -> !participant.getUser().getUserID().equals(userId)) // ⬅️ SO SÁNH UserID
+					.map(ConversationParticipantEntity::getUser) // ⬅️ LẤY UserEntity từ ConversationParticipant
+					.collect(Collectors.toList());
+
+			if (otherParticipants.isEmpty()) {
+				throw new IllegalArgumentException("Không tìm thấy người nhận trong conversation");
+			}
+
+			// Lấy người đầu tiên làm receiver (cho private chat)
+			UserEntity receiver = otherParticipants.get(0);
 
 			// Tạo Call Entity
 			CallEntity callEntity = new CallEntity();

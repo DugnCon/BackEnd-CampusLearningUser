@@ -48,25 +48,24 @@ public class CallAPI {
     public ResponseEntity<?> initiateCall(@RequestBody Map<String, Object> request) {
         try {
             Long userId = getCurrentUserId();
-            String receiverId = request.get("receiverID").toString();
+            // ✅ CHỈ SỬA 2 DÒNG NÀY:
+            Long conversationID = convertToLong(request.get("conversationID"));
             String type = request.get("type") != null ? request.get("type").toString() : "video";
 
-            log.info("📞 INITIATE CALL - userId: {}, receiverId: {}, type: {}",
-                    userId, receiverId, type);
+            log.info("📞 INITIATE CALL - userId: {}, conversationID: {}, type: {}",
+                    userId, conversationID, type);
 
-            // Tạo request object
+            // Tạo request object với conversationID
             InitiateCallRequest initiateRequest = new InitiateCallRequest();
-            initiateRequest.setReceiverID(receiverId);
+            initiateRequest.setConversationID(conversationID);
             initiateRequest.setType(type);
-            // Tạo conversation ID tạm thời từ receiverId (có thể sửa sau)
-            initiateRequest.setConversationID(Long.parseLong(receiverId));
 
             CallDTO call = callService.initiateCall(initiateRequest, userId);
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Cuộc gọi đã được khởi tạo");
-            response.put("call", call); // Đổi từ "data" -> "call" để match FE
+            response.put("call", call);
 
             log.info("✅ INITIATE CALL SUCCESS - callId: {}", call.getCallID());
             return ResponseEntity.ok(response);
