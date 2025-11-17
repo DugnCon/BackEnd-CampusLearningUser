@@ -697,7 +697,9 @@ public class ConversationServiceImpl implements IConservationService {
                     .findFirst()
                     .ifPresent(otherUser -> {
                         dto.setTitle(otherUser.getFullName());
-                        dto.setAvatar(otherUser.getAvatar());
+                        if(otherUser.getAvatar() == null) {
+                            dto.setAvatar(otherUser.getImage());
+                        } else dto.setAvatar(otherUser.getAvatar());
                     });
         } else {
             // Group conversation hoặc fallback
