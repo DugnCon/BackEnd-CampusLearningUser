@@ -878,12 +878,8 @@ public class ConversationServiceImpl implements IConservationService {
                     "hasNext", false,
                     "hasPrevious", false
             ));
-
-            List<Long> receiverID = conversationParticipantRepository.findAllUserIdsByConversationId(conversation.getConversationID(), userId);
-
             response.put("conversationInfo", Map.of(
                     "conversationID", conversation.getConversationID(),
-                    "receiverID", receiverID,
                     "title", conversation.getTitle(),
                     "type", conversation.getType()
             ));
