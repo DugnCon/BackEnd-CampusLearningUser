@@ -18,6 +18,7 @@ public class ChatAPI {
     @Autowired
     private IConservationService conservationService;
 
+    // 1. CONVERSATIONS
     @GetMapping("/conversations")
     public ResponseEntity<Object> getConversations() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -111,6 +112,7 @@ public class ChatAPI {
         }
     }
 
+    // 3. PARTICIPANTS
     @PostMapping("/conversations/{conversationId}/participants")
     public ResponseEntity<Object> addParticipants(@PathVariable String conversationId, @RequestBody Map<String, Object> data) {
         return ResponseEntity.ok(null);
@@ -121,6 +123,7 @@ public class ChatAPI {
         return ResponseEntity.ok(null);
     }
 
+    // 4. FILES AND MEDIA
     @PostMapping("/upload")
     public ResponseEntity<Object> uploadMedia(@RequestParam("file") MultipartFile file, @RequestParam("type") String type) {
         return ResponseEntity.ok(null);
