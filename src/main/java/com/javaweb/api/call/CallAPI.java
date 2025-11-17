@@ -45,27 +45,18 @@ public class CallAPI {
      * Khởi tạo cuộc gọi mới
      */
     @PostMapping("/initiate")
-    public ResponseEntity<?> initiateCall(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> initiateCall(@RequestBody InitiateCallRequest request) {
         try {
             Long userId = getCurrentUserId();
-            // ✅ CHỈ SỬA 2 DÒNG NÀY:
-            Long conversationID = convertToLong(request.get("conversationID"));
-            String type = request.get("type") != null ? request.get("type").toString() : "video";
+            log.info("📞 INITIATE CALL - userId: {}, conversationId: {}, type: {}",
+                    userId, request.getConversationID(), request.getType());
 
-            log.info("📞 INITIATE CALL - userId: {}, conversationID: {}, type: {}",
-                    userId, conversationID, type);
-
-            // Tạo request object với conversationID
-            InitiateCallRequest initiateRequest = new InitiateCallRequest();
-            initiateRequest.setConversationID(conversationID);
-            initiateRequest.setType(type);
-
-            CallDTO call = callService.initiateCall(initiateRequest, userId);
+            CallDTO call = callService.initiateCall(request, userId);
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Cuộc gọi đã được khởi tạo");
-            response.put("call", call);
+            response.put("data", call);
 
             log.info("✅ INITIATE CALL SUCCESS - callId: {}", call.getCallID());
             return ResponseEntity.ok(response);
@@ -86,7 +77,7 @@ public class CallAPI {
     @PostMapping("/answer")
     public ResponseEntity<?> answerCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callID"));
+            Long callId = convertToLong(request.get("callId"));
             Long userId = getCurrentUserId();
 
             log.info("📞 ANSWER CALL - userId: {}, callId: {}", userId, callId);
@@ -96,7 +87,7 @@ public class CallAPI {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Đã trả lời cuộc gọi");
-            response.put("call", call); // Đổi từ "data" -> "call"
+            response.put("data", call);
 
             log.info("✅ ANSWER CALL SUCCESS - callId: {}", callId);
             return ResponseEntity.ok(response);
@@ -117,17 +108,18 @@ public class CallAPI {
     @PostMapping("/end")
     public ResponseEntity<?> endCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callID"));
+            Long callId = convertToLong(request.get("callId"));
+            String reason = request.get("reason") != null ? (String) request.get("reason") : "normal";
             Long userId = getCurrentUserId();
 
-            log.info("📞 END CALL - userId: {}, callId: {}", userId, callId);
+            log.info("📞 END CALL - userId: {}, callId: {}, reason: {}", userId, callId, reason);
 
-            CallDTO call = callService.endCall(callId, "normal", userId);
+            CallDTO call = callService.endCall(callId, reason, userId);
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Đã kết thúc cuộc gọi");
-            response.put("call", call); // Đổi từ "data" -> "call"
+            response.put("data", call);
 
             log.info("✅ END CALL SUCCESS - callId: {}", callId);
             return ResponseEntity.ok(response);
@@ -148,7 +140,7 @@ public class CallAPI {
     @PostMapping("/reject")
     public ResponseEntity<?> rejectCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callID"));
+            Long callId = convertToLong(request.get("callId"));
             Long userId = getCurrentUserId();
 
             log.info("📞 REJECT CALL - userId: {}, callId: {}", userId, callId);
@@ -158,7 +150,7 @@ public class CallAPI {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Đã từ chối cuộc gọi");
-            response.put("call", call); // Đổi từ "data" -> "call"
+            response.put("data", call);
 
             log.info("✅ REJECT CALL SUCCESS - callId: {}", callId);
             return ResponseEntity.ok(response);
@@ -186,7 +178,7 @@ public class CallAPI {
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("call", call); // Đổi từ "data" -> "call"
+            response.put("data", call);
 
             return ResponseEntity.ok(response);
 
@@ -203,43 +195,6 @@ public class CallAPI {
     /**
      * Lấy danh sách cuộc gọi đang active
      */
-    @GetMapping("/active/check")
-    public ResponseEntity<?> checkActiveCall() {
-        try {
-            Long userId = getCurrentUserId();
-            log.info("📞 CHECK ACTIVE CALL - userId: {}", userId);
-
-            List<CallDTO> calls = callService.getActiveCalls();
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("hasActiveCall", !calls.isEmpty());
-
-            if (!calls.isEmpty()) {
-                // Trả về call đầu tiên đang active
-                response.put("call", calls.get(0));
-                log.info("✅ ACTIVE CALL FOUND - callId: {}", calls.get(0).getCallID());
-            } else {
-                response.put("call", null);
-                log.info("ℹ️ NO ACTIVE CALL FOUND");
-            }
-
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            log.error("❌ CHECK ACTIVE CALL ERROR: {}", e.getMessage());
-
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("hasActiveCall", false);
-            return ResponseEntity.internalServerError().body(errorResponse);
-        }
-    }
-
-    /**
-     * Lấy danh sách cuộc gọi đang active (original)
-     */
     @GetMapping("/active")
     public ResponseEntity<?> getActiveCalls() {
         try {
@@ -250,7 +205,7 @@ public class CallAPI {
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("calls", calls); // Đổi từ "data" -> "calls"
+            response.put("data", calls);
 
             log.info("✅ GET ACTIVE CALLS SUCCESS - count: {}", calls.size());
             return ResponseEntity.ok(response);
