@@ -12,8 +12,11 @@ import java.util.Optional;
 public interface IConversationParticipantRepository extends JpaRepository<ConversationParticipantEntity, Long> {
 
     // Lấy tất cả user IDs trong conversation - SỬA user.UserID thành user.userID
-    @Query("SELECT p.user.UserID FROM ConversationParticipantEntity p WHERE p.conversation.conversationID = :conversationId")
+    @Query("SELECT p.user.UserID FROM ConversationParticipantEntity p WHERE p.conversation.conversationID = :conversationId and p.user.UserID != :userId")
     List<Long> findUserIdsByConversationId(@Param("conversationId") Long conversationId);
+
+    @Query("SELECT p.user.UserID FROM ConversationParticipantEntity p WHERE p.conversation.conversationID = :conversationId and p.user.UserID != :userId")
+    List<Long> findAllUserIdsByConversationId(@Param("conversationId") Long conversationId, @Param("userId") Long userId);
 
     // Kiểm tra user có trong conversation không - SỬA user.UserID thành user.userID
     @Query("SELECT COUNT(p) > 0 FROM ConversationParticipantEntity p " +

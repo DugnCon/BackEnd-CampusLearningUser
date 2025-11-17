@@ -42,13 +42,13 @@ public class CallAPI {
     }
 
     /**
-     * Khởi tạo cuộc gọi mới - VERSION MỚI cho FE
+     * Khởi tạo cuộc gọi mới
      */
     @PostMapping("/initiate")
     public ResponseEntity<?> initiateCall(@RequestBody Map<String, Object> request) {
         try {
             Long userId = getCurrentUserId();
-            String receiverId = request.get("receiverId").toString();
+            String receiverId = request.get("receiverID").toString();
             String type = request.get("type") != null ? request.get("type").toString() : "video";
 
             log.info("📞 INITIATE CALL - userId: {}, receiverId: {}, type: {}",
@@ -82,12 +82,12 @@ public class CallAPI {
     }
 
     /**
-     * Trả lời cuộc gọi - VERSION MỚI
+     * Trả lời cuộc gọi
      */
     @PostMapping("/answer")
     public ResponseEntity<?> answerCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callId"));
+            Long callId = convertToLong(request.get("callID"));
             Long userId = getCurrentUserId();
 
             log.info("📞 ANSWER CALL - userId: {}, callId: {}", userId, callId);
@@ -113,12 +113,12 @@ public class CallAPI {
     }
 
     /**
-     * Kết thúc cuộc gọi - VERSION MỚI
+     * Kết thúc cuộc gọi
      */
     @PostMapping("/end")
     public ResponseEntity<?> endCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callId"));
+            Long callId = convertToLong(request.get("callID"));
             Long userId = getCurrentUserId();
 
             log.info("📞 END CALL - userId: {}, callId: {}", userId, callId);
@@ -144,12 +144,12 @@ public class CallAPI {
     }
 
     /**
-     * Từ chối cuộc gọi - VERSION MỚI
+     * Từ chối cuộc gọi
      */
     @PostMapping("/reject")
     public ResponseEntity<?> rejectCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callId"));
+            Long callId = convertToLong(request.get("callID"));
             Long userId = getCurrentUserId();
 
             log.info("📞 REJECT CALL - userId: {}, callId: {}", userId, callId);
@@ -202,7 +202,7 @@ public class CallAPI {
     }
 
     /**
-     * Lấy danh sách cuộc gọi đang active - VERSION MỚI cho FE
+     * Lấy danh sách cuộc gọi đang active
      */
     @GetMapping("/active/check")
     public ResponseEntity<?> checkActiveCall() {
