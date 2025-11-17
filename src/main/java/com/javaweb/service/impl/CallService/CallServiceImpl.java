@@ -47,6 +47,8 @@ public class CallServiceImpl implements ICallService {
 			log.info("INITIATE CALL - conversationId: {}, type: {}, userId: {}",
 					request.getConversationID(), request.getType(), userId);
 
+			System.out.println(request.getConversationID() + "  " + request.getType());
+
 			// Validate request
 			if (request.getConversationID() == null || request.getType() == null) {
 				throw new IllegalArgumentException("Thiếu conversationId hoặc type");
