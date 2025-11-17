@@ -138,7 +138,7 @@ public class ConversationServiceImpl implements IConservationService {
     // ============ CONVERSATION METHODS ============
 
     /**
-     * Tạo conversation (cả private và group) - BẤT ĐỒNG BỘ TỐI ƯU
+     * Tạo conversation (cả private và group)
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
