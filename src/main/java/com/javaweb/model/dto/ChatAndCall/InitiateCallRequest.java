@@ -14,6 +14,7 @@ import java.util.List;
 public class InitiateCallRequest {
     private String conversationType;
     private Long conversationID;
+    private Long receiverId;
     private String type;
     private List<Long> participantIds;
 }

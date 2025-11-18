@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Controller
 @Slf4j
-public class CallSignalingController {
+public class CallSignalingHandler {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -24,29 +24,46 @@ public class CallSignalingController {
     @MessageMapping("/call.signal")
     public void handleCallSignal(CallSignalMessage message, Principal principal) {
         try {
-            log.info("SOCKET - CALL SIGNAL: from={}, to={}, type={}",
-                    principal.getName(), message.getToUserID(), message.getSignal().getType());
+            WebRTCSignal signal = message.getSignal();
 
-            // Thêm thông tin người gửi
+            log.info("📡 SOCKET - CALL SIGNAL: from={}, to={}, callId={}, signalType={}",
+                    principal.getName(), message.getToUserID(), message.getCallID(),
+                    signal.getType());
+
+            // Validate signal data
+            if (signal == null || signal.getType() == null) {
+                throw new IllegalArgumentException("Invalid signal data");
+            }
+
+            // Set sender info
             message.setFromUserID(principal.getName());
+
+            // Log chi tiết signal
+            if (signal.isSDP()) {
+                log.info("SDP Signal - Type: {}, SDP length: {}",
+                        signal.getType(),
+                        signal.getSdp() != null ? signal.getSdp().length() : 0);
+            } else if (signal.isCandidate()) {
+                RTCIceCandidate candidate = signal.getCandidate();
+                log.info("ICE Candidate - Mid: {}, Index: {}",
+                        candidate.getSdpMid(), candidate.getSdpMLineIndex());
+            }
 
             // Forward signal đến user đích
             messagingTemplate.convertAndSendToUser(
-                    message.getToUserID(),
+                    message.getToUserID().toString(),
                     "/topic/call.signal",
                     message
             );
 
-            log.info("Đã chuyển SIGNAL đến user: {}, type: {}",
-                    message.getToUserID(), message.getSignal().getType());
+            log.info("✅ Đã chuyển SIGNAL đến user: {}", message.getToUserID());
 
         } catch (Exception e) {
-            log.error("Lỗi xử lý CALL_SIGNAL: {}", e.getMessage(), e);
+            log.error("❌ Lỗi xử lý CALL_SIGNAL: {}", e.getMessage(), e);
 
-            // Gửi lỗi về cho sender
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("type", "SIGNAL_ERROR");
-            errorResponse.put("message", "Failed to send signal");
+            errorResponse.put("message", e.getMessage());
             errorResponse.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSendToUser(

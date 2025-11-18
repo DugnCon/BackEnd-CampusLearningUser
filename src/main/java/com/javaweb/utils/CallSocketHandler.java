@@ -37,7 +37,7 @@ public class CallSocketHandler {
 
             // Gửi đến user cụ thể thay vì broadcast
             messagingTemplate.convertAndSendToUser(
-                    message.getReceiverID(),
+                    message.getReceiverID().toString(),
                     "/topic/call.incoming",
                     response
             );
@@ -80,7 +80,7 @@ public class CallSocketHandler {
 
             // Gửi đến initiator của cuộc gọi
             messagingTemplate.convertAndSendToUser(
-                    message.getInitiatorID(),
+                    message.getInitiatorID().toString(),
                     "/topic/call.answered",
                     response
             );
@@ -141,7 +141,7 @@ public class CallSocketHandler {
 
             // Gửi đến initiator của cuộc gọi
             messagingTemplate.convertAndSendToUser(
-                    message.getInitiatorID(),
+                    message.getInitiatorID().toString(),
                     "/topic/call.rejected",
                     response
             );

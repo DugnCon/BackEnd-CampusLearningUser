@@ -113,8 +113,8 @@ com\javaweb\entity\Event\EventEntity.class
 com\javaweb\model\dto\ChatAndCall\CallParticipantDTO.class
 com\javaweb\model\dto\PasskeyCredential\CredentialResponse.class
 com\javaweb\service\PostCommentService.class
-com\javaweb\utils\CallSignalingController.class
 com\javaweb\entity\Event\EventParticipantsEntity.class
+com\javaweb\utils\CallSignalingHandler.class
 com\javaweb\service\SolvingByRabbitMQ\Media\MediaConsumer.class
 com\javaweb\model\dto\User\UserProfileDTO.class
 com\javaweb\repository\UserSettingsRepository.class

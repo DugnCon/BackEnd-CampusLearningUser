@@ -47,12 +47,9 @@ public class CallAPI {
      */
     @PostMapping("/initiate")
     public ResponseEntity<?> initiateCall(@RequestBody InitiateCallRequest request) {
-        System.out.println("✅ "  + request);
         try {
             Long userId = getCurrentUserId();
-            log.info("📞 INITIATE CALL - userId: {}, conversationId: {}, type: {}",
-                    userId, request.getConversationID(), request.getType());
-
+            log.info("REQUEST - request:{}", request);
             CallDTO call = callService.initiateCall(request, userId);
 
             Map<String, Object> response = new HashMap<>();
@@ -60,12 +57,10 @@ public class CallAPI {
             response.put("message", "Cuộc gọi đã được khởi tạo");
             response.put("data", call);
 
-            log.info("✅ INITIATE CALL SUCCESS - callId: {}", call.getCallID());
+            log.info("INITIATE CALL SUCCESS - callId: {}", call.getCallID());
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            log.error("❌ INITIATE CALL ERROR: {}", e.getMessage());
-
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
             errorResponse.put("message", e.getMessage());
@@ -82,7 +77,7 @@ public class CallAPI {
             Long callId = convertToLong(request.get("callId"));
             Long userId = getCurrentUserId();
 
-            log.info("📞 ANSWER CALL - userId: {}, callId: {}", userId, callId);
+            log.info("ANSWER CALL - userId: {}, callId: {}", userId, callId);
 
             CallDTO call = callService.answerCall(callId, userId);
 
@@ -91,11 +86,11 @@ public class CallAPI {
             response.put("message", "Đã trả lời cuộc gọi");
             response.put("data", call);
 
-            log.info("✅ ANSWER CALL SUCCESS - callId: {}", callId);
+            log.info("ANSWER CALL SUCCESS - callId: {}", callId);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            log.error("❌ ANSWER CALL ERROR: {}", e.getMessage());
+            log.error("ANSWER CALL ERROR: {}", e.getMessage());
 
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
@@ -114,7 +109,7 @@ public class CallAPI {
             String reason = request.get("reason") != null ? (String) request.get("reason") : "normal";
             Long userId = getCurrentUserId();
 
-            log.info("📞 END CALL - userId: {}, callId: {}, reason: {}", userId, callId, reason);
+            log.info("END CALL - userId: {}, callId: {}, reason: {}", userId, callId, reason);
 
             CallDTO call = callService.endCall(callId, reason, userId);
 
@@ -123,11 +118,11 @@ public class CallAPI {
             response.put("message", "Đã kết thúc cuộc gọi");
             response.put("data", call);
 
-            log.info("✅ END CALL SUCCESS - callId: {}", callId);
+            log.info("END CALL SUCCESS - callId: {}", callId);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            log.error("❌ END CALL ERROR: {}", e.getMessage());
+            log.error(" END CALL ERROR: {}", e.getMessage());
 
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
@@ -145,7 +140,7 @@ public class CallAPI {
             Long callId = convertToLong(request.get("callId"));
             Long userId = getCurrentUserId();
 
-            log.info("📞 REJECT CALL - userId: {}, callId: {}", userId, callId);
+            log.info("REJECT CALL - userId: {}, callId: {}", userId, callId);
 
             CallDTO call = callService.rejectCall(callId, userId);
 
@@ -154,11 +149,11 @@ public class CallAPI {
             response.put("message", "Đã từ chối cuộc gọi");
             response.put("data", call);
 
-            log.info("✅ REJECT CALL SUCCESS - callId: {}", callId);
+            log.info("REJECT CALL SUCCESS - callId: {}", callId);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            log.error("❌ REJECT CALL ERROR: {}", e.getMessage());
+            log.error("REJECT CALL ERROR: {}", e.getMessage());
 
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
@@ -174,7 +169,7 @@ public class CallAPI {
     public ResponseEntity<?> getCallDetails(@PathVariable Long callId) {
         try {
             Long userId = getCurrentUserId();
-            log.info("📞 GET CALL DETAILS - userId: {}, callId: {}", userId, callId);
+            log.info("GET CALL DETAILS - userId: {}, callId: {}", userId, callId);
 
             CallDTO call = callService.getCallById(callId, userId);
 
@@ -185,7 +180,7 @@ public class CallAPI {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            log.error("❌ GET CALL DETAILS ERROR: {}", e.getMessage());
+            log.error("GET CALL DETAILS ERROR: {}", e.getMessage());
 
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
@@ -201,7 +196,7 @@ public class CallAPI {
     public ResponseEntity<?> getActiveCalls() {
         try {
             Long userId = getCurrentUserId();
-            log.info("📞 GET ACTIVE CALLS - userId: {}", userId);
+            log.info("GET ACTIVE CALLS - userId: {}", userId);
 
             List<CallDTO> calls = callService.getActiveCalls();
 
@@ -209,11 +204,11 @@ public class CallAPI {
             response.put("success", true);
             response.put("data", calls);
 
-            log.info("✅ GET ACTIVE CALLS SUCCESS - count: {}", calls.size());
+            log.info("GET ACTIVE CALLS SUCCESS - count: {}", calls.size());
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            log.error("❌ GET ACTIVE CALLS ERROR: {}", e.getMessage());
+            log.error("GET ACTIVE CALLS ERROR: {}", e.getMessage());
 
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
