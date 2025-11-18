@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.midi.SysexMessage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class CallAPI {
      */
     @PostMapping("/initiate")
     public ResponseEntity<?> initiateCall(@RequestBody InitiateCallRequest request) {
+        System.out.println("✅ "  + request);
         try {
             Long userId = getCurrentUserId();
             log.info("📞 INITIATE CALL - userId: {}, conversationId: {}, type: {}",
