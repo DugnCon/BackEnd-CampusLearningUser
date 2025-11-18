@@ -24,7 +24,7 @@ public class CallSignalingController {
     @MessageMapping("/call.signal")
     public void handleCallSignal(CallSignalMessage message, Principal principal) {
         try {
-            log.info("📡 SOCKET - CALL SIGNAL: from={}, to={}, type={}",
+            log.info("SOCKET - CALL SIGNAL: from={}, to={}, type={}",
                     principal.getName(), message.getToUserID(), message.getSignal().getType());
 
             // Thêm thông tin người gửi
@@ -37,11 +37,11 @@ public class CallSignalingController {
                     message
             );
 
-            log.info("✅ Đã chuyển SIGNAL đến user: {}, type: {}",
+            log.info("Đã chuyển SIGNAL đến user: {}, type: {}",
                     message.getToUserID(), message.getSignal().getType());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý CALL_SIGNAL: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý CALL_SIGNAL: {}", e.getMessage(), e);
 
             // Gửi lỗi về cho sender
             Map<String, Object> errorResponse = new HashMap<>();
@@ -79,10 +79,10 @@ public class CallSignalingController {
                     response
             );
 
-            log.info("✅ USER_JOINED gửi đến call: {}", message.getCallID());
+            log.info("USER_JOINED gửi đến call: {}", message.getCallID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý CALL_JOIN: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý CALL_JOIN: {}", e.getMessage(), e);
         }
     }
 
@@ -108,10 +108,10 @@ public class CallSignalingController {
                     response
             );
 
-            log.info("✅ USER_LEFT gửi đến call: {}", message.getCallID());
+            log.info("USER_LEFT gửi đến call: {}", message.getCallID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý CALL_LEAVE: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý CALL_LEAVE: {}", e.getMessage(), e);
         }
     }
 
@@ -138,10 +138,10 @@ public class CallSignalingController {
                     response
             );
 
-            log.info("✅ MEDIA_TOGGLED gửi đến call: {}", message.getCallID());
+            log.info("MEDIA_TOGGLED gửi đến call: {}", message.getCallID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý MEDIA_TOGGLE: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý MEDIA_TOGGLE: {}", e.getMessage(), e);
         }
     }
 
@@ -151,7 +151,7 @@ public class CallSignalingController {
     @MessageMapping("/call.heartbeat")
     public void handleHeartbeat(HeartbeatMessage message, Principal principal) {
         try {
-            log.debug("📡 SOCKET - HEARTBEAT: user={}, callId={}",
+            log.debug("SOCKET - HEARTBEAT: user={}, callId={}",
                     principal.getName(), message.getCallID());
 
             Map<String, Object> response = new HashMap<>();
@@ -168,7 +168,7 @@ public class CallSignalingController {
             );
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý HEARTBEAT: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý HEARTBEAT: {}", e.getMessage(), e);
         }
     }
 }

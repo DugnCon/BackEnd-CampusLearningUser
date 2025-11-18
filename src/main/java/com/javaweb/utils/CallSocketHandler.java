@@ -24,7 +24,7 @@ public class CallSocketHandler {
     @MessageMapping("/call.initiate")
     public void handleInitiateCall(CallInitiateMessage message, Principal principal) {
         try {
-            log.info("📞 SOCKET - CALL INITIATE: from={}, to={}, type={}, callId={}",
+            log.info("SOCKET - CALL INITIATE: from={}, to={}, type={}, callId={}",
                     principal.getName(), message.getReceiverID(), message.getType(), message.getCallID());
 
             // Gửi DIRECT đến user cụ thể
@@ -42,10 +42,10 @@ public class CallSocketHandler {
                     response
             );
 
-            log.info("✅ Đã gửi INCOMING_CALL đến user: {}", message.getReceiverID());
+            log.info("Đã gửi INCOMING_CALL đến user: {}", message.getReceiverID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý CALL_INITIATE: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý CALL_INITIATE: {}", e.getMessage(), e);
 
             // Gửi lỗi về cho caller
             Map<String, Object> errorResponse = new HashMap<>();
@@ -67,7 +67,7 @@ public class CallSocketHandler {
     @MessageMapping("/call.answer")
     public void handleAnswerCall(CallAnswerMessage message, Principal principal) {
         try {
-            log.info("📞 SOCKET - CALL ANSWER: respondent={}, callId={}, accepted={}",
+            log.info("SOCKET - CALL ANSWER: respondent={}, callId={}, accepted={}",
                     principal.getName(), message.getCallID(), message.isAccepted());
 
             Map<String, Object> response = new HashMap<>();
@@ -85,10 +85,10 @@ public class CallSocketHandler {
                     response
             );
 
-            log.info("✅ Đã gửi CALL_ANSWERED đến initiator: {}", message.getInitiatorID());
+            log.info("Đã gửi CALL_ANSWERED đến initiator: {}", message.getInitiatorID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý CALL_ANSWER: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý CALL_ANSWER: {}", e.getMessage(), e);
         }
     }
 
@@ -98,7 +98,7 @@ public class CallSocketHandler {
     @MessageMapping("/call.end")
     public void handleEndCall(CallEndMessage message, Principal principal) {
         try {
-            log.info("📞 SOCKET - CALL END: callId={}, endedBy={}, reason={}",
+            log.info("SOCKET - CALL END: callId={}, endedBy={}, reason={}",
                     message.getCallID(), principal.getName(), message.getReason());
 
             Map<String, Object> response = new HashMap<>();
@@ -116,10 +116,10 @@ public class CallSocketHandler {
                     response
             );
 
-            log.info("✅ Đã gửi CALL_ENDED đến call: {}", message.getCallID());
+            log.info("Đã gửi CALL_ENDED đến call: {}", message.getCallID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý CALL_END: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý CALL_END: {}", e.getMessage(), e);
         }
     }
 
@@ -129,7 +129,7 @@ public class CallSocketHandler {
     @MessageMapping("/call.reject")
     public void handleRejectCall(CallRejectMessage message, Principal principal) {
         try {
-            log.info("📞 SOCKET - CALL REJECT: callId={}, rejectedBy={}",
+            log.info("SOCKET - CALL REJECT: callId={}, rejectedBy={}",
                     message.getCallID(), principal.getName());
 
             Map<String, Object> response = new HashMap<>();
@@ -146,10 +146,10 @@ public class CallSocketHandler {
                     response
             );
 
-            log.info("✅ Đã gửi CALL_REJECTED đến initiator: {}", message.getInitiatorID());
+            log.info("Đã gửi CALL_REJECTED đến initiator: {}", message.getInitiatorID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý CALL_REJECT: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý CALL_REJECT: {}", e.getMessage(), e);
         }
     }
 }
