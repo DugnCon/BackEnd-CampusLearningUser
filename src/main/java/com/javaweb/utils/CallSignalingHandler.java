@@ -55,7 +55,7 @@ public class CallSignalingHandler {
 
             messagingTemplate.convertAndSendToUser(
                     targetUsername,
-                    "/topic/call.signal",
+                    "/queue/call.signal",
                     message
             );
 
@@ -89,7 +89,7 @@ public class CallSignalingHandler {
             response.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSend(
-                    "/topic/call." + message.getCallID() + ".participants",
+                    "/queue/call." + message.getCallID() + ".participants",
                     response
             );
 
@@ -118,7 +118,7 @@ public class CallSignalingHandler {
             response.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSend(
-                    "/topic/call." + message.getCallID() + ".participants",
+                    "/queue/call." + message.getCallID() + ".participants",
                     response
             );
 

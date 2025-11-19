@@ -54,7 +54,7 @@ public class CallSocketHandler {
 
             messagingTemplate.convertAndSendToUser(
                     receiverUsername,
-                    "/topic/call.incoming",
+                    "/queue/call.incoming",
                     response
             );
 
@@ -85,7 +85,7 @@ public class CallSocketHandler {
 
             messagingTemplate.convertAndSendToUser(
                     initiator.getUsername(),
-                    "/topic/call.answered",
+                    "/queue/call.answered",
                     response
             );
 
@@ -114,7 +114,7 @@ public class CallSocketHandler {
 
             messagingTemplate.convertAndSendToUser(
                     initiator.getUsername(),
-                    "/topic/call.rejected",
+                    "/queue/call.rejected",
                     response
             );
 
@@ -137,7 +137,7 @@ public class CallSocketHandler {
             response.put("duration", message.getDuration());
             response.put("timestamp", System.currentTimeMillis());
 
-            messagingTemplate.convertAndSend("/topic/call." + message.getCallID(), response);
+            messagingTemplate.convertAndSend("/queue/call." + message.getCallID(), response);
             log.info("ĐÃ GỬI CALL_ENDED cho callID: {}", message.getCallID());
 
         } catch (Exception e) {
@@ -163,6 +163,6 @@ public class CallSocketHandler {
         Map<String, Object> error = new HashMap<>();
         error.put("type", "CALL_ERROR");
         error.put("message", msg);
-        messagingTemplate.convertAndSendToUser(username, "/topic/call.error", error);
+        messagingTemplate.convertAndSendToUser(username, "/queue/call.error", error);
     }
 }
