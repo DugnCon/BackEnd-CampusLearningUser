@@ -4,9 +4,7 @@ import lombok.Data;
 
 @Data
 public class CallRejectMessage {
-    private Long callID;
-    private Long initiatorID;    // Người khởi tạo cuộc gọi
-
-    public CallRejectMessage() {}
-
+    private Long callID;        // ID cuộc gọi
+    private Long initiatorID;   // ID người khởi tạo cuộc gọi
+    private Long fromUserID;    // ID người từ chối (optional)
 }

@@ -4,11 +4,9 @@ import lombok.Data;
 
 @Data
 public class CallInitiateMessage {
-    private Long callID;
-    private Long receiverID;
-    private String type;           // "audio", "video"
-    private Long conversationID; // Giữ cho compatibility
-
-    // Constructors
-    public CallInitiateMessage() {}
+    private Long receiverID;       // ID người nhận cuộc gọi
+    private Long callID;           // ID cuộc gọi
+    private String type;           // "audio" hoặc "video"
+    private Long conversationID;   // ID cuộc trò chuyện
+    private Long fromUserID;       // ID người gọi (optional)
 }
