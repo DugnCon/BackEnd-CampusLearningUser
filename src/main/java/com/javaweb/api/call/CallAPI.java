@@ -55,7 +55,7 @@ public class CallAPI {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Cuộc gọi đã được khởi tạo");
-            response.put("data", call);
+            response.put("call", call);ad
 
             log.info("INITIATE CALL SUCCESS - callId: {}", call.getCallID());
             return ResponseEntity.ok(response);
@@ -123,7 +123,6 @@ public class CallAPI {
 
         } catch (Exception e) {
             log.error(" END CALL ERROR: {}", e.getMessage());
-
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
             errorResponse.put("message", e.getMessage());
