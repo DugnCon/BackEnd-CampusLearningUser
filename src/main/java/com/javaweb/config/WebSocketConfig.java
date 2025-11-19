@@ -14,6 +14,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Autowired
+    private JwtChannelInterceptor jwtChannelInterceptor; // ĐƯA LÊN TRÊN ĐẦU TIÊN!!!
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
@@ -24,11 +27,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app");
-
         registry.enableSimpleBroker("/topic", "/queue", "/user")
                 .setHeartbeatValue(new long[]{10000, 10000})
                 .setTaskScheduler(heartbeatScheduler());
-
         registry.setUserDestinationPrefix("/user");
     }
 
@@ -42,10 +43,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @Override
+    // BÂY GIỜ MỚI GỌI → jwtChannelInterceptor ĐÃ CÓ GIÁ TRỊ!!!
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(jwtChannelInterceptor);
     }
-
-    @Autowired
-    private JwtChannelInterceptor jwtChannelInterceptor;
 }
