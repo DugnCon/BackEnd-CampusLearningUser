@@ -23,31 +23,34 @@ public class CallSocketHandler {
     @Autowired
     private IUserRepository userRepository;
 
-    /**
-     * Xử lý khi có người khởi tạo cuộc gọi
-     */
     @MessageMapping("/call.initiate")
     public void handleInitiateCall(CallInitiateMessage message, Principal principal) {
         try {
             log.info("SOCKET - CALL INITIATE: from={}, to={}, type={}, callId={}",
                     principal.getName(), message.getReceiverID(), message.getType(), message.getCallID());
 
-            UserEntity user = userRepository.findById(message.getReceiverID()).orElseThrow(() -> new RuntimeException("Not found"));
-            String receiverUsername = user.getUsername();
+            // Lấy user nhận cuộc gọi để lấy username
+            UserEntity receiver = userRepository.findById(message.getReceiverID())
+                    .orElse(null);
 
-            if (receiverUsername == null) {
-                log.warn("Không tìm thấy username cho receiverID: {}", message.getReceiverID());
+            if (receiver == null || receiver.getUsername() == null) {
+                log.warn("Không tìm thấy user hoặc username cho receiverID: {}", message.getReceiverID());
                 sendError(principal.getName(), "Người này hiện không online");
                 return;
             }
+
+            String receiverUsername = receiver.getUsername();
+
+            // Lấy tên thật của người gọi (nếu có fullName thì dùng, không thì dùng username)
+            String callerName = getCallerDisplayName(principal);
 
             Map<String, Object> response = new HashMap<>();
             response.put("type", "INCOMING_CALL");
             response.put("callID", message.getCallID());
             response.put("initiatorID", principal.getName());
-            response.put("initiatorName", getCurrentUsername(principal));
+            response.put("initiatorName", callerName);
             response.put("conversationID", message.getConversationID());
-            response.put("type", message.getType());
+            response.put("callType", message.getType()); // FE hay dùng callType thay vì type
             response.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSendToUser(
@@ -60,12 +63,101 @@ public class CallSocketHandler {
 
         } catch (Exception e) {
             log.error("Lỗi xử lý CALL_INITIATE: {}", e.getMessage(), e);
-            sendError(principal.getName(), "Hệ thống bận");
+            sendError(principal.getName(), "Không thể khởi tạo cuộc gọi");
         }
     }
 
-    private String getCurrentUsername(Principal principal) {
-        return principal != null ? principal.getName() : "Unknown";
+    @MessageMapping("/call.answer")
+    public void handleAnswerCall(CallAnswerMessage message, Principal principal) {
+        try {
+            UserEntity initiator = userRepository.findById(message.getInitiatorID()).orElse(null);
+            if (initiator == null || initiator.getUsername() == null) {
+                log.warn("Không tìm thấy initiator ID: {}", message.getInitiatorID());
+                return;
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("type", "CALL_ANSWERED");
+            response.put("callID", message.getCallID());
+            response.put("accepted", message.isAccepted());
+            response.put("respondentID", principal.getName());
+            response.put("respondentName", getCallerDisplayName(principal));
+            response.put("timestamp", System.currentTimeMillis());
+
+            messagingTemplate.convertAndSendToUser(
+                    initiator.getUsername(),
+                    "/topic/call.answered",
+                    response
+            );
+
+            log.info("ĐÃ GỬI CALL_ANSWERED đến user: {}", initiator.getUsername());
+
+        } catch (Exception e) {
+            log.error("Lỗi xử lý CALL_ANSWER: {}", e.getMessage(), e);
+        }
+    }
+
+    @MessageMapping("/call.reject")
+    public void handleRejectCall(CallRejectMessage message, Principal principal) {
+        try {
+            UserEntity initiator = userRepository.findById(message.getInitiatorID()).orElse(null);
+            if (initiator == null || initiator.getUsername() == null) {
+                log.warn("Không tìm thấy initiator ID: {}", message.getInitiatorID());
+                return;
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("type", "CALL_REJECTED");
+            response.put("callID", message.getCallID());
+            response.put("rejectedByID", principal.getName());
+            response.put("rejectedByName", getCallerDisplayName(principal));
+            response.put("timestamp", System.currentTimeMillis());
+
+            messagingTemplate.convertAndSendToUser(
+                    initiator.getUsername(),
+                    "/topic/call.rejected",
+                    response
+            );
+
+            log.info("ĐÃ GỬI CALL_REJECTED đến user: {}", initiator.getUsername());
+
+        } catch (Exception e) {
+            log.error("Lỗi xử lý CALL_REJECT: {}", e.getMessage(), e);
+        }
+    }
+
+    @MessageMapping("/call.end")
+    public void handleEndCall(CallEndMessage message, Principal principal) {
+        try {
+            Map<String, Object> response = new HashMap<>();
+            response.put("type", "CALL_ENDED");
+            response.put("callID", message.getCallID());
+            response.put("endedByID", principal.getName());
+            response.put("endedByName", getCallerDisplayName(principal));
+            response.put("reason", message.getReason());
+            response.put("duration", message.getDuration());
+            response.put("timestamp", System.currentTimeMillis());
+
+            messagingTemplate.convertAndSend("/topic/call." + message.getCallID(), response);
+            log.info("ĐÃ GỬI CALL_ENDED cho callID: {}", message.getCallID());
+
+        } catch (Exception e) {
+            log.error("Lỗi xử lý CALL_END: {}", e.getMessage(), e);
+        }
+    }
+
+    // Helper: Lấy tên hiển thị (fullName > username > Unknown)
+    private String getCallerDisplayName(Principal principal) {
+        if (principal == null) return "Unknown";
+        try {
+            UserEntity user = userRepository.findById(Long.valueOf(principal.getName())).orElse(null);
+            if (user != null && user.getFullName() != null && !user.getFullName().trim().isEmpty()) {
+                return user.getFullName();
+            }
+            return user != null ? user.getUsername() : principal.getName();
+        } catch (Exception e) {
+            return principal.getName();
+        }
     }
 
     private void sendError(String username, String msg) {
@@ -73,97 +165,5 @@ public class CallSocketHandler {
         error.put("type", "CALL_ERROR");
         error.put("message", msg);
         messagingTemplate.convertAndSendToUser(username, "/topic/call.error", error);
-    }
-
-    /**
-     * Xử lý khi có người trả lời cuộc gọi - GỬI DIRECT ĐẾN INITIATOR
-     */
-    @MessageMapping("/call.answer")
-    public void handleAnswerCall(CallAnswerMessage message, Principal principal) {
-        try {
-            log.info("SOCKET - CALL ANSWER: respondent={}, callId={}, accepted={}",
-                    principal.getName(), message.getCallID(), message.isAccepted());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("type", "CALL_ANSWERED");
-            response.put("callID", message.getCallID());
-            response.put("accepted", message.isAccepted());
-            response.put("respondentID", principal.getName());
-            response.put("respondentName", principal.getName());
-            response.put("timestamp", System.currentTimeMillis());
-
-            // Gửi đến initiator của cuộc gọi
-            messagingTemplate.convertAndSendToUser(
-                    message.getInitiatorID().toString(),
-                    "/topic/call.answered",
-                    response
-            );
-
-            log.info("Đã gửi CALL_ANSWERED đến initiator: {}", message.getInitiatorID());
-
-        } catch (Exception e) {
-            log.error("Lỗi xử lý CALL_ANSWER: {}", e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Xử lý khi kết thúc cuộc gọi
-     */
-    @MessageMapping("/call.end")
-    public void handleEndCall(CallEndMessage message, Principal principal) {
-        try {
-            log.info("SOCKET - CALL END: callId={}, endedBy={}, reason={}",
-                    message.getCallID(), principal.getName(), message.getReason());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("type", "CALL_ENDED");
-            response.put("callID", message.getCallID());
-            response.put("endedByID", principal.getName());
-            response.put("endedByName", principal.getName());
-            response.put("reason", message.getReason());
-            response.put("duration", message.getDuration());
-            response.put("timestamp", System.currentTimeMillis());
-
-            // Broadcast đến tất cả participants trong call
-            messagingTemplate.convertAndSend(
-                    "/topic/call." + message.getCallID(),
-                    response
-            );
-
-            log.info("Đã gửi CALL_ENDED đến call: {}", message.getCallID());
-
-        } catch (Exception e) {
-            log.error("Lỗi xử lý CALL_END: {}", e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Xử lý khi từ chối cuộc gọi
-     */
-    @MessageMapping("/call.reject")
-    public void handleRejectCall(CallRejectMessage message, Principal principal) {
-        try {
-            log.info("SOCKET - CALL REJECT: callId={}, rejectedBy={}",
-                    message.getCallID(), principal.getName());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("type", "CALL_REJECTED");
-            response.put("callID", message.getCallID());
-            response.put("rejectedByID", principal.getName());
-            response.put("rejectedByName", principal.getName());
-            response.put("timestamp", System.currentTimeMillis());
-
-            // Gửi đến initiator của cuộc gọi
-            messagingTemplate.convertAndSendToUser(
-                    message.getInitiatorID().toString(),
-                    "/topic/call.rejected",
-                    response
-            );
-
-            log.info("Đã gửi CALL_REJECTED đến initiator: {}", message.getInitiatorID());
-
-        } catch (Exception e) {
-            log.error("Lỗi xử lý CALL_REJECT: {}", e.getMessage(), e);
-        }
     }
 }
