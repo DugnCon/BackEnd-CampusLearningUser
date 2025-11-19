@@ -79,7 +79,7 @@ public class CallServiceImpl implements ICallService {
 			log.info("CALL ENTITY CREATED - callId: {}", savedCall.getCallID());
 
 			// Tạo participants
-			createCallParticipants(savedCall, conversation, initiator);
+			createCallParticipants(savedCall, conversation, initiator, request.getReceiverId());
 
 			// Convert to DTO và return
 			CallDTO callDTO = convertToDTO(savedCall);
@@ -214,7 +214,7 @@ public class CallServiceImpl implements ICallService {
 	/**
 	 * Tạo participants cho call
 	 */
-	private void createCallParticipants(CallEntity call, ConversationEntity conversation, UserEntity initiator) {
+	private void createCallParticipants(CallEntity call, ConversationEntity conversation, UserEntity initiator, Long receiverId) {
 		try {
 			List<CallParticipantEntity> participants = new ArrayList<>();
 
@@ -223,23 +223,17 @@ public class CallServiceImpl implements ICallService {
 			initiatorParticipant.setCall(call);
 			initiatorParticipant.setUser(initiator);
 			initiatorParticipant.setJoinTime(new Date());
-			initiatorParticipant.setStatus("joined"); // ✅ ĐÚNG constraint
+			initiatorParticipant.setStatus("joined");
 			participants.add(initiatorParticipant);
 
 			// Tìm user khác - SỬA: 'calling' -> 'invited'
-			List<UserEntity> allUsers = userRepository.findAll();
-			Optional<UserEntity> otherUserOpt = allUsers.stream()
-					.filter(u -> !u.getUserID().equals(initiator.getUserID())) // Sửa field thực tế
-					.findFirst();
 
-			if (otherUserOpt.isPresent()) {
-				UserEntity otherUser = otherUserOpt.get();
-				CallParticipantEntity otherParticipant = new CallParticipantEntity();
-				otherParticipant.setCall(call);
-				otherParticipant.setUser(otherUser);
-				otherParticipant.setStatus("invited"); // ✅ ĐÚNG constraint
-				participants.add(otherParticipant);
-			}
+			UserEntity otherUser = userRepository.findById(receiverId).orElseThrow(() -> new RuntimeException("not found"));
+			CallParticipantEntity otherParticipant = new CallParticipantEntity();
+			otherParticipant.setCall(call);
+			otherParticipant.setUser(otherUser);
+			otherParticipant.setStatus("invited");
+			participants.add(otherParticipant);
 
 			// Lưu participants
 			callParticipantRepository.saveAll(participants);
