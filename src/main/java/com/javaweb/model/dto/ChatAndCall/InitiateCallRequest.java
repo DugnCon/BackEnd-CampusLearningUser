@@ -13,7 +13,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InitiateCallRequest {
     private String conversationType;
-    private Long conversationID;
+    private Long conversationId;
     private Long receiverId;
     private String type;
     private List<Long> participantIds;

@@ -45,12 +45,12 @@ public class CallServiceImpl implements ICallService {
 	public CallDTO initiateCall(InitiateCallRequest request, Long userId) {
 		try {
 			log.info("INITIATE CALL - conversationId: {}, type: {}, userId: {}",
-					request.getConversationID(), request.getType(), userId);
+					request.getConversationId(), request.getType(), userId);
 
-			System.out.println(request.getConversationID() + "  " + request.getType());
+			System.out.println(request.getConversationId() + "  " + request.getType());
 
 			// Validate request
-			if (request.getConversationID() == null || request.getType() == null) {
+			if (request.getConversationId() == null || request.getType() == null) {
 				throw new IllegalArgumentException("Thiếu conversationId hoặc type");
 			}
 
@@ -59,8 +59,8 @@ public class CallServiceImpl implements ICallService {
 			}
 
 			// Tìm conversation
-			ConversationEntity conversation = conversationRepository.findById(request.getConversationID())
-					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy conversation với ID: " + request.getConversationID()));
+			ConversationEntity conversation = conversationRepository.findById(request.getConversationId())
+					.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy conversation với ID: " + request.getConversationId()));
 
 			// Tìm initiator
 			UserEntity initiator = userRepository.findById(userId)
