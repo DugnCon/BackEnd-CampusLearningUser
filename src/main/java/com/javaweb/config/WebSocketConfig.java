@@ -1,6 +1,8 @@
 package com.javaweb.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -38,4 +40,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         scheduler.initialize();
         return scheduler;
     }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(jwtChannelInterceptor);
+    }
+
+    @Autowired
+    private JwtChannelInterceptor jwtChannelInterceptor;
 }
