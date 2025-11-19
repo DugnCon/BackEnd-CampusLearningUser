@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Controller
 @Slf4j
 public class CallSocketHandler {
 
