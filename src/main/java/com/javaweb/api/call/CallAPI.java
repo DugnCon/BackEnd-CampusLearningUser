@@ -55,7 +55,7 @@ public class CallAPI {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Cuộc gọi đã được khởi tạo");
-            response.put("call", call);ad
+            response.put("call", call);
 
             log.info("INITIATE CALL SUCCESS - callId: {}", call.getCallID());
             return ResponseEntity.ok(response);
