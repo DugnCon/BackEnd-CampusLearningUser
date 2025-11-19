@@ -7,12 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 @Controller
 @Slf4j
 public class CallSignalingHandler {
