@@ -74,7 +74,7 @@ public class CallAPI {
     @PostMapping("/answer")
     public ResponseEntity<?> answerCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callId"));
+            Long callId = convertToLong(request.get("callID"));
             Long userId = getCurrentUserId();
 
             log.info("ANSWER CALL - userId: {}, callId: {}", userId, callId);
@@ -105,7 +105,7 @@ public class CallAPI {
     @PostMapping("/end")
     public ResponseEntity<?> endCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callId"));
+            Long callId = convertToLong(request.get("callID"));
             String reason = request.get("reason") != null ? (String) request.get("reason") : "normal";
             Long userId = getCurrentUserId();
 
@@ -137,7 +137,7 @@ public class CallAPI {
     @PostMapping("/reject")
     public ResponseEntity<?> rejectCall(@RequestBody Map<String, Object> request) {
         try {
-            Long callId = convertToLong(request.get("callId"));
+            Long callId = convertToLong(request.get("callID"));
             Long userId = getCurrentUserId();
 
             log.info("REJECT CALL - userId: {}, callId: {}", userId, callId);
