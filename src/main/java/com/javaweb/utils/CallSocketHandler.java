@@ -1,6 +1,8 @@
 package com.javaweb.utils;
 
+import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.ChatAndCall.*;
+import com.javaweb.repository.IUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,8 +20,11 @@ public class CallSocketHandler {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    private IUserRepository userRepository;
+
     /**
-     * Xử lý khi có người khởi tạo cuộc gọi - GỬI DIRECT ĐẾN USER
+     * Xử lý khi có người khởi tạo cuộc gọi
      */
     @MessageMapping("/call.initiate")
     public void handleInitiateCall(CallInitiateMessage message, Principal principal) {
@@ -27,38 +32,47 @@ public class CallSocketHandler {
             log.info("SOCKET - CALL INITIATE: from={}, to={}, type={}, callId={}",
                     principal.getName(), message.getReceiverID(), message.getType(), message.getCallID());
 
-            // Gửi DIRECT đến user cụ thể
+            UserEntity user = userRepository.findById(message.getReceiverID()).orElseThrow(() -> new RuntimeException("Not found"));
+            String receiverUsername = user.getUsername();
+
+            if (receiverUsername == null) {
+                log.warn("Không tìm thấy username cho receiverID: {}", message.getReceiverID());
+                sendError(principal.getName(), "Người này hiện không online");
+                return;
+            }
+
             Map<String, Object> response = new HashMap<>();
             response.put("type", "INCOMING_CALL");
-            response.put("call", message);
+            response.put("callID", message.getCallID());
             response.put("initiatorID", principal.getName());
-            response.put("initiatorName", principal.getName());
+            response.put("initiatorName", getCurrentUsername(principal));
+            response.put("conversationID", message.getConversationID());
+            response.put("type", message.getType());
             response.put("timestamp", System.currentTimeMillis());
 
-            // Gửi đến user cụ thể thay vì broadcast
             messagingTemplate.convertAndSendToUser(
-                    message.getReceiverID().toString(),
+                    receiverUsername,
                     "/topic/call.incoming",
                     response
             );
 
-            log.info("Đã gửi INCOMING_CALL đến user: {}", message.getReceiverID());
+            log.info("ĐÃ GỬI INCOMING_CALL đến user: {} (ID: {})", receiverUsername, message.getReceiverID());
 
         } catch (Exception e) {
             log.error("Lỗi xử lý CALL_INITIATE: {}", e.getMessage(), e);
-
-            // Gửi lỗi về cho caller
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("type", "CALL_ERROR");
-            errorResponse.put("message", "Failed to initiate call");
-            errorResponse.put("timestamp", System.currentTimeMillis());
-
-            messagingTemplate.convertAndSendToUser(
-                    principal.getName(),
-                    "/topic/call.error",
-                    errorResponse
-            );
+            sendError(principal.getName(), "Hệ thống bận");
         }
+    }
+
+    private String getCurrentUsername(Principal principal) {
+        return principal != null ? principal.getName() : "Unknown";
+    }
+
+    private void sendError(String username, String msg) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("type", "CALL_ERROR");
+        error.put("message", msg);
+        messagingTemplate.convertAndSendToUser(username, "/topic/call.error", error);
     }
 
     /**
