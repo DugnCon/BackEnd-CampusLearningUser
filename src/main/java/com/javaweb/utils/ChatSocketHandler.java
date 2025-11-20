@@ -17,7 +17,6 @@ public class ChatSocketHandler {
 
     /**
      * Broadcast message đến tất cả clients trong conversation
-     * Nhận Map<String, Object> làm parameter
      */
     public void broadcastToConversation(Long conversationId, Map<String, Object> payload) {
         try {

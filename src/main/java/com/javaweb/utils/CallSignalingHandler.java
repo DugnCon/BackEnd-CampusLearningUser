@@ -27,24 +27,31 @@ public class CallSignalingHandler {
                 return;
             }
 
+            String sender = principal.getName();
+            String target = message.getToUserID().toString();
+
+            // Nếu gửi nhầm cho chính mình thì bỏ qua và log
+            if (sender.equals(target)) {
+                log.warn("Signal target is same as sender ({}). Ignoring.", sender);
+                return;
+            }
+
             WebRTCSignal signal = message.getSignal();
             log.info("SIGNAL {} từ user {} → user {} (callId={})",
-                    signal.getType(), principal.getName(), message.getToUserID(), message.getCallID());
+                    signal.getType(), sender, target, message.getCallID());
 
-            // 🚨 SỬA: Dùng convertAndSendToUser với user ID
             messagingTemplate.convertAndSendToUser(
-                    message.getToUserID().toString(),
+                    target,
                     "/queue/call.signal",
                     message
             );
 
-            log.info("ĐÃ CHUYỂN SIGNAL đến user: {}", message.getToUserID());
-
+            log.info("Đã chuyển signal đến user: {}", target);
         } catch (Exception e) {
-            log.error("Lỗi xử lý CALL_SIGNAL: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý call signal: {}", e.getMessage(), e);
 
             Map<String, Object> error = new HashMap<>();
-            error.put("type", "SIGNAL_ERROR");
+            //error.put("type", "SIGNAL_ERROR");
             error.put("message", "Không thể chuyển tín hiệu WebRTC");
 
             if (principal != null) {

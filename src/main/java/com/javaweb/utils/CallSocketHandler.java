@@ -26,7 +26,7 @@ public class CallSocketHandler {
     @MessageMapping("/call.initiate")
     public void handleInitiateCall(CallInitiateMessage message, Principal principal) {
         try {
-            log.info("CALL INITIATE từ user {} → user {}", principal.getName(), message.getReceiverID());
+            log.info("Call initiate từ user {} → user {}", principal.getName(), message.getReceiverID());
 
             String callerName = getCallerDisplayName(principal);
 
@@ -72,7 +72,7 @@ public class CallSocketHandler {
 
             log.info("ĐÃ GỬI CALL_ANSWERED đến userId: {}", message.getInitiatorID());
         } catch (Exception e) {
-            log.error("Lỗi CALL_ANSWER: {}", e.getMessage(), e);
+            log.error("Lỗi call answer: {}", e.getMessage(), e);
         }
     }
 
@@ -92,9 +92,9 @@ public class CallSocketHandler {
                     response
             );
 
-            log.info("ĐÃ GỬI CALL_REJECTED đến userId: {}", message.getInitiatorID());
+            log.info("Đã gửi call rejected đến userId: {}", message.getInitiatorID());
         } catch (Exception e) {
-            log.error("Lỗi CALL_REJECT: {}", e.getMessage(), e);
+            log.error("Lỗi call reject: {}", e.getMessage(), e);
         }
     }
 
@@ -112,14 +112,14 @@ public class CallSocketHandler {
 
             // Gửi cho tất cả user trong call
             messagingTemplate.convertAndSendToUser(
-                    message.getTargetUserID().toString(),  // User ID as string
-                    "/queue/call.ended",                   // 🚨 ĐÚNG PATH
+                    message.getTargetUserID().toString(),
+                    "/queue/call.ended",
                     response
             );
 
-            log.info("ĐÃ GỬI CALL_ENDED cho callID: {}", message.getCallID());
+            log.info("Đã gửi call ended cho callID: {}", message.getCallID());
         } catch (Exception e) {
-            log.error("Lỗi CALL_END: {}", e.getMessage(), e);
+            log.error("Lỗi call ended: {}", e.getMessage(), e);
         }
     }
 
