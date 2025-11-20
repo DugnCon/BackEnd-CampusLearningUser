@@ -3,13 +3,35 @@ package com.javaweb.model.dto.ChatAndCall;
 import lombok.Data;
 
 public class CallSocketDTO {
-
     @Data
     public static class InitiateCallRequest {
-        private Long receiverID;
-        private Long conversationID;
-        private String type; // "audio" or "video"
-        private Long callID;
+        private Object receiverID;
+        private Object conversationID;
+        private String type;
+        private Object callID;
+
+        public Long getReceiverID() {
+            return convertToLong(receiverID);
+        }
+        public Long getConversationID() {
+            return convertToLong(conversationID);
+        }
+        public Long getCallID() {
+            return convertToLong(callID);
+        }
+        private Long convertToLong(Object obj) {
+            if (obj == null) return null;
+            if (obj instanceof Long) return (Long) obj;
+            if (obj instanceof Integer) return ((Integer) obj).longValue();
+            if (obj instanceof String) {
+                try {
+                    return Long.parseLong((String) obj);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            return null;
+        }
     }
 
     @Data
@@ -26,34 +48,111 @@ public class CallSocketDTO {
 
     @Data
     public static class CallSignal {
-        private Long toUserID;
-        private Long fromUserID;
-        private Long callID;
+        private Object toUserID;
+        private Object fromUserID;
+        private Object callID;
         private Signal signal;
+
+        public Long getToUserID() {
+            return convertToLong(toUserID);
+        }
+        public Long getFromUserID() {
+            return convertToLong(fromUserID);
+        }
+        public Long getCallID() {
+            return convertToLong(callID);
+        }
+        private Long convertToLong(Object obj) {
+            if (obj == null) return null;
+            if (obj instanceof Long) return (Long) obj;
+            if (obj instanceof Integer) return ((Integer) obj).longValue();
+            if (obj instanceof String) {
+                try {
+                    return Long.parseLong((String) obj);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            return null;
+        }
     }
 
     @Data
     public static class Signal {
-        private String type; // "offer", "answer", "candidate"
+        private String type;
         private String sdp;
         private Object candidate;
     }
 
     @Data
     public static class AnswerCallRequest {
-        private Long callID;
-        private Long initiatorID;
+        private Object callID;
+        private Object initiatorID;
         private Boolean accepted;
+
+        public Long getCallID() {
+            return convertToLong(callID);
+        }
+        public Long getInitiatorID() {
+            return convertToLong(initiatorID);
+        }
+        private Long convertToLong(Object obj) {
+            if (obj == null) return null;
+            if (obj instanceof Long) return (Long) obj;
+            if (obj instanceof Integer) return ((Integer) obj).longValue();
+            if (obj instanceof String) {
+                try {
+                    return Long.parseLong((String) obj);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            return null;
+        }
     }
 
     @Data
     public static class RejectCallRequest {
-        private Long callID;
+        private Object callID;
+
+        public Long getCallID() {
+            return convertToLong(callID);
+        }
+        private Long convertToLong(Object obj) {
+            if (obj == null) return null;
+            if (obj instanceof Long) return (Long) obj;
+            if (obj instanceof Integer) return ((Integer) obj).longValue();
+            if (obj instanceof String) {
+                try {
+                    return Long.parseLong((String) obj);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            return null;
+        }
     }
 
     @Data
     public static class EndCallRequest {
-        private Long callID;
+        private Object callID;
+
+        public Long getCallID() {
+            return convertToLong(callID);
+        }
+        private Long convertToLong(Object obj) {
+            if (obj == null) return null;
+            if (obj instanceof Long) return (Long) obj;
+            if (obj instanceof Integer) return ((Integer) obj).longValue();
+            if (obj instanceof String) {
+                try {
+                    return Long.parseLong((String) obj);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            return null;
+        }
     }
 
     @Data
