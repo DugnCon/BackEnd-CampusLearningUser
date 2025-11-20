@@ -48,7 +48,11 @@ public class CallWebSocketHandler {
         try {
             ICallSocketService.CallInfo callInfo = callSocketService.getCallInfo(request.getCallID());
             if (callInfo != null) callInfo.status = "ongoing";
-            Map<String, Object> response = Map.of("callID", request.getCallID(), "accepted", request.getAccepted(), "answererID", userId);
+            Map<String, Object> response = Map.of(
+                    "callID", request.getCallID(),
+                    "accepted", request.getAccepted(),
+                    "answererID", userId
+            );
             messagingTemplate.convertAndSendToUser(request.getInitiatorID().toString(), "/queue/call.answered", response);
             log.info("Call {} answered by user {}", request.getCallID(), userId);
         } catch (Exception e) {
@@ -58,33 +62,36 @@ public class CallWebSocketHandler {
     }
 
     @MessageMapping("/call.reject")
-    public void handleCallReject(@Payload CallSocketDTO.RejectCallRequest request, @AuthenticationPrincipal Long userId) {
-        log.info("User {} rejecting call {}", userId, request.getCallID());
+    public void handleCallReject(@Payload Long callID, @AuthenticationPrincipal Long userId) {
+        log.info("User {} rejecting call {}", userId, callID);
         try {
-            callSocketService.removeCallInfo(request.getCallID());
-            Map<String, Object> response = Map.of("callID", request.getCallID(), "rejectedBy", userId);
-            messagingTemplate.convertAndSendToUser(callSocketService.getCallInitiator(request.getCallID()).toString(), "/queue/call.rejected", response);
-            log.info("Call {} rejected by user {}", request.getCallID(), userId);
+            callSocketService.removeCallInfo(callID);
+            Map<String, Object> response = Map.of("callID", callID, "rejectedBy", userId);
+            Long initiator = callSocketService.getCallInitiator(callID);
+            if (initiator != null) {
+                messagingTemplate.convertAndSendToUser(initiator.toString(), "/queue/call.rejected", response);
+            }
+            log.info("Call {} rejected by user {}", callID, userId);
         } catch (Exception e) {
             log.error("Error rejecting call: {}", e.getMessage());
-            sendCallError(userId, request.getCallID(), "Failed to reject call");
+            sendCallError(userId, callID, "Failed to reject call");
         }
     }
 
     @MessageMapping("/call.end")
-    public void handleCallEnd(@Payload CallSocketDTO.EndCallRequest request, @AuthenticationPrincipal Long userId) {
-        log.info("User {} ending call {}", userId, request.getCallID());
+    public void handleCallEnd(@Payload Long callID, @AuthenticationPrincipal Long userId) {
+        log.info("User {} ending call {}", userId, callID);
         try {
-            callSocketService.removeCallInfo(request.getCallID());
-            Map<String, Object> response = Map.of("callID", request.getCallID(), "endedBy", userId);
-            Long otherParticipant = callSocketService.getOtherParticipant(request.getCallID(), userId);
+            callSocketService.removeCallInfo(callID);
+            Map<String, Object> response = Map.of("callID", callID, "endedBy", userId);
+            Long otherParticipant = callSocketService.getOtherParticipant(callID, userId);
             if (otherParticipant != null) {
                 messagingTemplate.convertAndSendToUser(otherParticipant.toString(), "/queue/call.ended", response);
             }
-            log.info("Call {} ended by user {}", request.getCallID(), userId);
+            log.info("Call {} ended by user {}", callID, userId);
         } catch (Exception e) {
             log.error("Error ending call: {}", e.getMessage());
-            sendCallError(userId, request.getCallID(), "Failed to end call");
+            sendCallError(userId, callID, "Failed to end call");
         }
     }
 
