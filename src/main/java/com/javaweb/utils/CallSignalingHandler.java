@@ -43,13 +43,11 @@ public class CallSignalingHandler {
             log.info("SIGNAL {} từ user {} → user {} (callId={})",
                     signal.getType(), sender, target, message.getCallID());
 
-            /*messagingTemplate.convertAndSendToUser(
+            messagingTemplate.convertAndSendToUser(
                     target,
                     "/queue/call.signal",
                     message
-            );*/
-
-            messagingTemplate.convertAndSend("/topic/call.signal", message);
+            );
 
             log.info("Đã chuyển signal đến user: {}", target);
         } catch (Exception e) {
