@@ -55,11 +55,10 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
 
                 String userIdStr = String.valueOf(user.getUserID());
 
-                // Tạo Principal có name = userId (dạng String)
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         userIdStr,
                         null,
-                        List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                        List.of(new SimpleGrantedAuthority("STUDENT"))
                 );
 
                 accessor.setUser(auth);
@@ -69,6 +68,11 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                 System.out.println("WebSocket token lỗi: " + e.getMessage());
                 return null;
             }
+        }
+
+        if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+            System.out.println("🔔 SUBSCRIBE: destination=" + accessor.getDestination()
+                    + ", user=" + accessor.getUser());
         }
 
         return message;

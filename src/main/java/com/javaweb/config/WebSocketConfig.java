@@ -15,7 +15,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Autowired
-    private JwtChannelInterceptor jwtChannelInterceptor; // ĐƯA LÊN TRÊN ĐẦU TIÊN!!!
+    private JwtChannelInterceptor jwtChannelInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -43,7 +43,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @Override
-    // BÂY GIỜ MỚI GỌI → jwtChannelInterceptor ĐÃ CÓ GIÁ TRỊ!!!
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(jwtChannelInterceptor);
     }

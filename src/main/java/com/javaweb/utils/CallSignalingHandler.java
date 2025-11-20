@@ -21,6 +21,9 @@ public class CallSignalingHandler {
 
     @MessageMapping("/call.signal")
     public void handleCallSignal(CallSignalMessage message, Principal principal) {
+        System.out.println("📡 SOCKET - CALL SIGNAL received!");
+        System.out.println("From: " + principal.getName() + ", To: " + message.getToUserID()
+                + ", type=" + message.getSignal().getType());
         try {
             if (principal == null) {
                 log.error("Principal null trong CallSignalingHandler");
@@ -40,11 +43,13 @@ public class CallSignalingHandler {
             log.info("SIGNAL {} từ user {} → user {} (callId={})",
                     signal.getType(), sender, target, message.getCallID());
 
-            messagingTemplate.convertAndSendToUser(
+            /*messagingTemplate.convertAndSendToUser(
                     target,
                     "/queue/call.signal",
                     message
-            );
+            );*/
+
+            messagingTemplate.convertAndSend("/topic/call.signal", message);
 
             log.info("Đã chuyển signal đến user: {}", target);
         } catch (Exception e) {
