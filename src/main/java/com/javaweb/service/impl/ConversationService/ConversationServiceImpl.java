@@ -551,6 +551,7 @@ public class ConversationServiceImpl implements IConservationService {
                                                      List<UserSuggestionDTO> participants,
                                                      Long currentUserId) {
         ConversationDTO dto = new ConversationDTO();
+        dto.setCreatedBy(conversation.getUser().getUserID());
         dto.setConversationID(conversation.getConversationID());
         dto.setType(conversation.getType());
         dto.setParticipants(participants);
@@ -590,6 +591,7 @@ public class ConversationServiceImpl implements IConservationService {
 
     private ConversationDTO toConversationDTO(ConversationEntity conversation, List<UserSuggestionDTO> participants) {
         ConversationDTO dto = new ConversationDTO();
+        dto.setCreatedBy(conversation.getUser().getUserID());
         dto.setConversationID(conversation.getConversationID());
         dto.setType(conversation.getType());
         dto.setParticipants(participants);

@@ -4,11 +4,10 @@ import lombok.Data;
 
 @Data
 public class CallSignalMessage {
-    private String fromUserID;     // Auto-set by server
+    private String fromUserID;
     private Long toUserID;
-    private Long callID;// Người nhận signal
-    private WebRTCSignal signal;   // WebRTC signaling data
+    private Long callID;
+    private WebRTCSignal signal;
 
-    // Constructor cho convenience
     public CallSignalMessage() {}
 }

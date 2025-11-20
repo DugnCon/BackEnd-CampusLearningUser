@@ -16,10 +16,19 @@ public class ConversationDTO {
     private String title;
     private String type;
     private String avatar; //Người kia
+    private Long createdBy;
     private LocalDateTime lastMessageContent;
     private LocalDateTime lastMessageTime;
     private Integer unreadCount;
     private List<UserSuggestionDTO> participants;
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public List<UserSuggestionDTO> getParticipants() {
         return participants;

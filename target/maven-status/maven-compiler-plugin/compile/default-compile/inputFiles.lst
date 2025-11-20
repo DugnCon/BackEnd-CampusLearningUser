@@ -1,3 +1,4 @@
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\IceCandidate.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ProfileAndSetting\UserProfileHelperService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\CompetitionRegistrationDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\JwtService.java
@@ -88,7 +89,6 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICodingExerci
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\PostCommentService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Post\PostDetailDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\competition\CompetitionAPI.java
-C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\RTCIceCandidate.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ILessonProgressService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\CallDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\notification\NotificationAPI.java
@@ -157,6 +157,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Post\PostComme
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Event\EventScheduleEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\UserEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\UserSettingsRepository.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\JwtChannelInterceptor.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICourseEnrollmentRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\impl\UserRepositoryCustom\UserRepositoryCustom.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICompetitionSubmissionRepository.java
