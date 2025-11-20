@@ -111,7 +111,7 @@ public class CallWebSocketHandler {
 
     @MessageMapping("/call.signal")
     public void handleCallSignal(@Payload CallSocketDTO.CallSignal signal) {
-        Long fromUserID = (Long) signal.getFromUserID(); // đã có sẵn trong message
+        Long fromUserID = Long.valueOf(signal.getFromUserID().toString()); // đã có sẵn trong message
 
         log.debug("Forwarding WebRTC signal {} from {} to {} (call {})",
                 signal.getSignal().getType(), fromUserID, signal.getToUserID(), signal.getCallID());
