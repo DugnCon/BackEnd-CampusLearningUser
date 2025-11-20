@@ -9,6 +9,7 @@ public class CallSocketDTO {
         private Object conversationID;
         private String type;
         private Object callID;
+        private Long fromUserID;
 
         public Long getReceiverID() {
             return convertToLong(receiverID);
@@ -56,9 +57,6 @@ public class CallSocketDTO {
         public Long getToUserID() {
             return convertToLong(toUserID);
         }
-        public Long getFromUserID() {
-            return convertToLong(fromUserID);
-        }
         public Long getCallID() {
             return convertToLong(callID);
         }
@@ -89,6 +87,7 @@ public class CallSocketDTO {
         private Object callID;
         private Object initiatorID;
         private Boolean accepted;
+        private Long fromUserID;
 
         public Long getCallID() {
             return convertToLong(callID);
