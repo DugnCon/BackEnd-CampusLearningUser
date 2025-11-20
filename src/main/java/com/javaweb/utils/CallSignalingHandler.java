@@ -23,25 +23,25 @@ public class CallSignalingHandler {
     public void handleCallSignal(CallSignalMessage message, Principal principal) {
         try {
             if (principal == null) {
-                log.error("❌ Principal null trong CallSignalingHandler");
+                log.error("Principal null trong CallSignalingHandler");
                 return;
             }
 
             WebRTCSignal signal = message.getSignal();
-            log.info("📡 SIGNAL {} từ user {} → user {} (callId={})",
+            log.info("SIGNAL {} từ user {} → user {} (callId={})",
                     signal.getType(), principal.getName(), message.getToUserID(), message.getCallID());
 
             // 🚨 SỬA: Dùng convertAndSendToUser với user ID
             messagingTemplate.convertAndSendToUser(
-                    message.getToUserID().toString(),  // User ID as string
-                    "/queue/call.signal",              // 🚨 ĐÚNG PATH - /queue thay vì /topic
+                    message.getToUserID().toString(),
+                    "/queue/call.signal",
                     message
             );
 
-            log.info("✅ ĐÃ CHUYỂN SIGNAL đến user: {}", message.getToUserID());
+            log.info("ĐÃ CHUYỂN SIGNAL đến user: {}", message.getToUserID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi xử lý CALL_SIGNAL: {}", e.getMessage(), e);
+            log.error("Lỗi xử lý CALL_SIGNAL: {}", e.getMessage(), e);
 
             Map<String, Object> error = new HashMap<>();
             error.put("type", "SIGNAL_ERROR");

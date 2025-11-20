@@ -26,12 +26,12 @@ public class CallSocketHandler {
     @MessageMapping("/call.initiate")
     public void handleInitiateCall(CallInitiateMessage message, Principal principal) {
         try {
-            log.info("📞 CALL INITIATE từ user {} → user {}", principal.getName(), message.getReceiverID());
+            log.info("CALL INITIATE từ user {} → user {}", principal.getName(), message.getReceiverID());
 
             String callerName = getCallerDisplayName(principal);
 
             Map<String, Object> response = new HashMap<>();
-            response.put("type", "INCOMING_CALL");
+            //response.put("type", "INCOMING_CALL");
             response.put("callID", message.getCallID());
             response.put("initiatorID", principal.getName());
             response.put("initiatorName", callerName);
@@ -39,17 +39,16 @@ public class CallSocketHandler {
             response.put("callType", message.getType());
             response.put("timestamp", System.currentTimeMillis());
 
-            // 🚨 SỬA: Dùng convertAndSendToUser
             messagingTemplate.convertAndSendToUser(
-                    message.getReceiverID().toString(),  // User ID as string
-                    "/queue/call.incoming",              // 🚨 ĐÚNG PATH
+                    message.getReceiverID().toString(),
+                    "/queue/call.incoming",
                     response
             );
 
-            log.info("✅ ĐÃ GỬI INCOMING_CALL đến userId: {}", message.getReceiverID());
+            log.info("Đã gửi incoming call đến userId: {}", message.getReceiverID());
 
         } catch (Exception e) {
-            log.error("❌ Lỗi CALL_INITIATE: {}", e.getMessage(), e);
+            log.error("Lỗi call initiate: {}", e.getMessage(), e);
             sendError(principal.getName(), "Không thể khởi tạo cuộc gọi");
         }
     }
@@ -58,7 +57,7 @@ public class CallSocketHandler {
     public void handleAnswerCall(CallAnswerMessage message, Principal principal) {
         try {
             Map<String, Object> response = new HashMap<>();
-            response.put("type", "CALL_ANSWERED");
+            //response.put("type", "CALL_ANSWERED");
             response.put("callID", message.getCallID());
             response.put("accepted", message.isAccepted());
             response.put("respondentID", principal.getName());
@@ -66,14 +65,14 @@ public class CallSocketHandler {
             response.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSendToUser(
-                    message.getInitiatorID().toString(),  // User ID as string
-                    "/queue/call.answered",               // 🚨 ĐÚNG PATH
+                    message.getInitiatorID().toString(),
+                    "/queue/call.answered",
                     response
             );
 
-            log.info("✅ ĐÃ GỬI CALL_ANSWERED đến userId: {}", message.getInitiatorID());
+            log.info("ĐÃ GỬI CALL_ANSWERED đến userId: {}", message.getInitiatorID());
         } catch (Exception e) {
-            log.error("❌ Lỗi CALL_ANSWER: {}", e.getMessage(), e);
+            log.error("Lỗi CALL_ANSWER: {}", e.getMessage(), e);
         }
     }
 
@@ -81,21 +80,21 @@ public class CallSocketHandler {
     public void handleRejectCall(CallRejectMessage message, Principal principal) {
         try {
             Map<String, Object> response = new HashMap<>();
-            response.put("type", "CALL_REJECTED");
+            //response.put("type", "CALL_REJECTED");
             response.put("callID", message.getCallID());
             response.put("rejectedByID", principal.getName());
             response.put("rejectedByName", getCallerDisplayName(principal));
             response.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSendToUser(
-                    message.getInitiatorID().toString(),  // User ID as string
-                    "/queue/call.rejected",               // 🚨 ĐÚNG PATH
+                    message.getInitiatorID().toString(),
+                    "/queue/call.rejected",
                     response
             );
 
-            log.info("✅ ĐÃ GỬI CALL_REJECTED đến userId: {}", message.getInitiatorID());
+            log.info("ĐÃ GỬI CALL_REJECTED đến userId: {}", message.getInitiatorID());
         } catch (Exception e) {
-            log.error("❌ Lỗi CALL_REJECT: {}", e.getMessage(), e);
+            log.error("Lỗi CALL_REJECT: {}", e.getMessage(), e);
         }
     }
 
@@ -103,7 +102,7 @@ public class CallSocketHandler {
     public void handleEndCall(CallEndMessage message, Principal principal) {
         try {
             Map<String, Object> response = new HashMap<>();
-            response.put("type", "CALL_ENDED");
+            //response.put("type", "CALL_ENDED");
             response.put("callID", message.getCallID());
             response.put("endedByID", principal.getName());
             response.put("endedByName", getCallerDisplayName(principal));
@@ -118,9 +117,9 @@ public class CallSocketHandler {
                     response
             );
 
-            log.info("✅ ĐÃ GỬI CALL_ENDED cho callID: {}", message.getCallID());
+            log.info("ĐÃ GỬI CALL_ENDED cho callID: {}", message.getCallID());
         } catch (Exception e) {
-            log.error("❌ Lỗi CALL_END: {}", e.getMessage(), e);
+            log.error("Lỗi CALL_END: {}", e.getMessage(), e);
         }
     }
 
@@ -139,7 +138,7 @@ public class CallSocketHandler {
 
     private void sendError(String userId, String msg) {
         Map<String, Object> error = new HashMap<>();
-        error.put("type", "CALL_ERROR");
+        //error.put("type", "CALL_ERROR");
         error.put("message", msg);
         messagingTemplate.convertAndSendToUser(
                 userId,
