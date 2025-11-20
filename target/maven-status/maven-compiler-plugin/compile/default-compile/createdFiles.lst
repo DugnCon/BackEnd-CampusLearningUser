@@ -3,6 +3,7 @@ com\javaweb\service\SolvingByRabbitMQ\Story\StoryConsumer.class
 com\javaweb\service\SolvingByRabbitMQ\Comment\CommentConsumer.class
 com\javaweb\entity\ChatAndCall\MessageEntity.class
 com\javaweb\model\dto\PasskeyCredentialDTO\CredentialResponse.class
+com\javaweb\service\impl\CallService\CallSocketServiceImpl.class
 com\javaweb\entity\PasskeyCredentialsEntity.class
 com\javaweb\entity\Competition\CompetitionRegistrationEntity.class
 com\javaweb\model\dto\ChatAndCall\ChatMessageDTO.class
@@ -18,6 +19,7 @@ com\javaweb\model\dto\PasskeyCredentialDTO\CredentialVerifyRequest.class
 com\javaweb\entity\Event\EventTechnologiesEntity.class
 com\javaweb\model\dto\PreferenceSettingsDTO.class
 com\javaweb\repository\IPostRepository.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO$RejectCallRequest.class
 com\javaweb\model\dto\AccessibilitySettingsDTO.class
 com\javaweb\service\impl\CallService\CallServiceImpl.class
 com\javaweb\service\PayPalService.class
@@ -43,6 +45,7 @@ com\javaweb\SpringBootWebApplication.class
 com\javaweb\config\JwtChannelInterceptor.class
 com\javaweb\converter\TestCaseConverter$1.class
 com\javaweb\model\dto\Profile\ProfileInformation\EducationDTO.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO$CallSignal.class
 com\javaweb\service\impl\EventService\EventServiceImpl.class
 com\javaweb\api\call\CallAPI.class
 com\javaweb\model\dto\ProfileInfoDTO.class
@@ -75,6 +78,7 @@ com\javaweb\security\utils\SecurityUtils.class
 com\javaweb\api\User\UserAPI.class
 com\javaweb\model\dto\ChatAndCall\CallInitiateMessage.class
 com\javaweb\api\Settings\SettingsAPI.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO$CallError.class
 com\javaweb\model\dto\CompetitionDTO.class
 com\javaweb\config\ModelMapperConfig.class
 com\javaweb\entity\Course\CourseEntity.class
@@ -91,12 +95,14 @@ com\javaweb\service\IUserService.class
 com\javaweb\api\profile\ProfileAPI$EducationUpdateRequest.class
 com\javaweb\converter\TestCaseConverter.class
 com\javaweb\service\ICommentService.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO$CallResponse.class
 com\javaweb\model\dto\ChatAndCall\JoinCallMessage.class
 com\javaweb\repository\IStoryRepository.class
 com\javaweb\entity\UserSettings.class
 com\javaweb\service\IConservationService.class
 com\javaweb\model\dto\User\UserDTO.class
 com\javaweb\api\profile\ProfileAPI$WorkExperienceUpdateRequest.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO$Signal.class
 com\javaweb\service\ICompetitionService.class
 com\javaweb\service\impl\PostService\PostServiceImpl.class
 com\javaweb\entity\Payment\PaymentHistoryEntity.class
@@ -115,8 +121,8 @@ com\javaweb\model\dto\ChatAndCall\CallParticipantDTO.class
 com\javaweb\model\dto\PasskeyCredential\CredentialResponse.class
 com\javaweb\service\PostCommentService.class
 com\javaweb\entity\Event\EventParticipantsEntity.class
-com\javaweb\utils\CallSignalingHandler.class
 com\javaweb\service\SolvingByRabbitMQ\Media\MediaConsumer.class
+com\javaweb\service\ICallSocketService.class
 com\javaweb\model\dto\User\UserProfileDTO.class
 com\javaweb\repository\UserSettingsRepository.class
 com\javaweb\service\CodeServerService.class
@@ -132,6 +138,7 @@ com\javaweb\service\impl\PostService\CommentServiceImpl.class
 com\javaweb\model\dto\ChatAndCall\WebRTCAnswerMessage$WebRTCAnswerMessageBuilder.class
 com\javaweb\model\dto\Post\PostProfileDTO.class
 com\javaweb\service\SolvingByRabbitMQ\Story\StoryProducer.class
+com\javaweb\utils\CallWebSocketHandler.class
 com\javaweb\utils\MapUtils.class
 com\javaweb\entity\AccessibilitySettings.class
 com\javaweb\service\impl\CompetitionService\CompetitionServiceImpl.class
@@ -144,6 +151,7 @@ com\javaweb\api\posts\PostAPI.class
 com\javaweb\entity\Post\TagsEntity.class
 com\javaweb\model\dto\Post\PostLikeDTO.class
 com\javaweb\service\GoogleAuthService.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO$EndCallRequest.class
 com\javaweb\repository\impl\UserRepositoryCustom\UserRepositoryCustom.class
 com\javaweb\entity\Story\StoryEntity.class
 com\javaweb\repository\ICodingExerciseRepository.class
@@ -167,7 +175,7 @@ com\javaweb\api\notification\NotificationAPI.class
 com\javaweb\api\story\StoryAPI$ReplyRequest.class
 com\javaweb\entity\Competition\CompetitionSubmissionEntity.class
 com\javaweb\utils\NullAwareBeanUtils.class
-com\javaweb\utils\CallSocketHandler.class
+com\javaweb\service\ICallSocketService$CallInfo.class
 com\javaweb\model\dto\ChatAndCall\CallAnswerMessage.class
 com\javaweb\service\SolvingByRabbitMQ\Message\MessageProducer.class
 com\javaweb\model\dto\ChatAndCall\LeaveCallMessage.class
@@ -183,6 +191,7 @@ com\javaweb\entity\Post\CommentLikeEntity.class
 com\javaweb\model\dto\Profile\UserProfileDetailDTO.class
 com\javaweb\service\FileStorageService.class
 com\javaweb\service\SolvingByRabbitMQ\Message\MessageConsumer.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO$AnswerCallRequest.class
 com\javaweb\service\impl\PaymentService\PaymentServiceImpl.class
 com\javaweb\repository\IConversationParticipantRepository.class
 com\javaweb\api\profile\ProfileAPI$UpdateUserRequest.class
@@ -204,6 +213,7 @@ com\javaweb\service\ISettingsService.class
 com\javaweb\model\dto\NotificationSettingsDTO.class
 com\javaweb\model\dto\ChatAndCall\WebRTCOfferMessage.class
 com\javaweb\model\dto\ChatAndCall\ConversationDTO.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO.class
 com\javaweb\model\dto\ChatAndCall\KeepAliveMessage$KeepAliveMessageBuilder.class
 com\javaweb\service\impl\CourseService\CodingExerciseServiceImpl.class
 com\javaweb\model\dto\ChatAndCall\ScreenShareMessage.class
@@ -235,6 +245,7 @@ com\javaweb\model\dto\Post\PostDTO.class
 com\javaweb\api\profile\ProfileAPI.class
 com\javaweb\config\CorsFilter.class
 com\javaweb\converter\SocialLinkConverter.class
+com\javaweb\model\dto\ChatAndCall\CallSocketDTO$InitiateCallRequest.class
 com\javaweb\model\dto\ChatAndCall\WebRTCAnswerMessage.class
 com\javaweb\service\ICodingExerciseService.class
 com\javaweb\api\chatAI\ErrorResponse.class

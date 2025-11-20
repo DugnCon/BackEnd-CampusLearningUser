@@ -53,16 +53,16 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                     return null;
                 }
 
-                String userIdStr = String.valueOf(user.getUserID());
+                //String userIdStr = String.valueOf(user.getUserID());
 
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        userIdStr,
+                        user.getUserID(),
                         null,
                         List.of(new SimpleGrantedAuthority("STUDENT"))
                 );
 
                 accessor.setUser(auth);
-                System.out.println("WebSocket xác thực thành công: userId = " + userIdStr + " (email: " + email + ")");
+                System.out.println("WebSocket xác thực thành công: userId = " + user + " (email: " + email + ")");
 
             } catch (Exception e) {
                 System.out.println("WebSocket token lỗi: " + e.getMessage());
