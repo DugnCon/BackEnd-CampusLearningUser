@@ -9,7 +9,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -21,49 +20,41 @@ public class CallSignalingHandler {
 
     @MessageMapping("/call.signal")
     public void handleCallSignal(CallSignalMessage message, Principal principal) {
-        System.out.println("📡 SOCKET - CALL SIGNAL received!");
-        System.out.println("From: " + principal.getName() + ", To: " + message.getToUserID()
-                + ", type=" + message.getSignal().getType());
+        if (principal == null) {
+            log.error("Principal null khi nhận signal");
+            return;
+        }
+
+        String senderId = principal.getName();
+        String targetId = message.getToUserID().toString();
+        WebRTCSignal signal = message.getSignal();
+
+        // Ngăn gửi cho chính mình
+        if (senderId.equals(targetId)) {
+            log.warn("User {} gửi signal cho chính mình → bỏ qua", senderId);
+            return;
+        }
+
+        log.info("Chuyển WebRTC signal [{}] từ {} → {} (callID={})",
+                signal.getType(), senderId, targetId, message.getCallID());
+
         try {
-            if (principal == null) {
-                log.error("Principal null trong CallSignalingHandler");
-                return;
-            }
-
-            String sender = principal.getName();
-            String target = message.getToUserID().toString();
-
-            // Nếu gửi nhầm cho chính mình thì bỏ qua và log
-            if (sender.equals(target)) {
-                log.warn("Signal target is same as sender ({}). Ignoring.", sender);
-                return;
-            }
-
-            WebRTCSignal signal = message.getSignal();
-            log.info("SIGNAL {} từ user {} → user {} (callId={})",
-                    signal.getType(), sender, target, message.getCallID());
-
             messagingTemplate.convertAndSendToUser(
-                    target,
-                    "/queue/call.signal",
+                    targetId,
+                    "/queue/call.signal",  // ĐÚNG 100%
                     message
             );
 
-            log.info("Đã chuyển signal đến user: {}", target);
+            log.info("Đã chuyển signal thành công đến user {}", targetId);
         } catch (Exception e) {
-            log.error("Lỗi xử lý call signal: {}", e.getMessage(), e);
+            log.error("Lỗi chuyển signal đến user {}: {}", targetId, e.getMessage(), e);
 
-            Map<String, Object> error = new HashMap<>();
-            //error.put("type", "SIGNAL_ERROR");
-            error.put("message", "Không thể chuyển tín hiệu WebRTC");
-
-            if (principal != null) {
-                messagingTemplate.convertAndSendToUser(
-                        principal.getName(),
-                        "/queue/call.error",
-                        error
-                );
-            }
+            // Gửi lỗi về cho người gửi
+            messagingTemplate.convertAndSendToUser(
+                    senderId,
+                    "/queue/call.error",
+                    Map.of("message", "Không thể chuyển tín hiệu WebRTC", "timestamp", System.currentTimeMillis())
+            );
         }
     }
 }

@@ -26,29 +26,28 @@ public class CallSocketHandler {
     @MessageMapping("/call.initiate")
     public void handleInitiateCall(CallInitiateMessage message, Principal principal) {
         try {
-            log.info("Call initiate từ user {} → user {}", principal.getName(), message.getReceiverID());
+            String callerId = principal.getName();
+            log.info("CALL INITIATE từ user {} → user {}", callerId, message.getReceiverID());
 
-            String callerName = getCallerDisplayName(principal);
+            String callerName = getDisplayName(callerId);
 
-            Map<String, Object> response = new HashMap<>();
-            //response.put("type", "INCOMING_CALL");
-            response.put("callID", message.getCallID());
-            response.put("initiatorID", principal.getName());
-            response.put("initiatorName", callerName);
-            response.put("conversationID", message.getConversationID());
-            response.put("callType", message.getType());
-            response.put("timestamp", System.currentTimeMillis());
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("callID", message.getCallID());
+            payload.put("initiatorID", callerId);
+            payload.put("initiatorName", callerName);
+            payload.put("conversationID", message.getConversationID());
+            payload.put("callType", message.getType());
+            payload.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSendToUser(
                     message.getReceiverID().toString(),
                     "/queue/call.incoming",
-                    response
+                    payload
             );
 
-            log.info("Đã gửi incoming call đến userId: {}", message.getReceiverID());
-
+            log.info("Đã gửi INCOMING_CALL đến user {}", message.getReceiverID());
         } catch (Exception e) {
-            log.error("Lỗi call initiate: {}", e.getMessage(), e);
+            log.error("Lỗi handleInitiateCall: {}", e.getMessage(), e);
             sendError(principal.getName(), "Không thể khởi tạo cuộc gọi");
         }
     }
@@ -56,94 +55,96 @@ public class CallSocketHandler {
     @MessageMapping("/call.answer")
     public void handleAnswerCall(CallAnswerMessage message, Principal principal) {
         try {
-            Map<String, Object> response = new HashMap<>();
-            //response.put("type", "CALL_ANSWERED");
-            response.put("callID", message.getCallID());
-            response.put("accepted", message.isAccepted());
-            response.put("respondentID", principal.getName());
-            response.put("respondentName", getCallerDisplayName(principal));
-            response.put("timestamp", System.currentTimeMillis());
+            String respondentId = principal.getName();
+            log.info("CALL ANSWERED - callID: {}, accepted: {}", message.getCallID(), message.isAccepted());
+
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("callID", message.getCallID());
+            payload.put("accepted", message.isAccepted());
+            payload.put("respondentID", respondentId);
+            payload.put("respondentName", getDisplayName(respondentId));
+            payload.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSendToUser(
                     message.getInitiatorID().toString(),
                     "/queue/call.answered",
-                    response
+                    payload
             );
 
-            log.info("ĐÃ GỬI CALL_ANSWERED đến userId: {}", message.getInitiatorID());
+            log.info("Đã gửi CALL_ANSWERED đến initiator {}", message.getInitiatorID());
         } catch (Exception e) {
-            log.error("Lỗi call answer: {}", e.getMessage(), e);
+            log.error("Lỗi handleAnswerCall: {}", e.getMessage(), e);
         }
     }
 
     @MessageMapping("/call.reject")
     public void handleRejectCall(CallRejectMessage message, Principal principal) {
         try {
-            Map<String, Object> response = new HashMap<>();
-            //response.put("type", "CALL_REJECTED");
-            response.put("callID", message.getCallID());
-            response.put("rejectedByID", principal.getName());
-            response.put("rejectedByName", getCallerDisplayName(principal));
-            response.put("timestamp", System.currentTimeMillis());
+            String rejectorId = principal.getName();
+            log.info("CALL REJECTED - callID: {}", message.getCallID());
+
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("callID", message.getCallID());
+            payload.put("rejectedByID", rejectorId);
+            payload.put("rejectedByName", getDisplayName(rejectorId));
+            payload.put("timestamp", System.currentTimeMillis());
 
             messagingTemplate.convertAndSendToUser(
                     message.getInitiatorID().toString(),
                     "/queue/call.rejected",
-                    response
+                    payload
             );
 
-            log.info("Đã gửi call rejected đến userId: {}", message.getInitiatorID());
+            log.info("Đã gửi CALL_REJECTED đến initiator {}", message.getInitiatorID());
         } catch (Exception e) {
-            log.error("Lỗi call reject: {}", e.getMessage(), e);
+            log.error("Lỗi handleRejectCall: {}", e.getMessage(), e);
         }
     }
 
     @MessageMapping("/call.end")
     public void handleEndCall(CallEndMessage message, Principal principal) {
         try {
-            Map<String, Object> response = new HashMap<>();
-            //response.put("type", "CALL_ENDED");
-            response.put("callID", message.getCallID());
-            response.put("endedByID", principal.getName());
-            response.put("endedByName", getCallerDisplayName(principal));
-            response.put("reason", message.getReason());
-            response.put("duration", message.getDuration());
-            response.put("timestamp", System.currentTimeMillis());
+            String enderId = principal.getName();
+            String targetId = message.getTargetUserID().toString();
 
-            // Gửi cho tất cả user trong call
-            messagingTemplate.convertAndSendToUser(
-                    message.getTargetUserID().toString(),
-                    "/queue/call.ended",
-                    response
-            );
+            log.info("CALL ENDED - callID: {}, bởi: {}", message.getCallID(), enderId);
 
-            log.info("Đã gửi call ended cho callID: {}", message.getCallID());
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("callID", message.getCallID());
+            payload.put("endedByID", enderId);
+            payload.put("endedByName", getDisplayName(enderId));
+            payload.put("reason", message.getReason() != null ? message.getReason() : "normal");
+            payload.put("duration", message.getDuration());
+            payload.put("timestamp", System.currentTimeMillis());
+
+            // GỬI CHO CẢ 2 BÊN - QUAN TRỌNG!!!
+            messagingTemplate.convertAndSendToUser(enderId, "/queue/call.ended", payload);
+            messagingTemplate.convertAndSendToUser(targetId, "/queue/call.ended", payload);
+
+            log.info("Đã gửi CALL_ENDED cho cả 2 bên: {} và {}", enderId, targetId);
         } catch (Exception e) {
-            log.error("Lỗi call ended: {}", e.getMessage(), e);
+            log.error("Lỗi handleEndCall: {}", e.getMessage(), e);
         }
     }
 
-    private String getCallerDisplayName(Principal principal) {
-        if (principal == null) return "Unknown";
+    private String getDisplayName(String userId) {
         try {
-            UserEntity user = userRepository.findById(Long.valueOf(principal.getName())).orElse(null);
-            if (user != null && user.getFullName() != null && !user.getFullName().trim().isEmpty()) {
-                return user.getFullName();
+            UserEntity user = userRepository.findById(Long.valueOf(userId)).orElse(null);
+            if (user != null) {
+                return user.getFullName() != null && !user.getFullName().trim().isEmpty()
+                        ? user.getFullName() : user.getUsername();
             }
-            return user != null ? user.getUsername() : principal.getName();
         } catch (Exception e) {
-            return principal.getName();
+            log.warn("Lỗi lấy display name cho user {}: {}", userId, e.getMessage());
         }
+        return "Người dùng";
     }
 
     private void sendError(String userId, String msg) {
         Map<String, Object> error = new HashMap<>();
-        //error.put("type", "CALL_ERROR");
         error.put("message", msg);
-        messagingTemplate.convertAndSendToUser(
-                userId,
-                "/queue/call.error",
-                error
-        );
+        error.put("timestamp", System.currentTimeMillis());
+
+        messagingTemplate.convertAndSendToUser(userId, "/queue/call.error", error);
     }
 }
