@@ -21,7 +21,7 @@ public class CallWebSocketHandler {
 
     @MessageMapping("/call.initiate")
     public void handleCallInitiate(@Payload CallSocketDTO.InitiateCallRequest request) {
-        Long userId = request.getFromUserID(); // frontend sẽ gửi thêm fromUserID
+        Long userId = request.getFromUserID();
         log.info("User {} initiating call to {}", userId, request.getReceiverID());
 
         try {
@@ -35,7 +35,7 @@ public class CallWebSocketHandler {
             response.setConversationID(request.getConversationID());
             response.setStatus("ringing");
 
-            messagingTemplate.convertAndSendToUser(request.getReceiverID().toString(), "/queue/call.incoming", response);
+            messagingTemplate.convertAndSend("/user/" + request.getReceiverID() + "/queue/call.incoming", response);
             log.info("Call invitation sent to user {}", request.getReceiverID());
         } catch (Exception e) {
             log.error("Error initiating call: {}", e.getMessage());
@@ -45,7 +45,7 @@ public class CallWebSocketHandler {
 
     @MessageMapping("/call.answer")
     public void handleCallAnswer(@Payload CallSocketDTO.AnswerCallRequest request) {
-        Long userId = request.getFromUserID(); // frontend gửi kèm
+        Long userId = request.getFromUserID();
         log.info("User {} answering call {}", userId, request.getCallID());
 
         try {
@@ -57,7 +57,7 @@ public class CallWebSocketHandler {
                     "accepted", request.getAccepted(),
                     "answererID", userId
             );
-            messagingTemplate.convertAndSendToUser(request.getInitiatorID().toString(), "/queue/call.answered", response);
+            messagingTemplate.convertAndSend("/user/" + request.getInitiatorID() + "/queue/call.answered", response);
             log.info("Call {} answered by user {}", request.getCallID(), userId);
         } catch (Exception e) {
             log.error("Error answering call: {}", e.getMessage());
@@ -78,7 +78,7 @@ public class CallWebSocketHandler {
             Map<String, Object> response = Map.of("callID", callID, "rejectedBy", userId);
             Long initiator = callSocketService.getCallInitiator(callID);
             if (initiator != null) {
-                messagingTemplate.convertAndSendToUser(initiator.toString(), "/queue/call.rejected", response);
+                messagingTemplate.convertAndSend("/user/" + initiator + "/queue/call.rejected", response);
             }
             log.info("Call {} rejected by user {}", callID, userId);
         } catch (Exception e) {
@@ -100,7 +100,7 @@ public class CallWebSocketHandler {
             Map<String, Object> response = Map.of("callID", callID, "endedBy", userId);
             Long otherParticipant = callSocketService.getOtherParticipant(callID, userId);
             if (otherParticipant != null) {
-                messagingTemplate.convertAndSendToUser(otherParticipant.toString(), "/queue/call.ended", response);
+                messagingTemplate.convertAndSend("/user/" + otherParticipant + "/queue/call.ended", response);
             }
             log.info("Call {} ended by user {}", callID, userId);
         } catch (Exception e) {
@@ -111,15 +111,14 @@ public class CallWebSocketHandler {
 
     @MessageMapping("/call.signal")
     public void handleCallSignal(@Payload CallSocketDTO.CallSignal signal) {
-        Long fromUserID = Long.valueOf(signal.getFromUserID().toString()); // đã có sẵn trong message
+        Long fromUserID = Long.valueOf(signal.getFromUserID().toString());
 
         log.debug("Forwarding WebRTC signal {} from {} to {} (call {})",
                 signal.getSignal().getType(), fromUserID, signal.getToUserID(), signal.getCallID());
 
         try {
-            // Đảm bảo fromUserID được set (dù frontend đã gửi)
             signal.setFromUserID(fromUserID);
-            messagingTemplate.convertAndSendToUser(signal.getToUserID().toString(), "/queue/call.signal", signal);
+            messagingTemplate.convertAndSend("/user/" + signal.getToUserID() + "/queue/call.signal", signal);
         } catch (Exception e) {
             log.error("Error forwarding signal: {}", e.getMessage());
             sendCallError(fromUserID, signal.getCallID(), "Failed to send signal: " + e.getMessage());
@@ -131,6 +130,6 @@ public class CallWebSocketHandler {
         CallSocketDTO.CallError error = new CallSocketDTO.CallError();
         error.setCallID(callID);
         error.setMessage(message);
-        messagingTemplate.convertAndSendToUser(userId.toString(), "/queue/call.error", error);
+        messagingTemplate.convertAndSend("/user/" + userId + "/queue/call.error", error);
     }
 }
