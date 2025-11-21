@@ -28,6 +28,7 @@ public class CallWebSocketHandler {
             callSocketService.storeCallInfo(request.getCallID(), userId, request.getReceiverID(), request.getType());
 
             CallSocketDTO.CallResponse response = new CallSocketDTO.CallResponse();
+
             response.setCallID(request.getCallID());
             response.setCallType(request.getType());
             response.setInitiatorID(userId);
@@ -36,7 +37,7 @@ public class CallWebSocketHandler {
             response.setStatus("ringing");
 
             messagingTemplate.convertAndSend("/user/" + request.getReceiverID() + "/queue/call.incoming", response);
-            log.info("Call invitation sent to user {}", request.getReceiverID());
+            log.info("Call invitation sent to user {}", response);
         } catch (Exception e) {
             log.error("Error initiating call: {}", e.getMessage());
             sendCallError(userId, request.getCallID(), "Failed to initiate call: " + e.getMessage());
