@@ -34,10 +34,16 @@ public class CallWebSocketHandler {
         response.setConversationID(request.getConversationID());
         response.setStatus("ringing");
 
-        messagingTemplate.convertAndSendToUser(fromId.toString(), "/queue/call.incoming", response);  // caller
-        messagingTemplate.convertAndSendToUser(toId.toString(), "/queue/call.incoming", response);    // callee
+        messagingTemplate.convertAndSendToUser(toId.toString(), "/queue/call.incoming", response);
 
-        log.info("Sent call incoming to {} and {}", fromId, toId);
+        Map<String, Object> callerResponse = Map.of(
+                "callID", request.getCallID(),
+                "status", "calling",
+                "receiverID", toId
+        );
+        messagingTemplate.convertAndSendToUser(fromId.toString(), "/queue/call.initiated", callerResponse);
+
+        log.info("Sent call incoming to {} and call initiated to {}", toId, fromId);
     }
 
 
