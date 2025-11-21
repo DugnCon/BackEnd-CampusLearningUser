@@ -21,28 +21,25 @@ public class CallWebSocketHandler {
 
     @MessageMapping("/call.initiate")
     public void handleCallInitiate(@Payload CallSocketDTO.InitiateCallRequest request) {
-        Long userId = request.getFromUserID();
-        log.info("User {} initiating call to {}", userId, request.getReceiverID());
+        Long fromId = request.getFromUserID();
+        Long toId = request.getReceiverID();
 
-        try {
-            callSocketService.storeCallInfo(request.getCallID(), userId, request.getReceiverID(), request.getType());
+        log.info("User {} initiating call to {}", fromId, toId);
 
-            CallSocketDTO.CallResponse response = new CallSocketDTO.CallResponse();
+        CallSocketDTO.CallResponse response = new CallSocketDTO.CallResponse();
+        response.setCallID(request.getCallID());
+        response.setCallType(request.getType());
+        response.setInitiatorID(fromId);
+        response.setReceiverID(toId);
+        response.setConversationID(request.getConversationID());
+        response.setStatus("ringing");
 
-            response.setCallID(request.getCallID());
-            response.setCallType(request.getType());
-            response.setInitiatorID(userId);
-            response.setReceiverID(request.getReceiverID());
-            response.setConversationID(request.getConversationID());
-            response.setStatus("ringing");
+        messagingTemplate.convertAndSendToUser(fromId.toString(), "/queue/call.incoming", response);  // caller
+        messagingTemplate.convertAndSendToUser(toId.toString(), "/queue/call.incoming", response);    // callee
 
-            messagingTemplate.convertAndSend("/user/" + request.getReceiverID() + "/queue/call.incoming", response);
-            log.info("Call invitation sent to user {}", response);
-        } catch (Exception e) {
-            log.error("Error initiating call: {}", e.getMessage());
-            sendCallError(userId, request.getCallID(), "Failed to initiate call: " + e.getMessage());
-        }
+        log.info("Sent call incoming to {} and {}", fromId, toId);
     }
+
 
     @MessageMapping("/call.answer")
     public void handleCallAnswer(@Payload CallSocketDTO.AnswerCallRequest request) {
