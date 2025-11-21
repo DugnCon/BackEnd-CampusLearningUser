@@ -54,6 +54,8 @@ public class CallServiceImpl implements ICallService {
 				throw new IllegalArgumentException("Thiếu conversationId hoặc type");
 			}
 
+			request.setType("audio");
+
 			if (!request.getType().equals("audio") && !request.getType().equals("video")) {
 				throw new IllegalArgumentException("Type phải là 'audio' hoặc 'video'");
 			}
