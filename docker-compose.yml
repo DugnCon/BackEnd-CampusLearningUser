@@ -83,15 +83,16 @@ services:
     networks:
       - app-net
 
-  # DÙNG IMAGE TỪ DOCKERHUB
   spring-app:
-    #Khi nào CI/CD được thì comment cái build lại
     build:
-      context: .                     # <-- MÀY MUỐN THÊM
+      context: .
       dockerfile: Dockerfile
     image: damdung/campuslearning-spring-app:latest
     container_name: spring_container_2
     restart: always
+    env_file:
+      - /home/nguyenducduong/campuslearning/configs/.env.user.dev
+      - /home/nguyenducduong/campuslearning/configs/.env.user.prod
     depends_on:
       mysql:
         condition: service_healthy
@@ -108,27 +109,7 @@ services:
       redis-story:
         condition: service_started
     ports:
-      - "8888:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/campuslearning
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: dungcon2005
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: "false"
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: guest
-      SPRING_RABBITMQ_PASSWORD: guest
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_COMMENT_HOST: redis-comment
-      SPRING_REDIS_COMMENT_PORT: 6379
-      SPRING_REDIS_CONVERSATION_HOST: redis-conversation
-      SPRING_REDIS_CONVERSATION_PORT: 6379
-      SPRING_REDIS_MESSAGE_HOST: redis-message
-      SPRING_REDIS_MESSAGE_PORT: 6379
-      SPRING_REDIS_STORY_HOST: redis-story
-      SPRING_REDIS_STORY_PORT: 6379
+      - "${SPRING_PORT}:8080"
     networks:
       - app-net
     volumes:

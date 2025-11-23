@@ -18,11 +18,14 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
     
-    private static final String SECRET_KEY = "Igf4IQ6BKCNvbT9fehqgHP1gpJZ2Bx1Qm4F6ZAUXEgQTcJTBKukpvYfpKL/0GQZv";
-    //private static final String SCRET_KEY_SHORT = "Igf4IQ6BKCNvbT9fehqgHP1gpJZ2Bx1Qm4F6ZAUXEgQTcJTBKukpvYfpKL/0GQZv";
+    private static String SECRET_KEY;
+
+    @Value("${jwt.secret}")
+    public static void setSecretKey(String secretKey) {
+        SECRET_KEY = secretKey;
+    }
     
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-    //private final SecretKey key_short = Keys.hmacShaKeyFor(SCRET_KEY_SHORT.getBytes(StandardCharsets.UTF_8));
     
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;// 1 giờ
     private final long EXPIRATION_TIME_SHORT = 1000 * 60 * 5; 

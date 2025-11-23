@@ -16,7 +16,7 @@ public class Judge0Service {
 
     public Judge0Service() {
         this.webClient = WebClient.builder()
-                .baseUrl("https://judge0-ce.p.rapidapi.com") // Judge0 CE trên RapidAPI
+                .baseUrl("https://judge0-ce.p.rapidapi.com")
                 .defaultHeader("x-rapidapi-key", "84ec9f3030mshb3f5702dbc0bebep1ce0b0jsn7098b8781f69")
                 .defaultHeader("x-rapidapi-host", "judge0-ce.p.rapidapi.com")
                 .build();
