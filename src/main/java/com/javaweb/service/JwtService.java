@@ -17,20 +17,19 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-    
-    private static String SECRET_KEY;
 
-    @Value("${jwt.secret}")
-    public static void setSecretKey(String secretKey) {
-        SECRET_KEY = secretKey;
+    private final String SECRET_KEY;
+    private final SecretKey key;
+
+    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 1 giờ
+    private final long EXPIRATION_TIME_SHORT = 1000 * 60 * 5;
+    private final long REFRESH_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 7;
+
+    // Sửa constructor injection
+    public JwtService(@Value("${jwt.secret}") String secretKey) {
+        this.SECRET_KEY = secretKey;
+        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
-    
-    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-    
-    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;// 1 giờ
-    private final long EXPIRATION_TIME_SHORT = 1000 * 60 * 5; 
-    
-    private final long REFRESH_EXPIRATION_TIME = 1000L *  60 * 60 * 24 * 7;
 
     public String generateToken(String email) {
         return Jwts.builder()
@@ -40,8 +39,8 @@ public class JwtService {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
-    
-  //Tạo refresh token
+
+    // Các method khác giữ nguyên...
     public String generateRefreshToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
@@ -60,39 +59,39 @@ public class JwtService {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
-    
+
     public String generateRefreshClaims(Claims claim) {
-    	return Jwts.builder()
-    			.setClaims(claim)
-    			.setSubject(SECRET_KEY)
-    			.setIssuedAt(new Date())
-    			.setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
-    			.signWith(key, SignatureAlgorithm.HS256)
-    			.compact();
+        return Jwts.builder()
+                .setClaims(claim)
+                .setSubject(SECRET_KEY)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)//Dũng để giải mã chứ kĩ, còn cái Jwt là chưa kí
+                .parseClaimsJws(token)
                 .getBody();
     }
-    
+
     public String generateIdToken(String id) {
-    	return Jwts.builder()
-    			 .setSubject(id)
-                 .setIssuedAt(new Date())
-                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_SHORT))
-                 .signWith(key, SignatureAlgorithm.HS256)
-                 .compact();
+        return Jwts.builder()
+                .setSubject(id)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_SHORT))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
-    
+
     public String extractIdToken(String ref) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(ref) 
+                .parseClaimsJws(ref)
                 .getBody();
         return claims.getSubject();
     }
@@ -105,7 +104,7 @@ public class JwtService {
             return true;
         }
     }
-    
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
             final String email = extractEmail(token);
@@ -115,23 +114,20 @@ public class JwtService {
         }
     }
 
-    // Lấy email (subject) từ token
     public String extractEmail(String token) {
-        return extractAllClaims(token).getSubject(); //getBody() có nghĩa là lấy từ Payload
-        //Có thể lấy các object từ getHeader và getSignature nếu muốn
+        return extractAllClaims(token).getSubject();
     }
-    // Kiểm tra token hợp lệ
+
     public boolean validateToken(String token, String email) {
         final String extractedEmail = extractEmail(token);
         return (extractedEmail.equals(email) && !isTokenExpired(token));
     }
+
     public SecretKey getKey() {
         return key;
     }
+
     public Claims parseToken(String token) {
         return extractAllClaims(token);
     }
-
-
 }
-
