@@ -26,8 +26,6 @@ public class LessonProgressImpl implements ILessonProgressService {
 
         CourseEnrollmentEntity courseEnrollment = courseEnrollmentRepository.getCourseEnrollmentForProgress(userId);
         LessonProgressEntity progressEntity = lessonProgressRepository.updateStatusLessonProgress(courseEnrollment.getEnrollmentID(), lessonId);
-        //return ResponseEntity.ok(progressEntity);
-        //System.out.println(progressEntity);
         try {
             progressEntity.setStatus("completed");
             progressEntity.setCompletedAt(LocalDateTime.now());

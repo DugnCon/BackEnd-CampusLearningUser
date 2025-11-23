@@ -23,6 +23,9 @@ public class CodingExerciseServiceImpl implements ICodingExerciseService {
     public ResponseEntity<Object> getCodingExercise(Long lessonId) {
         try {
             CodingExercisesEntity codingExercisesEntity = codingExerciseRepository.getCodingExercise(lessonId);
+            if(codingExercisesEntity == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Bài học này không có bài tập"));
+            }
             return ResponseEntity.ok(Map.of("success", true, "data", codingExercisesEntity));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -39,7 +42,6 @@ public class CodingExerciseServiceImpl implements ICodingExerciseService {
         boolean allPassed = result.stream()
                 .allMatch(submission -> "Accepted".equals(submission.get("status")));
 
-        // chỉ trả về success + passed
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "data", Map.of("passed", allPassed)

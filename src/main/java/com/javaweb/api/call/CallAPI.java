@@ -24,9 +24,6 @@ public class CallAPI {
     @Autowired
     private ICallService callService;
 
-    /**
-     * Lấy thông tin user từ authentication
-     */
     private Long getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
@@ -42,9 +39,7 @@ public class CallAPI {
         }
     }
 
-    /**
-     * Khởi tạo cuộc gọi mới
-     */
+
     @PostMapping("/initiate")
     public ResponseEntity<?> initiateCall(@RequestBody InitiateCallRequest request) {
         try {
@@ -68,9 +63,6 @@ public class CallAPI {
         }
     }
 
-    /**
-     * Trả lời cuộc gọi
-     */
     @PostMapping("/answer")
     public ResponseEntity<?> answerCall(@RequestBody Map<String, Object> request) {
         try {
@@ -99,9 +91,6 @@ public class CallAPI {
         }
     }
 
-    /**
-     * Kết thúc cuộc gọi
-     */
     @PostMapping("/end")
     public ResponseEntity<?> endCall(@RequestBody Map<String, Object> request) {
         try {
@@ -130,9 +119,6 @@ public class CallAPI {
         }
     }
 
-    /**
-     * Từ chối cuộc gọi
-     */
     @PostMapping("/reject")
     public ResponseEntity<?> rejectCall(@RequestBody Map<String, Object> request) {
         try {
@@ -161,9 +147,6 @@ public class CallAPI {
         }
     }
 
-    /**
-     * Lấy thông tin cuộc gọi theo ID
-     */
     @GetMapping("/{callId}")
     public ResponseEntity<?> getCallDetails(@PathVariable Long callId) {
         try {
@@ -188,9 +171,6 @@ public class CallAPI {
         }
     }
 
-    /**
-     * Lấy danh sách cuộc gọi đang active
-     */
     @GetMapping("/active")
     public ResponseEntity<?> getActiveCalls() {
         try {
@@ -216,9 +196,6 @@ public class CallAPI {
         }
     }
 
-    /**
-     * Helper method để convert object sang Long
-     */
     private Long convertToLong(Object obj) {
         if (obj == null) {
             throw new IllegalArgumentException("ID không được null");

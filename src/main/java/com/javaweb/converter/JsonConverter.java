@@ -11,7 +11,7 @@ import com.javaweb.model.dto.TestCasesDTO;
 public class JsonConverter implements AttributeConverter<Object, String> {
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    @Override
+    @Override //Ghi 1 object ra Json
     public String convertToDatabaseColumn(Object attribute) {
         try {
             if (attribute == null) return null;
@@ -21,7 +21,7 @@ public class JsonConverter implements AttributeConverter<Object, String> {
         }
     }
 
-    @Override
+    @Override //Chuyển json sang object
     public Object convertToEntityAttribute(String dbData) {
         try {
             if (dbData == null || dbData.trim().isEmpty() || "null".equals(dbData)) {

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ai/chat")
-@CrossOrigin(origins = "http://localhost:5004")
+@CrossOrigin(origins = "https://campuslearning.site")
 public class ChatAIAPI {
 
     private final GeminiService geminiService;

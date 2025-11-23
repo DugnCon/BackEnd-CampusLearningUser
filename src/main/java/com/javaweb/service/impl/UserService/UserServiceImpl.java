@@ -72,6 +72,9 @@ public class UserServiceImpl implements IUserService{
 	public ResponseEntity<Object> userLogin(UserDTO userDTO) {
 		String email = userDTO.getEmail();
 		String password = userDTO.getPassword();
+		if("LOCKED".equals(userDTO.getAccountStatus())) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản của bạn đã bị khóa"));
+		}
 		if(!email.contains("@")) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản không đúng định dạng. Vui lòng nhâp lại"));
 		}
