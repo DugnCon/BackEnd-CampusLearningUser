@@ -92,7 +92,7 @@ services:
     restart: always
     env_file:
       - /home/nguyenducduong/campuslearning/configs/.env.user.dev
-      - /home/nguyenducduong/campuslearning/configs/.env.user.prod
+      - /home/nguyenducduong/campuslearning/configs/.env.user.pro
     depends_on:
       mysql:
         condition: service_healthy
