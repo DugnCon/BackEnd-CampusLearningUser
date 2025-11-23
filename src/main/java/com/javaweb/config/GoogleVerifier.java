@@ -12,7 +12,12 @@ import java.util.Collections;
 @Component
 public class GoogleVerifier {
 
-    private static final String CLIENT_ID = "687543650693-istlhoe28vq9adl28v5lc9ojkhgo47mj.apps.googleusercontent.com";
+    private static String CLIENT_ID;
+
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    public void setClientId(String clientId) {
+        CLIENT_ID = clientId;
+    }
 
     public static GoogleIdTokenVerifier getVerifier() {
         return new GoogleIdTokenVerifier.Builder(
