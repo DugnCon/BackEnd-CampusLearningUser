@@ -22,8 +22,8 @@ public class FriendSocketHandler {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/friend/request")
-    public void handleFriendRequest(JsonNode payload, Principal principal) {
-        String requesterId = principal.getName();
+    public void handleFriendRequest(JsonNode payload) {
+        String requesterId = payload.get("requesterId").asText();
         String addresseeId = payload.get("addresseeId").asText();
 
         if (requesterId.equals(addresseeId)) return;
@@ -46,8 +46,8 @@ public class FriendSocketHandler {
     }
 
     @MessageMapping("/friend/accept")
-    public void handleAcceptFriend(JsonNode payload, Principal principal) {
-        String accepterId = principal.getName();
+    public void handleAcceptFriend(JsonNode payload) {
+        String accepterId = payload.get("accepterId").asText();
         String requesterId = payload.get("friendshipId").asText();
 
         Map<String, Object> toRequester = Map.of(
@@ -77,8 +77,8 @@ public class FriendSocketHandler {
     }
 
     @MessageMapping("/friend/reject")
-    public void handleRejectFriend(JsonNode payload, Principal principal) {
-        String rejecterId = principal.getName();
+    public void handleRejectFriend(JsonNode payload) {
+        String rejecterId = payload.get("rejecterId").asText();
         String requesterId = payload.get("friendshipId").asText();
 
         Map<String, Object> notification = Map.of(
@@ -91,8 +91,8 @@ public class FriendSocketHandler {
     }
 
     @MessageMapping("/friend/cancel")
-    public void handleCancelRequest(JsonNode payload, Principal principal) {
-        String cancellerId = principal.getName();
+    public void handleCancelRequest(JsonNode payload) {
+        String cancellerId = payload.get("cancellerId").asText();
         String addresseeId = payload.get("friendshipId").asText();
 
         Map<String, Object> notification = Map.of(
@@ -106,7 +106,7 @@ public class FriendSocketHandler {
 
     @MessageMapping("/friend/remove")
     public void handleRemoveFriend(JsonNode payload, Principal principal) {
-        String removerId = principal.getName();
+        String removerId = payload.get("removerId").asText();
         String removedId = payload.get("friendshipId").asText();
 
         Map<String, Object> notification = Map.of(
