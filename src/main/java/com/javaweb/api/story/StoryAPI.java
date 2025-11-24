@@ -84,7 +84,7 @@ public class StoryAPI {
         return storyService.replyStory(storyId, userId, replyRequest);
     }
 
-    @PostMapping("/stories/video-chunk")
+    @PostMapping("/video-chunk")
     public ResponseEntity<?> uploadVideoChunk(
             @PathVariable Long courseId,
             @RequestParam("video") MultipartFile chunk,
@@ -105,7 +105,7 @@ public class StoryAPI {
     /**
      * API cleanup temp files
      */
-    @PostMapping("/stories/cleanup-temp-files")
+    @PostMapping("/cleanup-temp-files")
     public ResponseEntity<?> cleanupTempFiles() {
         Map<String, Object> result = videoChunkService.cleanupOldTempFiles();
 
