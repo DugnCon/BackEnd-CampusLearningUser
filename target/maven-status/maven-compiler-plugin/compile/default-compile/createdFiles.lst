@@ -45,6 +45,7 @@ com\javaweb\SpringBootWebApplication.class
 com\javaweb\config\JwtChannelInterceptor.class
 com\javaweb\converter\TestCaseConverter$1.class
 com\javaweb\model\dto\Profile\ProfileInformation\EducationDTO.class
+com\javaweb\model\dto\Friend\FriendRequestDTO.class
 com\javaweb\model\dto\ChatAndCall\CallSocketDTO$CallSignal.class
 com\javaweb\service\impl\EventService\EventServiceImpl.class
 com\javaweb\api\call\CallAPI.class
@@ -97,6 +98,7 @@ com\javaweb\converter\TestCaseConverter.class
 com\javaweb\service\ICommentService.class
 com\javaweb\model\dto\ChatAndCall\CallSocketDTO$CallResponse.class
 com\javaweb\model\dto\ChatAndCall\JoinCallMessage.class
+com\javaweb\model\dto\Friend\SocketResponseDTO.class
 com\javaweb\repository\IStoryRepository.class
 com\javaweb\entity\UserSettings.class
 com\javaweb\service\IConservationService.class
@@ -247,6 +249,7 @@ com\javaweb\config\CorsFilter.class
 com\javaweb\converter\SocialLinkConverter.class
 com\javaweb\model\dto\ChatAndCall\CallSocketDTO$InitiateCallRequest.class
 com\javaweb\model\dto\ChatAndCall\WebRTCAnswerMessage.class
+com\javaweb\utils\FriendSocketHandler.class
 com\javaweb\service\ICodingExerciseService.class
 com\javaweb\api\chatAI\ErrorResponse.class
 com\javaweb\entity\Post\PostEntity.class

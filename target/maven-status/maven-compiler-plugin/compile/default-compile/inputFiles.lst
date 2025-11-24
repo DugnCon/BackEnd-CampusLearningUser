@@ -79,6 +79,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\To
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Course\CourseEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\MessageDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\utils\ChatSocketHandler.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Friend\SocketResponseDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ProfileService\ProfileServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\WebMvcConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IFriendshipRepository.java
@@ -123,7 +124,6 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Competition\Compe
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\PostLikeService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\CorsFilter.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\CommentEntity.java
-C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\CustomOAuth2UserService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\CallSignalMessage.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IPostMediaRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\converter\TestCaseConverter.java
@@ -140,6 +140,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\PostLikeEnti
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\LeaveCallMessage.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\ChatAndCall\CallParticipantEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\api\profile\ProfileAPI.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Friend\FriendRequestDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\CallSocketDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\MyUserDetail.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\ScreenShareMessage.java
@@ -181,6 +182,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\utils\CommentSocketHandl
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\ChatAndCall\JoinCallMessage.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\CourseService\CourseServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitMQ\Comment\CommentConsumer.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\utils\FriendSocketHandler.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\AppConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IConservationService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\ICallService.java
