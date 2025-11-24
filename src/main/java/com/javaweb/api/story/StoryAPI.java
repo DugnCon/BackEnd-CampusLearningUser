@@ -3,6 +3,7 @@ package com.javaweb.api.story;
 import com.javaweb.model.dto.MyUserDetail;
 import com.javaweb.service.FileStorageService;
 import com.javaweb.service.IStoryService;
+import com.javaweb.service.VideoChunkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,8 @@ public class StoryAPI {
     private IStoryService storyService;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private VideoChunkService videoChunkService;
 
     @GetMapping
     public ResponseEntity<Object> getAllStories() {
@@ -79,6 +82,37 @@ public class StoryAPI {
 
         Long userId = myUserDetail.getId();
         return storyService.replyStory(storyId, userId, replyRequest);
+    }
+
+    @PostMapping("/stories/video-chunk")
+    public ResponseEntity<?> uploadVideoChunk(
+            @PathVariable Long courseId,
+            @RequestParam("video") MultipartFile chunk,
+            @RequestParam("chunkIndex") Integer chunkIndex,
+            @RequestParam("totalChunks") Integer totalChunks,
+            @RequestParam("fileName") String fileName) {
+
+        Map<String, Object> result = videoChunkService.processVideoChunk(
+                courseId, chunk, chunkIndex, totalChunks, fileName
+        );
+
+        boolean success = (boolean) result.get("success");
+        return success ?
+                ResponseEntity.ok(result) :
+                ResponseEntity.badRequest().body(result);
+    }
+
+    /**
+     * API cleanup temp files
+     */
+    @PostMapping("/stories/cleanup-temp-files")
+    public ResponseEntity<?> cleanupTempFiles() {
+        Map<String, Object> result = videoChunkService.cleanupOldTempFiles();
+
+        boolean success = (boolean) result.get("success");
+        return success ?
+                ResponseEntity.ok(result) :
+                ResponseEntity.badRequest().body(result);
     }
 
     // Inner class for reply request
