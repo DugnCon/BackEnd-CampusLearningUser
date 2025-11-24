@@ -15,4 +15,5 @@ public interface IFriendshipService {
     ResponseEntity<Object> getProfileFriend(Long userId);
     ResponseEntity<Object> getAllFriendships(Long userId);
     ResponseEntity<Object> searchUser(Long userId, String query);
+
 }

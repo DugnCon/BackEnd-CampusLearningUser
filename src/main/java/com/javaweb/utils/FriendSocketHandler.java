@@ -1,9 +1,13 @@
 package com.javaweb.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.javaweb.service.IFriendshipService;
+import com.javaweb.service.IFriendshipSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
@@ -20,6 +24,10 @@ import java.util.Map;
 public class FriendSocketHandler {
 
     private final SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private IFriendshipService friendshipService;
+    @Autowired
+    private IFriendshipSocketService friendshipSocketService;
 
     @MessageMapping("/friend/request")
     public void handleFriendRequest(JsonNode payload) {
@@ -28,6 +36,8 @@ public class FriendSocketHandler {
 
         if (requesterId.equals(addresseeId)) return;
 
+        Map<String, Object> data = Map.of("addresseeId",addresseeId);
+        friendshipSocketService.sendFriendRequest(Long.valueOf(requesterId), Long.valueOf(addresseeId));
         Map<String, Object> notification = Map.of(
                 "type", "FRIEND_REQUEST_RECEIVED",
                 "request", Map.of(
@@ -49,6 +59,8 @@ public class FriendSocketHandler {
     public void handleAcceptFriend(JsonNode payload) {
         String accepterId = payload.get("accepterId").asText();
         String requesterId = payload.get("friendshipId").asText();
+
+        friendshipSocketService.acceptFriendRequest(Long.valueOf(requesterId), Long.valueOf(accepterId));
 
         Map<String, Object> toRequester = Map.of(
                 "type", "FRIEND_REQUEST_ACCEPTED",
@@ -81,6 +93,8 @@ public class FriendSocketHandler {
         String rejecterId = payload.get("rejecterId").asText();
         String requesterId = payload.get("friendshipId").asText();
 
+        //ResponseEntity<Object> response = friendshipService.rejectFriend(Long.valueOf(requesterId), Long.valueOf(rejecterId));
+        friendshipSocketService.rejectFriendRequest(Long.valueOf(requesterId), Long.valueOf(rejecterId));
         Map<String, Object> notification = Map.of(
                 "type", "FRIEND_REQUEST_REJECTED",
                 "userId", rejecterId,
@@ -95,6 +109,8 @@ public class FriendSocketHandler {
         String cancellerId = payload.get("cancellerId").asText();
         String addresseeId = payload.get("friendshipId").asText();
 
+        //ResponseEntity<Object> response = friendshipService.acceptFriend(Long.valueOf(addresseeId), Long.valueOf(cancellerId));
+        friendshipSocketService.cancelFriendRequest(Long.valueOf(cancellerId), Long.valueOf(addresseeId));
         Map<String, Object> notification = Map.of(
                 "type", "FRIEND_REQUEST_CANCELLED",
                 "userId", cancellerId,
@@ -109,6 +125,8 @@ public class FriendSocketHandler {
         String removerId = payload.get("removerId").asText();
         String removedId = payload.get("friendshipId").asText();
 
+        //ResponseEntity<Object> response = friendshipService.deleteFrienḍ(Long.valueOf(removedId), Long.valueOf(removedId));
+        friendshipSocketService.removeFriend(Long.valueOf(removerId),Long.valueOf(removedId));
         Map<String, Object> notification = Map.of(
                 "type", "FRIEND_REMOVED",
                 "userId", removerId,
@@ -152,8 +170,6 @@ public class FriendSocketHandler {
     }
 
     private String getUserInfo(String userId, String field) {
-        // TODO: thay bằng service/cache thật của mày
-        // return userService.getUserInfo(userId, field);
         return switch (field) {
             case "fullName" -> "Tên Người Dùng";
             case "username" -> "username";

@@ -39,9 +39,17 @@ public class FriendshipServiceImpl implements IFriendshipService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Object> addFriend(Long userId, Map<String,Object> data) {
         Long friendId = MapUtils.getObject(data, "addresseeId", Long.class);
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("can not find user in friendship"));
-        assert friendId != null;
-        UserEntity friend = userRepository.findById(friendId).orElseThrow(() -> new RuntimeException("can not find friend in friendship"));
+        //UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("can not find user in friendship"));
+        //assert friendId != null;
+        //UserEntity friend = userRepository.findById(friendId).orElseThrow(() -> new RuntimeException("can not find friend in friendship"));
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        CompletableFuture<UserEntity> userAsync = CompletableFuture.supplyAsync(() -> getUserAndFriend(userId), executor);
+        CompletableFuture<UserEntity> friendAsync = CompletableFuture.supplyAsync(() -> getUserAndFriend(friendId), executor);
+        CompletableFuture.allOf(userAsync, friendAsync).join();
+
+        UserEntity user = userAsync.join();
+        UserEntity friend = friendAsync.join();
         try {
             FriendshipEntity friendshipEntity = new FriendshipEntity();
             friendshipEntity.setFriend(friend);
@@ -131,6 +139,10 @@ public class FriendshipServiceImpl implements IFriendshipService {
                 .map(fs -> toUserDTO(fs, userId))
                 .toList();
         return dtos;
+    }
+
+    public UserEntity getUserAndFriend(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("can not find friend in friendship"));
     }
 
     private UserSuggestionDTO toUserDTO(FriendshipEntity fs, Long currentUserId) {
