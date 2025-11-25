@@ -16,6 +16,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Course\CourseLess
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Event\EventEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IStoryService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\CourseService\CodingExerciseServiceImpl.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\FriendshipService\FriendshipSocketServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IEventService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\RedisConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\ChatAndCall\CallEntity.java
@@ -190,6 +191,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\EventServic
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IFriendshipService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\ModelMapperConfig.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\SolvingByRabbitMQ\Story\StoryProducer.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\VideoChunkService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICallRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\User\UserProfileDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\IPostLikeRepository.java
@@ -216,6 +218,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\ProfileAndS
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\jdbc\JDBC.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\CallService\CallSocketServiceImpl.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\impl\CallService\CallServiceImpl.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IFriendshipSocketService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\ChatAndCall\MessageStatusEntity.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\TestCasesDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PreferenceSettingsDTO.java

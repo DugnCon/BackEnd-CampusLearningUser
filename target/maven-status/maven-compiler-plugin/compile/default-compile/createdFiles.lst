@@ -30,6 +30,7 @@ com\javaweb\service\ICourseService.class
 com\javaweb\service\SolvingByRabbitMQ\Media\MediaProducer.class
 com\javaweb\entity\PreferenceSettings.class
 com\javaweb\repository\ICommentRepository.class
+com\javaweb\service\IFriendshipSocketService.class
 com\javaweb\service\CustomUserDetailService.class
 com\javaweb\entity\Event\EventScheduleEntity.class
 com\javaweb\entity\Post\PostMediaEntity.class
@@ -179,6 +180,7 @@ com\javaweb\entity\Competition\CompetitionSubmissionEntity.class
 com\javaweb\utils\NullAwareBeanUtils.class
 com\javaweb\service\ICallSocketService$CallInfo.class
 com\javaweb\model\dto\ChatAndCall\CallAnswerMessage.class
+com\javaweb\service\impl\FriendshipService\FriendshipSocketServiceImpl.class
 com\javaweb\service\SolvingByRabbitMQ\Message\MessageProducer.class
 com\javaweb\model\dto\ChatAndCall\LeaveCallMessage.class
 com\javaweb\repository\ICompetitionProblemRepository.class
@@ -253,4 +255,5 @@ com\javaweb\utils\FriendSocketHandler.class
 com\javaweb\service\ICodingExerciseService.class
 com\javaweb\api\chatAI\ErrorResponse.class
 com\javaweb\entity\Post\PostEntity.class
+com\javaweb\service\VideoChunkService.class
 com\javaweb\model\dto\Post\PostMediaDTO.class
