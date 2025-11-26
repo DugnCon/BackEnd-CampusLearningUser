@@ -134,7 +134,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/ai/chat").permitAll()
 
                 // Authenticated
-                .antMatchers("/courses/enrolled").authenticated()
+                .antMatchers("/user/api/courses/enrolled","/user/api/courses/*/check-enrollment").authenticated()
                 .antMatchers("/courses/*/progress", "/courses/*/payment-history").authenticated()
                 .antMatchers("/lessons/*/progress").authenticated()
                 .antMatchers("/courses/*/lessons/*/code-server", "/courses/*/lessons/*/submit-code").authenticated()
