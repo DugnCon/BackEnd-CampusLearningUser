@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: dungcon2005
       MYSQL_DATABASE: campuslearning
     ports:
-      - "3306:3306"
+      - "5001:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -25,8 +25,8 @@ services:
     container_name: rabbitmq_container
     restart: always
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5002:5672"
+      - "5003:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -43,7 +43,7 @@ services:
     container_name: redis_container
     restart: always
     ports:
-      - "6384:6379"
+      - "5004:6379"
     networks:
       - app-net
 
@@ -52,7 +52,7 @@ services:
     container_name: redis_comment_container
     restart: always
     ports:
-      - "6380:6379"
+      - "5005:6379"
     networks:
       - app-net
 
@@ -61,7 +61,7 @@ services:
     container_name: redis_conversation_container
     restart: always
     ports:
-      - "6381:6379"
+      - "5006:6379"
     networks:
       - app-net
 
@@ -70,7 +70,7 @@ services:
     container_name: redis_message_container
     restart: always
     ports:
-      - "6382:6379"
+      - "5007:6379"
     networks:
       - app-net
 
@@ -79,7 +79,7 @@ services:
     container_name: redis_story_container
     restart: always
     ports:
-      - "6383:6379"
+      - "5008:6379"
     networks:
       - app-net
 
@@ -121,7 +121,7 @@ services:
     restart: always
     command: --auth none --bind-addr 0.0.0.0:8080
     ports:
-      - "8100:8080"
+      - "5009:8080"
     volumes:
       - ./workspace:/home/coder/project
     networks:
@@ -133,7 +133,7 @@ services:
     volumes:
       - ./k8s:/etc/prometheus
     ports:
-      - "9090:9090"
+      - "5010:9090"
     networks:
       - app-net
     restart: always
@@ -145,7 +145,7 @@ services:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
     ports:
-      - "3000:3000"
+      - "5011:3000"
     depends_on:
       - prometheus
     networks:
