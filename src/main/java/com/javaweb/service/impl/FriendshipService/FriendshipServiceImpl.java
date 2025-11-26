@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-@EnableAsync
 public class FriendshipServiceImpl implements IFriendshipService {
     @Autowired
     private IUserRepository userRepository;
