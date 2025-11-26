@@ -159,7 +159,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .baseUri("/oauth2/authorization") // Spring default
                 .and()
                 .redirectionEndpoint()
-                .baseUri("/login/oauth2/code/*")
+                .baseUri("/oauth2/callback/*")
                 .and()
                 .successHandler((request, response, authentication) -> { //Nó sẽ callback về BE để làm token rồi gửi lại lên Fe để check Authenticated
 
