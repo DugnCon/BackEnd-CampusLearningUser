@@ -169,7 +169,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                     String token = jwtService.generateTokenWithClaims(Map.of("email", email, "name", name));
 
-                    response.sendRedirect("https://campuslearning.site/?jwt=" + token);
+                    response.sendRedirect("https://campuslearning.site/oauth2/redirect?token=" + token);
                 })
                 .failureHandler((request, response, exception) -> {
                     response.sendRedirect("https://campuslearning.site/login?error");
