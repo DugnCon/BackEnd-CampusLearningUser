@@ -159,7 +159,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .baseUri("/oauth2/authorization") // Spring default
                 .and()
                 .redirectionEndpoint()
-                .baseUri("/api/oauth2/callback/*")
+                .baseUri("/oauth2/callback/*")
                 .and()
                 .successHandler((request, response, authentication) -> { //Nó sẽ callback về BE để làm token rồi gửi lại lên Fe để check Authenticated
 
@@ -169,7 +169,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                     String token = jwtService.generateTokenWithClaims(Map.of("email", email, "name", name));
 
-                    response.sendRedirect("https://campuslearning.site/oauth2/redirect?token=" + token);
+                    response.sendRedirect("https://campuslearning.site/?token=" + token);
                 })
                 .failureHandler((request, response, exception) -> {
                     response.sendRedirect("https://campuslearning.site/login?error");
