@@ -360,7 +360,7 @@ public class CourseAPI {
     }
     
     //GỬi các khóa học đã đăng kí
-    @GetMapping("/courses/enrolled")
+    @GetMapping("/user/api/courses/enrolled")
     public ResponseEntity<Object> getEnrolledCourses() {
     	
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -405,7 +405,7 @@ public class CourseAPI {
         return progressService.lessonCompleted(status, lessonId, userId);
     }
     
-    @GetMapping("/courses/{courseId}/check-enrollment")
+    @GetMapping("/user/api/courses/{courseId}/check-enrollment")
     public ResponseEntity<Object> checkEnrollment(
             @PathVariable("courseId") Long courseId) {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
