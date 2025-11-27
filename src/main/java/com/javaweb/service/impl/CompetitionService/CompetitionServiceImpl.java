@@ -904,7 +904,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (submission == null) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Submission not found");
+                response.put("message", "Không tìm thấy bài nộp");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
@@ -913,7 +913,7 @@ public class CompetitionServiceImpl implements ICompetitionService {
             if (!canView) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "You do not have permission to view this submission");
+                response.put("message", "Bạn không có quyền để xem bài nộp");
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
             }
 
