@@ -19,6 +19,8 @@ public class UserProfileDetailDTO {
     private String pronouns;
     private String url;
     private String orcidId;
+    private String imageUrl;
+    private String avatar;
 
     // Location & Contact
     private String school;
@@ -42,6 +44,23 @@ public class UserProfileDetailDTO {
     private Map<String, Boolean> notificationPreferences;
 
     // Getters & Setters
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
 

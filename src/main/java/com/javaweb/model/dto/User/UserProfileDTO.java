@@ -16,7 +16,6 @@ public class UserProfileDTO {
     @JsonProperty("Bio")
     private String bio; // Thuộc UserEntity
 
-
     @JsonProperty("School")
     private String school;
 

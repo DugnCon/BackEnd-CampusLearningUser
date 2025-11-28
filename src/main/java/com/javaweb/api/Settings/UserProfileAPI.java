@@ -1,17 +1,23 @@
 package com.javaweb.api.Settings;
 
+import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.MyUserDetail;
 import com.javaweb.model.dto.Profile.ProfileInformation.EducationDTO;
 import com.javaweb.model.dto.Profile.ProfileInformation.WorkExperienceDTO;
 import com.javaweb.model.dto.Profile.UserProfileDetailDTO;
+import com.javaweb.model.dto.User.UserSuggestions.UserSuggestionDTO;
+import com.javaweb.repository.IUserRepository;
 import com.javaweb.service.IUserProfileService; // Dùng Service mới
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping
@@ -19,6 +25,22 @@ public class UserProfileAPI {
 
     @Autowired
     private IUserProfileService IUserProfileService;
+    @Autowired
+    private IUserRepository userRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<Object> getProfileByUserID(@PathVariable Long userId) {
+        try {
+            UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("not found user"));
+            UserSuggestionDTO userSuggestionDTO = modelMapper.map(user, UserSuggestionDTO.class);
+
+            return ResponseEntity.ok(userSuggestionDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @GetMapping("/users/profile")
     public ResponseEntity<Object> getProfile() {
