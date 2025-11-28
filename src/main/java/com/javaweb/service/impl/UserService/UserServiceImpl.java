@@ -49,7 +49,7 @@ public class UserServiceImpl implements IUserService{
 		) {
 			Map<String, Object> error = new HashMap<>();
 			error.put("status", HttpStatus.BAD_REQUEST.value());
-			error.put("message", "All fields are required and cannot be null or empty");
+			error.put("message", "Các trường này không được trống");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 		} else {
 			String password = passwordEncoder.encode(userDTO.getPassword());
@@ -63,7 +63,7 @@ public class UserServiceImpl implements IUserService{
 			user.setRole("STUDENT");
 			user.setAccountStatus("ACTIVE");
 			userRepository.save(user);
-			return ResponseEntity.ok().body(Map.of("success","Signup Successfully!"));
+			return ResponseEntity.ok().body(Map.of("success","Đăng ký thành công!"));
 		}
 	}
 
@@ -94,6 +94,7 @@ public class UserServiceImpl implements IUserService{
 						"role", user.getRole()
 				));
 				UserDTO userResponse = modelMapper.map(user, UserDTO.class);
+				userResponse.setPassword(null);
 				return ResponseEntity.ok(Map.of(
 						"user", userResponse,
 						"token", token
