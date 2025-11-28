@@ -30,18 +30,6 @@ public class UserProfileAPI {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<Object> getProfileByUserID(@PathVariable Long userId) {
-        try {
-            UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("not found user"));
-            UserSuggestionDTO userSuggestionDTO = modelMapper.map(user, UserSuggestionDTO.class);
-
-            return ResponseEntity.ok(userSuggestionDTO);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @GetMapping("/users/profile")
     public ResponseEntity<Object> getProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
