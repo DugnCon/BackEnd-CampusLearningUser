@@ -22,6 +22,7 @@ com\javaweb\repository\IPostRepository.class
 com\javaweb\model\dto\ChatAndCall\CallSocketDTO$RejectCallRequest.class
 com\javaweb\model\dto\AccessibilitySettingsDTO.class
 com\javaweb\service\impl\CallService\CallServiceImpl.class
+com\javaweb\repository\ICourseLessonRepository.class
 com\javaweb\service\PayPalService.class
 com\javaweb\service\impl\ProfileAndSetting\IUserProfileServiceImpl.class
 com\javaweb\config\NoCacheFilter.class

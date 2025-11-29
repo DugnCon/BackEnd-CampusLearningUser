@@ -133,6 +133,7 @@ C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PasskeyCredent
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\PayPalPaymentDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\NoCacheFilter.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\config\PayPalConfig.java
+C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\repository\ICourseLessonRepository.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\model\dto\Post\PostLikeDTO.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\service\IProfileService.java
 C:\Esclipe_Web\campuslearning\src\main\java\com\javaweb\entity\Post\PostEntity.java
