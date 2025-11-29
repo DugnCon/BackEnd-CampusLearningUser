@@ -94,6 +94,8 @@ services:
       - /home/nguyenducduong/campuslearning/configs/.env.user.dev
       - /home/nguyenducduong/campuslearning/configs/.env.user.pro
     depends_on:
+      eureka-server:
+        condition: service_started
       mysql:
         condition: service_healthy
       rabbitmq:
@@ -110,6 +112,40 @@ services:
         condition: service_started
     ports:
       - "${SPRING_PORT}:8080"
+    networks:
+      - app-net
+    volumes:
+      - /home/nguyenducduong/campuslearning/uploads:/app/uploads
+
+  spring-app-2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: damdung/campuslearning-spring-app:latest
+    container_name: spring_container_3
+    restart: always
+    env_file:
+      - /home/nguyenducduong/campuslearning/configs/.env.user.dev
+      - /home/nguyenducduong/campuslearning/configs/.env.user.pro
+    depends_on:
+      eureka-server:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      redis-comment:
+        condition: service_started
+      redis-conversation:
+        condition: service_started
+      redis-message:
+        condition: service_started
+      redis-story:
+        condition: service_started
+    ports:
+      - "8887:8080"
     networks:
       - app-net
     volumes:
@@ -151,6 +187,12 @@ services:
     networks:
       - app-net
     restart: always
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "5012:8761"
 
   jenkins:
     image: jenkins/jenkins:lts
