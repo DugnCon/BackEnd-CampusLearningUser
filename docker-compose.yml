@@ -193,6 +193,8 @@ services:
     container_name: eureka-server
     ports:
       - "5012:8761"
+    networks:
+      - app-net
 
   jenkins:
     image: jenkins/jenkins:lts
