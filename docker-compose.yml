@@ -189,7 +189,7 @@ services:
     restart: always
 
   eureka-server:
-    build: ./Eureka-Server
+    build: ../Eureka-Server
     container_name: eureka-server
     ports:
       - "5012:8761"
