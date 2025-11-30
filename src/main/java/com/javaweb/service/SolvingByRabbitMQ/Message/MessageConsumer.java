@@ -55,7 +55,6 @@ public class MessageConsumer {
         Long userId = MapUtils.getObject(messageData, "userId", Long.class);
 
         try {
-            // Extract data từ message
             String content = MapUtils.getObject(messageData, "content", String.class);
             String type = MapUtils.getObject(messageData, "type", String.class);
             tempMessageId = MapUtils.getObject(messageData, "tempMessageId", String.class);

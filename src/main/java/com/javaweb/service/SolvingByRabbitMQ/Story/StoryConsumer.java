@@ -42,7 +42,6 @@ public class StoryConsumer {
         try {
             System.out.println("Received story upload task: " + message);
 
-            // Extract data from message
             Long userId = Long.valueOf(message.get("userId").toString());
             String mediaUrl = (String) message.get("mediaFile");
             String mediaType = (String) message.get("mediaType");
@@ -50,7 +49,6 @@ public class StoryConsumer {
             String backgroundColor = (String) message.get("backgroundColor");
             String fontStyle = (String) message.get("fontStyle");
 
-            // Find user
             UserEntity user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
             UserSuggestionDTO userSuggestionDTO = modelMapper.map(user, UserSuggestionDTO.class);

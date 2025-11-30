@@ -16,6 +16,6 @@ public interface ICourseRepository extends JpaRepository<CourseEntity, Long>{
 	//List<CourseEntity> getAllCourse();
     @Query("select c from CourseEntity c")
     List<CourseEntity> getAllCourse();
-    @Query("select c from CourseEntity c join fetch c.Modules m")
+    @Query("select c from CourseEntity c join fetch c.Modules m where c.CourseID = :courseId")
     CourseEntity getCourseById(@Param("courseId") Long courseId);
 }
