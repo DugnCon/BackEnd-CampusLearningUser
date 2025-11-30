@@ -196,6 +196,7 @@ services:
 
   eureka-server:
     build: ../Eureka-Server
+    image: campuslearning/eureka-server:latest
     container_name: eureka-server
     ports:
       - "5012:8761"
