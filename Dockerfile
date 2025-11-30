@@ -23,4 +23,4 @@ COPY --from=build /app/target/campuslearning-*.war /app/app.war
 EXPOSE 8080
 
 # Chạy ứng dụng
-ENTRYPOINT ["java", "-Dserver.port=${SPRING_PORT:-8080}", "-jar", "/app/app.war"]
+ENTRYPOINT ["java", "-jar", "/app/app.war"]

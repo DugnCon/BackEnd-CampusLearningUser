@@ -124,8 +124,6 @@ services:
     image: damdung/campuslearning-spring-app:latest
     container_name: spring_container_3
     restart: always
-    environment:
-      - SPRING_PORT=8082
     env_file:
       - /home/nguyenducduong/campuslearning/configs/.env.user.dev
       - /home/nguyenducduong/campuslearning/configs/.env.user.pro
