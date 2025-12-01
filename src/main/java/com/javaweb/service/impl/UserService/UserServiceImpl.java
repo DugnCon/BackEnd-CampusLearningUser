@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.transaction.Transactional;
 
@@ -70,43 +74,50 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	@Transactional
 	public ResponseEntity<Object> userLogin(UserDTO userDTO) {
+		ExecutorService executorService = Executors.newFixedThreadPool(2);
+
 		String email = userDTO.getEmail();
 		String password = userDTO.getPassword();
-		if("LOCKED".equals(userDTO.getAccountStatus())) {
+		UserEntity user = userRepository.userLogin(email);
+
+
+		if("LOCKED".equals(user.getAccountStatus())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản của bạn đã bị khóa"));
 		}
-		if(!email.contains("@")) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản không đúng định dạng. Vui lòng nhâp lại"));
-		}
-		try {
-			UserEntity user = userRepository.userLogin(email);
-			if(user == null) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Tài khoản này không tồn tại hoặc sai tài khoản mật khẩu"));
-			}
-			if(passwordEncoder.matches(password, user.getPassword())) {
 
-				user.setStatus("ONLINE");
-				userRepository.save(user);
+		CompletableFuture<Boolean> checkEmail = CompletableFuture.supplyAsync(() -> findUserEmail(email), executorService);
+		CompletableFuture<Boolean> checkPassword = CompletableFuture.supplyAsync(() -> findUserPassword(password, user.getPassword()));
 
-				String token = jwtService.generateTokenWithClaims(Map.of(
-						"id", user.getUserID(),
-						"email",user.getEmail(),
-						"role", user.getRole()
-				));
-				UserDTO userResponse = modelMapper.map(user, UserDTO.class);
-				userResponse.setPassword(null);
-				return ResponseEntity.ok(Map.of(
-						"user", userResponse,
-						"token", token
-				));
+		CompletableFuture.allOf(checkPassword, checkEmail).join();
 
-			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Sai tài khoản hoặc mật khẩu. Vui lòng nhập lại"));
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e + " can not found user");
+		if(checkPassword.join() && checkEmail.join()) {
+			executorService.shutdown();
+			user.setStatus("ONLINE");
+			userRepository.save(user);
+
+			String token = jwtService.generateTokenWithClaims(Map.of(
+					"id", user.getUserID(),
+					"email",user.getEmail(),
+					"role", user.getRole()
+			));
+			UserDTO userResponse = modelMapper.map(user, UserDTO.class);
+			userResponse.setPassword(null);
+			return ResponseEntity.ok(Map.of(
+					"user", userResponse,
+					"token", token
+			));
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", "Sai mật khẩu hoặc tài khoản!"));
 		}
 	}
+
+	public boolean findUserEmail(String email) {
+        return email.contains("@");
+    }
+
+	public boolean findUserPassword(String password, String userPassword) {
+        return passwordEncoder.matches(password, userPassword);
+    }
 
 	@Override
 	public UserEntity userVerifyByGoogle(String id,String email, String name, String picture, String username) {
