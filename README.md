@@ -1,10 +1,8 @@
-# 🎓 Campus Learning Admin -- Backend System
+# 🎓 Campus Learning User -- Backend System
 
-A backend system for managing campus learning activities including
-courses, users, and administrative operations.
+Backend system for managing campus learning user interactions such as profile, enrollments, and dashboard data.
 
-Built with **Java** and **Spring Boot** following a clean layered
-architecture.
+Built with **Java** and **Spring Boot** following a layered architecture.
 
 ------------------------------------------------------------------------
 
