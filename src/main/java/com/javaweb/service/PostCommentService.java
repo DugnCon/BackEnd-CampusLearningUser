@@ -32,7 +32,7 @@ public class PostCommentService {
         List<Map<String, Object>> result = new ArrayList<>();
 
         try {
-            //Lấy danh sách commentId từ Redis
+            // Lấy danh sách commentId từ Redis
             List<String> commentIds = commentRedisTemplate.opsForList().range(postKey, 0, -1);
 
             if (commentIds != null && !commentIds.isEmpty()) {
@@ -47,7 +47,7 @@ public class PostCommentService {
                 }
             }
 
-            //Nếu Redis trống thì fallback DB
+            // Nếu Redis trống thì fallback DB
             if (result.isEmpty()) {
                 List<CommentEntity> comments = commentRepository.findByPost_PostIDOrderByCreatedAtDesc(postId);
                 for (CommentEntity c : comments) {

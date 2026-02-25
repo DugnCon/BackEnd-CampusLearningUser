@@ -36,7 +36,7 @@ public class Judge0Service {
             body.put("expected_output", expected != null ? expected : "");
 
             try {
-                Map<String, Object> resp = webClient.post()
+                Map resp = webClient.post()
                         .uri("/submissions?base64_encoded=false&wait=true")
                         .bodyValue(body)
                         .retrieve()

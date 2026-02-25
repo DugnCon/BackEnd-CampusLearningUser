@@ -96,7 +96,7 @@ public class CourseAPI {
         return codingExerciseService.submitCode(submission, lessonId);
     }
 
-    /*@GetMapping("/{courseId}/psurint-details")
+    /*@GetMapping("/{courseId}/print-details")
     public ResponseEntity<Object> getCoursePrintDetails(@PathVariable("courseId") String courseId) {
         if (courseId == null) {
             return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Course ID is required"));
@@ -248,8 +248,10 @@ public class CourseAPI {
                     "paypal",
                     "sale",
                     "Thanh toán khóa học ID = " + courseId,
-                    "https://campuslearning.site/user/api/courses/paypal/cancel",
-                    "https://campuslearning.site/user/api/courses/paypal/success?courseId=" + courseId
+                    /*"https://campuslearning.site/user/api/courses/paypal/cancel",
+                    "https://campuslearning.site/user/api/courses/paypal/success?courseId=" + courseId*/
+                    "http://localhost:8080/courses/paypal/cancel",
+                    "http://localhost:8080/courses/paypal/success?courseId=" + courseId
             );
 
             Payment payment = payPalService.createPayment(dto);
@@ -290,7 +292,8 @@ public class CourseAPI {
 
             if ("approved".equalsIgnoreCase(payment.getState())) {
                 UriComponentsBuilder builder = UriComponentsBuilder
-                        .fromHttpUrl("https://campuslearning.site/payment/callback")
+                        //.fromHttpUrl("https://campuslearning.site/payment/callback")
+                        .fromHttpUrl("http://localhost:8080/payment/callback")
                         .queryParam("status", "success")
                         .queryParam("token", token)
                         .queryParam("message", "Thanh toán thành công")
@@ -300,7 +303,8 @@ public class CourseAPI {
                 return new RedirectView(builder.toUriString());
             } else {
                 UriComponentsBuilder builder = UriComponentsBuilder
-                        .fromHttpUrl("https://campuslearning.site/payment/callback")
+                        //.fromHttpUrl("https://campuslearning.site/payment/callback")
+                        .fromHttpUrl("http://localhost:8080/payment/callback")
                         .queryParam("status", "failed")
                         .queryParam("message", "Thanh toán không được chấp thuận");
                 return new RedirectView(builder.toUriString());
@@ -309,7 +313,8 @@ public class CourseAPI {
         } catch (PayPalRESTException e) {
             e.printStackTrace();
             UriComponentsBuilder builder = UriComponentsBuilder
-                    .fromHttpUrl("https://campuslearning.site/payment/callback")
+                    //.fromHttpUrl("https://campuslearning.site/payment/callback")
+                    .fromHttpUrl("http://localhost:8080/payment/callback")
                     .queryParam("status", "error")
                     .queryParam("message", "Lỗi khi xác nhận thanh toán: " + e.getMessage());
             return new RedirectView(builder.toUriString());
@@ -344,7 +349,8 @@ public class CourseAPI {
     @GetMapping("/courses/paypal/cancel")
     public RedirectView cancelPayment() {
     	UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl("https://campuslearning.site/payment/paypal/cancel")
+                //.fromHttpUrl("https://campuslearning.site/payment/paypal/cancel")
+                .fromHttpUrl("http://localhost:8080/payment/paypal/cancel")
                 .queryParam("status", "cancel")
                 .queryParam("message", "Thanh toán bị hủy");
         return new RedirectView(builder.toUriString());

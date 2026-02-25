@@ -11,13 +11,10 @@ import java.util.Map;
 @Component
 public class ChatSocketHandler {
 
-    //Cái này thay thê MessageMapping và sendTo và nó đảm nhận cả 2 việc
+    // cái này thay thê MessageMapping và sendTo và nó đảm nhận cả 2 việc
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    /**
-     * Broadcast message đến tất cả clients trong conversation
-     */
     public void broadcastToConversation(Long conversationId, Map<String, Object> payload) {
         try {
             String destination = "/topic/conversation." + conversationId;
@@ -31,9 +28,6 @@ public class ChatSocketHandler {
         }
     }
 
-    /**
-     * Overload method: vẫn hỗ trợ MessageDTO cho backward compatibility
-     */
     public void broadcastToConversation(Long conversationId, MessageDTO messageDTO) {
         try {
             Map<String, Object> payload = new HashMap<>();

@@ -125,7 +125,7 @@ public class RedisConfig {
     @Value("${redis.message.port}")
     private int messagePort;
 
-    @Value("${redis.conversation.password:}")
+    @Value("${redis.message.password:}")
     private String messagePassword;
 
     @Bean(name = "messageRedisConnectionFactory")

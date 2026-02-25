@@ -35,7 +35,7 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
             List<String> authHeaders = accessor.getNativeHeader("Authorization");
 
             if (authHeaders == null || authHeaders.isEmpty()) {
-                System.out.println("WebSocket: Không có token → từ chối kết nối");
+                System.out.println("WebSocket: Không có token từ chối kết nối");
                 return null;
             }
 
@@ -71,7 +71,7 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
         }
 
         if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
-            System.out.println("🔔 SUBSCRIBE: destination=" + accessor.getDestination()
+            System.out.println("destination=" + accessor.getDestination()
                     + ", user=" + accessor.getUser());
         }
 

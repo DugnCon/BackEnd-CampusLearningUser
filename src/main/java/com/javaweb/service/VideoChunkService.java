@@ -21,9 +21,6 @@ public class VideoChunkService {
 
     private final String uploadDir = "/app/uploads";
 
-    /**
-     * Xử lý video chunk - append trực tiếp vào file final (TỐI ƯU)
-     */
     public Map<String, Object> processVideoChunk(Long courseId, MultipartFile chunk,
                                                  Integer chunkIndex, Integer totalChunks,
                                                  String fileName) {
@@ -36,39 +33,26 @@ public class VideoChunkService {
                 return result;
             }
 
-            System.out.println("📦 Processing chunk " + (chunkIndex + 1) + "/" + totalChunks);
-            System.out.println("   - File: " + fileName);
-            System.out.println("   - Chunk size: " + chunk.getSize() + " bytes");
-            System.out.println("   - Course ID: " + courseId);
-
             // Tạo thư mục upload nếu chưa tồn tại
             File outputDir = new File(uploadDir);
             if (!outputDir.exists()) {
                 outputDir.mkdirs();
-                System.out.println("📁 Created upload directory: " + uploadDir);
             }
 
             String safeName = fileName.replaceAll("[^a-zA-Z0-9.-]", "_");
             String tempFileName = "temp_" + courseId + "_" + safeName;
             File tempFile = new File(outputDir, tempFileName);
 
-            System.out.println("💾 Appending chunk to: " + tempFile.getName());
-
             // Append chunk vào file temp
             try (FileOutputStream fos = new FileOutputStream(tempFile, true)) {
                 fos.write(chunk.getBytes());
             }
 
-            System.out.println("✅ Chunk " + (chunkIndex + 1) + " appended successfully");
-            System.out.println("   - Temp file size: " + tempFile.length() + " bytes");
 
             // Nếu là chunk cuối cùng → hoàn thành upload
             if (chunkIndex.equals(totalChunks - 1)) {
                 String finalName = System.currentTimeMillis() + "-" + fileName;
                 File finalFile = new File(outputDir, finalName);
-
-                System.out.println("🎯 Finalizing upload...");
-                System.out.println("   - Renaming: " + tempFileName + " → " + finalName);
 
                 if (tempFile.renameTo(finalFile)) {
                     String videoUrl = "/uploads/" + finalName;
@@ -79,17 +63,10 @@ public class VideoChunkService {
                     story.setMediaType("video");
                     storyRepository.save(story);
 
-                    System.out.println("🎉 Video upload completed!");
-                    System.out.println("   - Final file: " + finalName);
-                    System.out.println("   - Final size: " + finalFile.length() + " bytes");
-                    System.out.println("   - Video URL: " + videoUrl);
-
                     result.put("success", true);
                     result.put("videoUrl", videoUrl);
                     result.put("message", "Video uploaded successfully");
                 } else {
-                    // Fallback: copy file nếu rename thất bại
-                    System.out.println("⚠️ Rename failed, using fallback...");
                     try (FileOutputStream fos = new FileOutputStream(finalFile, true)) {
                         fos.write(chunk.getBytes()); // Write last chunk
                     }
@@ -118,7 +95,6 @@ public class VideoChunkService {
             }
 
         } catch (Exception e) {
-            System.err.println("❌ Chunk processing failed: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Failed to upload chunk: " + e.getMessage());
@@ -127,9 +103,6 @@ public class VideoChunkService {
         return result;
     }
 
-    /**
-     * Cleanup temp files (dọn dẹp file temp cũ)
-     */
     public Map<String, Object> cleanupOldTempFiles() {
         Map<String, Object> result = new HashMap<>();
 
@@ -152,9 +125,9 @@ public class VideoChunkService {
                     if (file.lastModified() < cutoffTime) {
                         if (file.delete()) {
                             deletedCount++;
-                            System.out.println("🗑️ Deleted old temp file: " + file.getName());
+                            System.out.println("🗑Deleted old temp file: " + file.getName());
                         } else {
-                            System.err.println("❌ Failed to delete: " + file.getName());
+                            System.err.println("Failed to delete: " + file.getName());
                         }
                     }
                 }
@@ -176,7 +149,7 @@ public class VideoChunkService {
             result.put("deletedFiles", deletedCount);
 
         } catch (Exception e) {
-            System.err.println("❌ Cleanup failed: " + e.getMessage());
+            System.err.println("Cleanup failed: " + e.getMessage());
             result.put("success", false);
             result.put("message", "Cleanup failed: " + e.getMessage());
         }
@@ -184,9 +157,6 @@ public class VideoChunkService {
         return result;
     }
 
-    /**
-     * Hàm này chỉ để tương thích ngược - có thể xóa sau
-     */
     public Map<String, Object> finalizeVideoUpload(Long courseId, String fileName, Integer totalChunks) {
         Map<String, Object> result = new HashMap<>();
         result.put("success", false);
